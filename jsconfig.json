@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "sourceMap": false,
+    "baseUrl": "src",
+    "paths": {
+      "*": ["src/*"]
+    }
+  }
+}
