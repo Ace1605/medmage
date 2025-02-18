@@ -49,7 +49,7 @@ export default function Main() {
             <RTLLayout  />
           }
         />
-        <Route path="/" element={<Navigate to="/admin" replace />} />
+        <Route path="/" element={<Navigate to="/auth" replace />} />
 
 
   
