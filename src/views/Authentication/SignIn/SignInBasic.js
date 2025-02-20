@@ -21,10 +21,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  HStack,
-  Icon,
   Input,
-  Link,
   Switch,
   Text,
   useColorModeValue,
@@ -32,21 +29,16 @@ import {
 // Assets
 import BasicImage from "assets/img/BasicImage.png";
 import React from "react";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 import AuthBasic from "layouts/AuthBasic";
 
 function SignInCover() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.400", "white");
   const bgForm = useColorModeValue("white", "navy.800");
-  const titleColor = useColorModeValue("gray.700", "blue.500");
-  const colorIcons = useColorModeValue("gray.700", "white");
-  const bgIcons = useColorModeValue("trasnparent", "navy.700");
-  const bgIconsHover = useColorModeValue("gray.50", "whiteAlpha.100");
   return (
     <AuthBasic
       title="Welcome!"
-      description="Use these awesome forms to login or create new account in your project for free."
+      description="Sign in to your account to get started"
       image={BasicImage}
     >
       <Flex
@@ -54,7 +46,7 @@ function SignInCover() {
         h="100%"
         alignItems="center"
         justifyContent="center"
-        mb="60px"
+        mb="22px"
         mt={{ base: "60px", md: "0px" }}
       >
         <Flex
@@ -79,49 +71,9 @@ function SignInCover() {
             textAlign="center"
             mb="22px"
           >
-            Sign In with
+            Sign In
           </Text>
-          <HStack spacing="15px" justify="center" mb="22px">
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="8px"
-              border={useColorModeValue("1px solid", "0px")}
-              borderColor="gray.200"
-              cursor="pointer"
-              transition="all .25s ease"
-              bg={bgIcons}
-              _hover={{ bg: bgIconsHover }}
-            >
-              <Link href="#">
-                <Icon as={FaFacebook} color={colorIcons} w="30px" h="30px" />
-              </Link>
-            </Flex>
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="8px"
-              border={useColorModeValue("1px solid", "0px")}
-              borderColor="gray.200"
-              cursor="pointer"
-              transition="all .25s ease"
-              bg={bgIcons}
-              _hover={{ bg: bgIconsHover }}
-            >
-              <Link href="#">
-                <Icon
-                  as={FaApple}
-                  color={colorIcons}
-                  w="30px"
-                  h="30px"
-                  _hover={{ filter: "brightness(120%)" }}
-                />
-              </Link>
-            </Flex>
+          {/* <HStack spacing="15px" justify="center" mb="22px">
             <Flex
               justify="center"
               align="center"
@@ -145,16 +97,7 @@ function SignInCover() {
                 />
               </Link>
             </Flex>
-          </HStack>
-          <Text
-            fontSize="lg"
-            color="gray.400"
-            fontWeight="bold"
-            textAlign="center"
-            mb="22px"
-          >
-            or
-          </Text>
+          </HStack> */}
           <FormControl>
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Name
@@ -197,26 +140,6 @@ function SignInCover() {
               SIGN IN
             </Button>
           </FormControl>
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            maxW="100%"
-            mt="0px"
-          >
-            <Text color={textColor} fontWeight="medium">
-              Don’t have an account?
-              <Link
-                color={titleColor}
-                as="span"
-                ms="5px"
-                href="#"
-                fontWeight="bold"
-              >
-                Sign up
-              </Link>
-            </Text>
-          </Flex>
         </Flex>
       </Flex>
     </AuthBasic>

@@ -16,27 +16,27 @@
 */
 
 // Chakra imports
-import { Box } from '@chakra-ui/react';
-import 'assets/css/plugin-styles.css';
-import Footer from 'components/Footer/Footer.js';
+import { Box } from "@chakra-ui/react";
+import "assets/css/plugin-styles.css";
+import Footer from "components/Footer/Footer.js";
 // core components
-import AuthNavbar from 'components/Navbars/AuthNavbar.js';
-import React from 'react';
+import AuthNavbar from "components/Navbars/AuthNavbar.js";
+import React from "react";
 
 import { Route, Routes, Navigate } from "react-router-dom";
-import routes from 'routes.js';
+import routes from "routes.js";
 
 export default function Pages(props) {
   const { ...rest } = props;
   // ref for the wrapper div
   const wrapper = React.createRef();
   React.useEffect(() => {
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
     // Specify how to clean up after this effect:
     return function cleanup() {};
   });
   const getActiveRoute = (routes) => {
-    let activeRoute = 'Default Brand Text';
+    let activeRoute = "Default Brand Text";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(routes[i].items);
@@ -84,14 +84,8 @@ export default function Pages(props) {
   };
   const getRoutes = (routes) => {
     return routes.map((route, key) => {
-      if (route.layout === '/auth') {
-        return (
-          <Route
-            path={ route.path}
-            element={route.component}
-            key={key}
-          />
-        );
+      if (route.layout === "/auth") {
+        return <Route path={route.path} element={route.component} key={key} />;
       }
       if (route.collapse) {
         return getRoutes(route.items);
@@ -103,26 +97,26 @@ export default function Pages(props) {
       }
     });
   };
-  document.documentElement.dir = 'ltr';
-  document.documentElement.layout = 'auth';
+  document.documentElement.dir = "ltr";
+  document.documentElement.layout = "auth";
   return (
     <>
       <AuthNavbar secondary={getActiveNavbar(routes)} />
 
-      <Box w='100%'>
-        <Box ref={wrapper} w='100%'>
+      <Box w="100%">
+        <Box ref={wrapper} w="100%">
           <Routes>
             {getRoutes(routes)}
             <Route
               path="/"
-              element={<Navigate to="/auth/authentication/sign-in/cover" replace />}
-            /> 
+              element={
+                <Navigate to="/auth/authentication/sign-in/cover" replace />
+              }
+            />
           </Routes>
         </Box>
       </Box>
-      <Box px='24px' mx='auto' width='1044px' maxW='100%'>
-        <Footer />
-      </Box>
+      <Box px="24px" mx="auto" width="1044px" maxW="100%"></Box>
     </>
   );
 }
