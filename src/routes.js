@@ -374,6 +374,33 @@ const dashRoutes = [
             ],
           },
           {
+            name: "Sign Up",
+            path: "/authentication/sign-up",
+            collapse: true,
+            authIcon: <DocumentIcon color="inherit" />,
+            items: [
+              {
+                name: "Basic",
+                component: <SignUpBasic />,
+                path: "/authentication/sign-up/basic",
+                layout: "/auth",
+              },
+              {
+                name: "Cover",
+                component: <SignUpCover />,
+                path: "/authentication/sign-up/cover",
+                layout: "/auth",
+              },
+              {
+                name: "Illustration",
+                secondaryNavbar: true,
+                component: <SignUpIllustration />,
+                path: "/authentication/sign-up/illustration",
+                layout: "/auth",
+              },
+            ],
+          },
+          {
             name: "Reset password",
             path: "/authentication/reset",
             collapse: true,

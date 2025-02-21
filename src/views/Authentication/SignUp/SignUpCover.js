@@ -30,12 +30,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import BasicImage from "assets/img/BasicImage.png";
+import CoverImage from "assets/img/CoverImage.png";
 import React from "react";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
-import AuthBasic from "layouts/AuthBasic";
+import AuthCover from "layouts/AuthCover";
 
-function SignInCover() {
+function SignUpCover() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.400", "white");
   const bgForm = useColorModeValue("white", "navy.800");
@@ -44,18 +44,14 @@ function SignInCover() {
   const bgIcons = useColorModeValue("trasnparent", "navy.700");
   const bgIconsHover = useColorModeValue("gray.50", "whiteAlpha.100");
   return (
-    <AuthBasic
-      title="Welcome!"
-      description="Use these awesome forms to login or create new account in your project for free."
-      image={BasicImage}
-    >
+    <AuthCover image={CoverImage}>
       <Flex
         w="100%"
         h="100%"
         alignItems="center"
         justifyContent="center"
         mb="60px"
-        mt={{ base: "60px", md: "0px" }}
+        mt={{ base: "60px", md: "160px" }}
       >
         <Flex
           zIndex="2"
@@ -169,6 +165,18 @@ function SignInCover() {
               size="lg"
             />
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+              Email
+            </FormLabel>
+            <Input
+              variant="auth"
+              fontSize="sm"
+              ms="4px"
+              type="email"
+              placeholder="Your full email adress"
+              mb="24px"
+              size="lg"
+            />
+            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Password
             </FormLabel>
             <Input
@@ -219,8 +227,8 @@ function SignInCover() {
           </Flex>
         </Flex>
       </Flex>
-    </AuthBasic>
+    </AuthCover>
   );
 }
 
-export default SignInCover;
+export default SignUpCover;

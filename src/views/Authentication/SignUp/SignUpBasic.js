@@ -14,6 +14,22 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+/*!
+
+=========================================================
+* Argon Dashboard Chakra PRO - v1.0.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
+* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
+
+* Designed and Coded by Simmmple & Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
 
 // Chakra imports
 import {
@@ -35,7 +51,7 @@ import React from "react";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 import AuthBasic from "layouts/AuthBasic";
 
-function SignInCover() {
+function SignUpBasic() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.400", "white");
   const bgForm = useColorModeValue("white", "navy.800");
@@ -49,23 +65,14 @@ function SignInCover() {
       description="Use these awesome forms to login or create new account in your project for free."
       image={BasicImage}
     >
-      <Flex
-        w="100%"
-        h="100%"
-        alignItems="center"
-        justifyContent="center"
-        mb="60px"
-        mt={{ base: "60px", md: "0px" }}
-      >
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
         <Flex
-          zIndex="2"
           direction="column"
           w="445px"
           background="transparent"
           borderRadius="15px"
           p="40px"
           mx={{ base: "100px" }}
-          mb={{ base: "20px", md: "auto" }}
           bg={bgForm}
           boxShadow={useColorModeValue(
             "0px 5px 14px rgba(0, 0, 0, 0.05)",
@@ -79,7 +86,7 @@ function SignInCover() {
             textAlign="center"
             mb="22px"
           >
-            Sign In with
+            Register With
           </Text>
           <HStack spacing="15px" justify="center" mb="22px">
             <Flex
@@ -169,6 +176,18 @@ function SignInCover() {
               size="lg"
             />
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+              Email
+            </FormLabel>
+            <Input
+              variant="auth"
+              fontSize="sm"
+              ms="4px"
+              type="email"
+              placeholder="Your email address"
+              mb="24px"
+              size="lg"
+            />
+            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Password
             </FormLabel>
             <Input
@@ -194,7 +213,7 @@ function SignInCover() {
               h="45"
               mb="24px"
             >
-              SIGN IN
+              SIGN UP
             </Button>
           </FormControl>
           <Flex
@@ -205,7 +224,7 @@ function SignInCover() {
             mt="0px"
           >
             <Text color={textColor} fontWeight="medium">
-              Don’t have an account?
+              Already have an account?
               <Link
                 color={titleColor}
                 as="span"
@@ -213,7 +232,7 @@ function SignInCover() {
                 href="#"
                 fontWeight="bold"
               >
-                Sign up
+                Sign In
               </Link>
             </Text>
           </Flex>
@@ -223,4 +242,4 @@ function SignInCover() {
   );
 }
 
-export default SignInCover;
+export default SignUpBasic;
