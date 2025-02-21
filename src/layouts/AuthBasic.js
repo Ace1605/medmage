@@ -31,28 +31,30 @@ function AuthBasic(props) {
       >
         <Box w="100vw" h="100vh" bg="blue.500" opacity="0.8"></Box>
       </Box>
-      <Flex
-        direction="column"
-        textAlign="center"
-        justifyContent="center"
-        align="center"
-        mt="110px"
-        mb={title || description ? "30px" : "140px"}
-      >
-        <Text fontSize="4xl" color="white" fontWeight="bold">
-          {title}
-        </Text>
-        <Text
-          fontSize="md"
-          color="white"
-          fontWeight="normal"
-          mt="10px"
-          mb="26px"
-          w={{ base: "90%", sm: "60%", lg: "40%", xl: "333px" }}
+      {title && description ? (
+        <Flex
+          direction="column"
+          textAlign="center"
+          justifyContent="center"
+          align="center"
+          mt="110px"
+          mb="30px"
         >
-          {description}
-        </Text>
-      </Flex>
+          <Text fontSize="4xl" color="white" fontWeight="bold">
+            {title}
+          </Text>
+          <Text
+            fontSize="md"
+            color="white"
+            fontWeight="normal"
+            mt="10px"
+            mb="26px"
+            w={{ base: "90%", sm: "60%", lg: "40%", xl: "333px" }}
+          >
+            {description}
+          </Text>
+        </Flex>
+      ) : null}
       {children}
     </Flex>
   );

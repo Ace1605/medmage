@@ -26,25 +26,23 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import BasicImage from "assets/img/BasicImage.png";
+import CoverImage from "assets/img/CoverImage.png";
 import React from "react";
-import AuthBasic from "layouts/AuthBasic";
-import { useNavigate } from "react-router-dom";
+import AuthCover from "layouts/AuthCover";
 
-function ForgotPassword() {
+function ResetCover() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgForm = useColorModeValue("white", "navy.800");
-  const navigate = useNavigate();
   return (
-    <AuthBasic image={BasicImage}>
+    <AuthCover image={CoverImage}>
       <Flex
         w="100%"
         h="100%"
         alignItems="center"
         justifyContent="center"
         mb="60px"
-        mt={{ base: "60px", md: "0px" }}
+        mt={{ base: "60px", md: "30vh" }}
       >
         <Flex
           zIndex="2"
@@ -66,9 +64,9 @@ function ForgotPassword() {
             color={textColor}
             textAlign="center"
             mb="10px"
-            fontSize={{ base: "3xl" }}
+            fontSize={{ base: "3xl", md: "4xl" }}
           >
-            Forgot password
+            Reset password
           </Text>
           <Text
             fontWeight="regular"
@@ -92,7 +90,6 @@ function ForgotPassword() {
               size="lg"
             />
             <Button
-              onClick={() => navigate("/auth/authentication/reset-password")}
               fontSize="10px"
               variant="dark"
               fontWeight="bold"
@@ -105,8 +102,8 @@ function ForgotPassword() {
           </FormControl>
         </Flex>
       </Flex>
-    </AuthBasic>
+    </AuthCover>
   );
 }
 
-export default ForgotPassword;
+export default ResetCover;

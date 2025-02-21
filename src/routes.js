@@ -30,13 +30,20 @@ import DataTables from "views/Applications/DataTables";
 import Kanban from "views/Applications/Kanban.js";
 import Wizard from "views/Applications/Wizard.js";
 import SignInBasic from "views/Authentication/SignIn/SignInBasic.js";
+import SignInCover from "views/Authentication/SignIn/SignInCover.js";
+import SignInIllustration from "views/Authentication/SignIn/SignInIllustration.js";
 import LockBasic from "views/Authentication/Lock/LockBasic.js";
 import LockCover from "views/Authentication/Lock/LockCover.js";
 import LockIllustration from "views/Authentication/Lock/LockIllustration.js";
 import ResetBasic from "views/Authentication/Reset/ResetBasic.js";
+import ResetCover from "views/Authentication/Reset/ResetCover.js";
+import ResetIllustration from "views/Authentication/Reset/ResetIllustration.js";
 import VerificationBasic from "views/Authentication/Verification/VerificationBasic.js";
 import VerificationCover from "views/Authentication/Verification/VerificationCover.js";
 import VerificationIllustration from "views/Authentication/Verification/VerificationIllustration.js";
+import SignUpBasic from "views/Authentication/SignUp/SignUpBasic.js";
+import SignUpCover from "views/Authentication/SignUp/SignUpCover.js";
+import SignUpIllustration from "views/Authentication/SignUp/SignUpIllustration.js";
 import Automotive from "views/Dashboard/Automotive";
 import CRM from "views/Dashboard/CRM.js";
 import Default from "views/Dashboard/Default.js";
@@ -62,8 +69,6 @@ import NewUser from "views/Pages/Users/NewUser.js";
 import Reports from "views/Pages/Users/Reports.js";
 import Widgets from "views/Pages/Widgets.js";
 import SmartHome from "views/Dashboard/SmartHome";
-import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
-import ResetCover from "views/Authentication/Reset/ResetBasic";
 
 const dashRoutes = [
   {
@@ -81,7 +86,7 @@ const dashRoutes = [
       },
       {
         name: "Default",
-        path: "/dashboard",
+        path: "/dashboard/default",
         component: <Default />,
         layout: "/admin",
       },
@@ -353,32 +358,44 @@ const dashRoutes = [
                 path: "/authentication/sign-in",
                 layout: "/auth",
               },
-            ],
-          },
-          {
-            name: "Forgot password",
-            path: "/authentication/forgot-password",
-            collapse: true,
-            authIcon: <DocumentIcon color="inherit" />,
-            items: [
               {
-                name: "Basic",
-                component: <ForgotPassword />,
-                path: "/authentication/forgot-password",
+                name: "Cover",
+                component: <SignInCover />,
+                path: "/authentication/sign-in/cover",
+                layout: "/auth",
+              },
+              {
+                name: "Illustration",
+                component: <SignInIllustration />,
+                secondaryNavbar: true,
+                path: "/authentication/sign-in/illustration",
                 layout: "/auth",
               },
             ],
           },
           {
-            name: "Reset",
+            name: "Reset password",
             path: "/authentication/reset",
             collapse: true,
             authIcon: <DocumentIcon color="inherit" />,
             items: [
               {
                 name: "Basic",
+                component: <ResetBasic />,
+                path: "/authentication/reset/basic",
+                layout: "/auth",
+              },
+              {
+                name: "Cover",
                 component: <ResetCover />,
-                path: "/authentication/reset-password",
+                path: "/authentication/reset/cover",
+                layout: "/auth",
+              },
+              {
+                name: "Illustration",
+                secondaryNavbar: true,
+                component: <ResetIllustration />,
+                path: "/authentication/reset/illustration",
                 layout: "/auth",
               },
             ],

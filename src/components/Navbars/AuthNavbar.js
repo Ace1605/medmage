@@ -18,6 +18,7 @@
 // Chakra imports
 import {
   Box,
+  Button,
   Flex,
   Grid,
   HStack,
@@ -33,8 +34,10 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
+import bgCard from "assets/img/background-card-reports.png";
 import IconBox from "components/Icons/IconBox";
 import {
+  CreativeTimLogo,
   RocketIcon,
   ChakraLogoDark,
   ChakraLogoLight,
@@ -45,6 +48,7 @@ import {
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import PropTypes from "prop-types";
 import { Fragment } from "react";
+import { AiFillStar } from "react-icons/ai";
 import { GoChevronDown, GoChevronRight } from "react-icons/go";
 import { NavLink } from "react-router-dom";
 import { SidebarContext } from "contexts/SidebarContext";
@@ -118,6 +122,8 @@ export default function AuthNavbar(props) {
   let mainText = "#fff";
   let navbarBg = "none";
   let navbarShadow = "initial";
+  let bgButton = useColorModeValue("white", "navy.900");
+  let colorButton = useColorModeValue("gray.700", "white");
   let navbarPosition = "absolute";
   if (props.secondary === true) {
     brand = (
