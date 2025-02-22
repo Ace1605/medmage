@@ -30,20 +30,13 @@ import DataTables from "views/Applications/DataTables";
 import Kanban from "views/Applications/Kanban.js";
 import Wizard from "views/Applications/Wizard.js";
 import SignInBasic from "views/Authentication/SignIn/SignInBasic.js";
-import SignInCover from "views/Authentication/SignIn/SignInCover.js";
-import SignInIllustration from "views/Authentication/SignIn/SignInIllustration.js";
 import LockBasic from "views/Authentication/Lock/LockBasic.js";
 import LockCover from "views/Authentication/Lock/LockCover.js";
 import LockIllustration from "views/Authentication/Lock/LockIllustration.js";
 import ResetBasic from "views/Authentication/Reset/ResetBasic.js";
-import ResetCover from "views/Authentication/Reset/ResetCover.js";
-import ResetIllustration from "views/Authentication/Reset/ResetIllustration.js";
 import VerificationBasic from "views/Authentication/Verification/VerificationBasic.js";
 import VerificationCover from "views/Authentication/Verification/VerificationCover.js";
 import VerificationIllustration from "views/Authentication/Verification/VerificationIllustration.js";
-import SignUpBasic from "views/Authentication/SignUp/SignUpBasic.js";
-import SignUpCover from "views/Authentication/SignUp/SignUpCover.js";
-import SignUpIllustration from "views/Authentication/SignUp/SignUpIllustration.js";
 import Automotive from "views/Dashboard/Automotive";
 import CRM from "views/Dashboard/CRM.js";
 import Default from "views/Dashboard/Default.js";
@@ -69,6 +62,7 @@ import NewUser from "views/Pages/Users/NewUser.js";
 import Reports from "views/Pages/Users/Reports.js";
 import Widgets from "views/Pages/Widgets.js";
 import SmartHome from "views/Dashboard/SmartHome";
+import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
 
 const dashRoutes = [
   {
@@ -81,31 +75,31 @@ const dashRoutes = [
       {
         name: "Landing Page",
         path: "/dashboard/landing",
-        component: <Landing/>,
+        component: <Landing />,
         layout: "/landing",
       },
       {
         name: "Default",
-        path: "/dashboard/default",
-        component: <Default/>,
+        path: "/dashboard",
+        component: <Default />,
         layout: "/admin",
       },
       {
         name: "Automotive",
         path: "/dashboard/automotive",
-        component: <Automotive/>,
+        component: <Automotive />,
         layout: "/admin",
       },
       {
         name: "Smart Home",
         path: "/dashboard/smart-home",
-        component: <SmartHome/>,
+        component: <SmartHome />,
         layout: "/admin",
       },
       {
         name: "CRM",
         path: "/dashboard/crm",
-        component: <CRM/>,
+        component: <CRM />,
         layout: "/admin",
       },
     ],
@@ -130,21 +124,21 @@ const dashRoutes = [
                 name: "Profile Overview",
                 secondaryNavbar: true,
                 path: "/pages/profile/overview",
-                component: <Overview/>,
+                component: <Overview />,
                 layout: "/admin",
               },
               {
                 name: "Teams",
                 secondaryNavbar: true,
                 path: "/pages/profile/teams",
-                component: <Teams/>,
+                component: <Teams />,
                 layout: "/admin",
               },
               {
                 name: "All Projects",
                 secondaryNavbar: true,
                 path: "/pages/profile/profile-projects",
-                component: <Projects/>,
+                component: <Projects />,
                 layout: "/admin",
               },
             ],
@@ -158,13 +152,13 @@ const dashRoutes = [
               {
                 name: "Reports",
                 path: "/pages/users/reports",
-                component: <Reports/>,
+                component: <Reports />,
                 layout: "/admin",
               },
               {
                 name: "New User",
                 path: "/pages/users/new-user",
-                component: <NewUser/>,
+                component: <NewUser />,
                 layout: "/admin",
               },
             ],
@@ -178,18 +172,18 @@ const dashRoutes = [
               {
                 name: "Settings",
                 path: "/pages/account/settings",
-                component: <Settings/>,
+                component: <Settings />,
                 layout: "/admin",
               },
               {
                 name: "Billing",
-                component: <Billing/>,
+                component: <Billing />,
                 path: "/pages/account/billing",
                 layout: "/admin",
               },
               {
                 name: "Invoice",
-                component: <Invoice/>,
+                component: <Invoice />,
                 path: "/pages/account/invoice",
                 layout: "/admin",
               },
@@ -204,45 +198,45 @@ const dashRoutes = [
               {
                 name: "General",
                 path: "/pages/projects/general",
-                component: <General/>,
+                component: <General />,
                 layout: "/admin",
               },
               {
                 name: "Timeline",
                 path: "/pages/projects/timeline",
-                component: <Timeline/>,
+                component: <Timeline />,
                 layout: "/admin",
               },
             ],
           },
           {
             name: "Pricing Page",
-            component: <Pricing/>,
+            component: <Pricing />,
             path: "/pages/pricing-page",
             layout: "/auth",
           },
           {
             name: "RTL",
-            component: <RTLPage/>,
+            component: <RTLPage />,
             path: "/pages/rtl-support-page",
             layout: "/rtl",
           },
           {
             name: "Widgets",
-            component: <Widgets/>,
+            component: <Widgets />,
             path: "/pages/widgets",
             layout: "/admin",
           },
           {
             name: "Charts",
-            component: <Charts/>,
+            component: <Charts />,
             path: "/pages/charts",
             layout: "/admin",
           },
           {
             name: "Alerts",
             path: "/pages/alerts",
-            component: <Alerts/>,
+            component: <Alerts />,
             layout: "/admin",
           },
         ],
@@ -256,14 +250,14 @@ const dashRoutes = [
         items: [
           {
             name: "Kanban",
-            component: <Kanban/>,
+            component: <Kanban />,
             authIcon: <DocumentIcon color="inherit" />,
             path: "/applications/kanban",
             layout: "/admin",
           },
           {
             name: "Wizard",
-            component: <Wizard/>,
+            component: <Wizard />,
             authIcon: <CartIcon color="inherit" />,
             path: "/applications/wizard",
             layout: "/admin",
@@ -272,12 +266,12 @@ const dashRoutes = [
             name: "Data Tables",
             path: "/applications/data-tables",
             authIcon: <PersonIcon color="inherit" />,
-            component: <DataTables/>,
+            component: <DataTables />,
             layout: "/admin",
           },
           {
             name: "Calendar",
-            component: <Calendar/>,
+            component: <Calendar />,
             authIcon: <StatsIcon color="inherit" />,
             path: "/applications/calendar",
             layout: "/admin",
@@ -299,20 +293,20 @@ const dashRoutes = [
             items: [
               {
                 name: "New Product",
-                component: <NewProduct/>,
+                component: <NewProduct />,
                 secondaryNavbar: true,
                 path: "/ecommerce/products/new-product",
                 layout: "/admin",
               },
               {
                 name: "Edit Product",
-                component: <EditProduct/>,
+                component: <EditProduct />,
                 path: "/ecommerce/products/edit-product",
                 layout: "/admin",
               },
               {
                 name: "Product Page",
-                component: <ProductPage/>,
+                component: <ProductPage />,
                 path: "/ecommerce/products/product-page",
                 layout: "/admin",
               },
@@ -326,13 +320,13 @@ const dashRoutes = [
             items: [
               {
                 name: "Order List",
-                component: <OrderList/>,
+                component: <OrderList />,
                 path: "/ecommerce/orders/order-list",
                 layout: "/admin",
               },
               {
                 name: "Order Details",
-                component: <OrderDetails/>,
+                component: <OrderDetails />,
                 path: "/ecommerce/orders/order-details",
                 layout: "/admin",
               },
@@ -354,48 +348,62 @@ const dashRoutes = [
             items: [
               {
                 name: "Basic",
-                component: <SignInBasic/>,
-                path: "/authentication/sign-in/basic",
+                component: <SignInBasic />,
+                path: "/authentication/sign-in",
                 layout: "/auth",
               },
-              {
-                name: "Cover",
-                component: <SignInCover/>,
-                path: "/authentication/sign-in/cover",
-                layout: "/auth",
-              },
-              {
-                name: "Illustration",
-                component: <SignInIllustration/>,
-                secondaryNavbar: true,
-                path: "/authentication/sign-in/illustration",
-                layout: "/auth",
-              },
+              // {
+              //   name: "Cover",
+              //   component: <SignInCover />,
+              //   path: "/authentication/sign-in/cover",
+              //   layout: "/auth",
+              // },
+              // {
+              //   name: "Illustration",
+              //   component: <SignInIllustration />,
+              //   secondaryNavbar: true,
+              //   path: "/authentication/sign-in/illustration",
+              //   layout: "/auth",
+              // },
             ],
           },
+          // {
+          //   name: "Sign Up",
+          //   path: "/authentication/sign-up",
+          //   collapse: true,
+          //   authIcon: <DocumentIcon color="inherit" />,
+          //   items: [
+          //     {
+          //       name: "Basic",
+          //       component: <SignUpBasic />,
+          //       path: "/authentication/sign-up/basic",
+          //       layout: "/auth",
+          //     },
+          //     {
+          //       name: "Cover",
+          //       component: <SignUpCover />,
+          //       path: "/authentication/sign-up/cover",
+          //       layout: "/auth",
+          //     },
+          //     {
+          //       name: "Illustration",
+          //       secondaryNavbar: true,
+          //       component: <SignUpIllustration />,
+          //       path: "/authentication/sign-up/illustration",
+          //       layout: "/auth",
+          //     },
+          //   ],
+          // },
           {
-            name: "Sign Up",
-            path: "/authentication/sign-up",
+            name: "Forgot password",
+            path: "/authentication/forgot-password",
             collapse: true,
             authIcon: <DocumentIcon color="inherit" />,
             items: [
               {
                 name: "Basic",
-                component: <SignUpBasic/>,
-                path: "/authentication/sign-up/basic",
-                layout: "/auth",
-              },
-              {
-                name: "Cover",
-                component: <SignUpCover/>,
-                path: "/authentication/sign-up/cover",
-                layout: "/auth",
-              },
-              {
-                name: "Illustration",
-                secondaryNavbar: true,
-                component: <SignUpIllustration/>,
-                path: "/authentication/sign-up/illustration",
+                component: <ForgotPassword />,
+                path: "/authentication/forgot-password",
                 layout: "/auth",
               },
             ],
@@ -408,23 +416,23 @@ const dashRoutes = [
             items: [
               {
                 name: "Basic",
-                component: <ResetBasic/>,
-                path: "/authentication/reset/basic",
+                component: <ResetBasic />,
+                path: "/authentication/reset-password",
                 layout: "/auth",
               },
-              {
-                name: "Cover",
-                component: <ResetCover/>,
-                path: "/authentication/reset/cover",
-                layout: "/auth",
-              },
-              {
-                name: "Illustration",
-                secondaryNavbar: true,
-                component: <ResetIllustration/>,
-                path: "/authentication/reset/illustration",
-                layout: "/auth",
-              },
+              // {
+              //   name: "Cover",
+              //   component: <ResetCover />,
+              //   path: "/authentication/reset/cover",
+              //   layout: "/auth",
+              // },
+              // {
+              //   name: "Illustration",
+              //   secondaryNavbar: true,
+              //   component: <ResetIllustration />,
+              //   path: "/authentication/reset/illustration",
+              //   layout: "/auth",
+              // },
             ],
           },
           {
@@ -435,20 +443,20 @@ const dashRoutes = [
             items: [
               {
                 name: "Basic",
-                component: <LockBasic/>,
+                component: <LockBasic />,
                 path: "/authentication/lock/basic",
                 layout: "/auth",
               },
               {
                 name: "Cover",
-                component: <LockCover/>,
+                component: <LockCover />,
                 path: "/authentication/lock/cover",
                 layout: "/auth",
               },
               {
                 name: "Illustration",
                 secondaryNavbar: true,
-                component: <LockIllustration/>,
+                component: <LockIllustration />,
                 path: "/authentication/lock/illustration",
                 layout: "/auth",
               },
@@ -462,20 +470,20 @@ const dashRoutes = [
             items: [
               {
                 name: "Basic",
-                component: <VerificationBasic/>,
+                component: <VerificationBasic />,
                 path: "/authentication/verification/basic",
                 layout: "/auth",
               },
               {
                 name: "Cover",
-                component: <VerificationCover/>,
+                component: <VerificationCover />,
                 path: "/authentication/verification/cover",
                 layout: "/auth",
               },
               {
                 name: "Illustration",
                 secondaryNavbar: true,
-                component: <VerificationIllustration/>,
+                component: <VerificationIllustration />,
                 path: "/authentication/verification/illustration",
                 layout: "/auth",
               },
