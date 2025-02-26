@@ -60,6 +60,9 @@ function Sidebar(props) {
 
 	const { routes, landing } = props;
 
+	console.log(routes)
+
+
 	// this is for the rest of the collapses
 	const { sidebarWidth, setSidebarWidth, toggleSidebar } = React.useContext(SidebarContext);
 
