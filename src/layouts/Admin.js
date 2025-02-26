@@ -46,6 +46,7 @@ import {
 // Custom Chakra theme
 export default function Dashboard(props) {
 	const { ...rest } = props;
+
 	// states and functions
 	const [ fixed, setFixed ] = useState(false);
 	const [ toggleSidebar, setToggleSidebar ] = useState(false);
@@ -186,9 +187,9 @@ export default function Dashboard(props) {
 							</PanelContainer>
 						</PanelContent>
 					) : null}
-					<Box>
+					{/* <Box>
 						<Footer />
-					</Box>
+					</Box> */}
 					<Portal>
 						<Box>
 							<FixedPlugin fixed={fixed} onOpen={onOpen} />

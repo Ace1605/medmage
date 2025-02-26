@@ -39,6 +39,7 @@ import {
   Th,
   Thead,
   Tooltip,
+  Grid,
   Tr,
   useColorMode,
   useColorModeValue,
@@ -380,7 +381,7 @@ function Settings() {
                     color={textColor}
                   />
                   <Text color='gray.500' fontWeight='normal' fontSize='xs'>
-                    Accounts
+                    Invite Users
                   </Text>
                 </Flex>
               </Button>
@@ -405,7 +406,7 @@ function Settings() {
                 </Flex>
               </Button>
             </Link>
-            <Link to='sessions' spy={true} smooth={true} duration={500}>
+            {/* <Link to='sessions' spy={true} smooth={true} duration={500}>
               <Button
                 variant='no-effects'
                 _hover={{ bg: bgHoverLinks }}
@@ -424,7 +425,7 @@ function Settings() {
                   </Text>
                 </Flex>
               </Button>
-            </Link>
+            </Link> */}
             <Link to='delete-account' spy={true} smooth={true} duration={500}>
               <Button
                 variant='no-effects'
@@ -1033,14 +1034,120 @@ function Settings() {
                   fontWeight='semibold'
                   mb='4px'
                 >
-                  Accounts
+                  Invite Users
                 </Text>
                 <Text color='gray.400' fontWeight='normal' fontSize='sm'>
-                  Here you can setup and manage your integration settings
+                  Here you can invite new users to the Medmage
                 </Text>
               </Flex>
             </CardHeader>
-            <CardBody>
+                          <CardBody>
+                <Flex direction="column" w="100%">
+                  <Grid
+                    templateColumns={{ sm: "1fr", md: "repeat(2, 1fr)" }}
+                    templateRows={{ md: "repeat(2, 1fr)" }}
+                    gap="24px"
+                  >
+                    <FormControl>
+                      <FormLabel
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="xs"
+                      >
+                        First Name
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="eg. Michael"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="xs"
+                      >
+                        Last Name
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="eg. Jackson"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="xs"
+                      >
+                        Company
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="eg. Simmmple"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="xs"
+                      >
+                        Email address
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        type="email"
+                        placeholder="eg. example@yahoo.com"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="xs"
+                      >
+                        Password
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        type="password"
+                        placeholder="******"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="xs"
+                      >
+                        Repeat Password
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="******"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Button
+                    variant="dark"
+                    alignSelf="flex-end"
+                    mt="24px"
+                    w="100px"
+                    h="35px"
+                    // onClick={() => addressTab.current.click()}
+                  >
+                    NEXT
+                  </Button>
+                </Flex>
+              </CardBody>
+            {/* <CardBody>
               <Stack direction='column' spacing='22px' w='100%'>
                 <Flex direction='column'>
                   <Flex justify='space-between' mb='16px'>
@@ -1223,7 +1330,7 @@ function Settings() {
                   </Flex>
                 </Flex>
               </Stack>
-            </CardBody>
+            </CardBody> */}
           </Element>
         </Card>
         <Card
@@ -1429,7 +1536,7 @@ function Settings() {
             </CardBody>
           </Element>
         </Card>
-        <Card
+        {/* <Card
           w={{ sm: '100%', lg: '70%' }}
           alignSelf='flex-end'
           justifySelf='flex-end'
@@ -1635,7 +1742,7 @@ function Settings() {
               </Stack>
             </CardBody>
           </Element>
-        </Card>
+        </Card> */}
         <Card
           w={{ sm: '100%', lg: '70%' }}
           alignSelf='flex-end'

@@ -1,8 +1,8 @@
 {
-  "name": "argon-dashboard-chakra-pro",
+  "name": "medmage",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/auth/authentication/sign-in",
+  "homepage": "https://medmage.vercel.app/auth/authentication/sign-in",
   "dependencies": {
     "@asseinfo/react-kanban": "^2.2.0",
     "@chakra-ui/icons": "^2.1.1",
