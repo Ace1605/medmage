@@ -109,7 +109,7 @@ export default function Pages(props) {
             <Route
               path="/"
               element={
-                <Navigate to="/auth/authentication/sign-in/cover" replace />
+                <Navigate to="/auth/authentication/sign-in" replace />
               }
             />
           </Routes>
