@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react"; // Chakra imports
 import { Box, Flex, Text } from "@chakra-ui/react";
 
@@ -10,6 +9,7 @@ function AuthBasic(props) {
       alignSelf="center"
       justifySelf="center"
       overflow="hidden"
+      w="full"
     >
       <Box
         position="absolute"
