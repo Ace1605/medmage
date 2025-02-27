@@ -50,16 +50,18 @@ function SignInCover() {
         alignItems="center"
         justifyContent="center"
         mb="22px"
+        px="16px"
         mt={{ base: "40px", md: "0px" }}
       >
         <Flex
           zIndex="2"
           direction="column"
-          w="445px"
+          maxW="388px"
+          w="full"
           background="transparent"
           borderRadius="15px"
           p="30px"
-          mx={{ base: "100px" }}
+          mx={{ base: "auto" }}
           mb={{ base: "20px", md: "auto" }}
           bg={bgForm}
           boxShadow={useColorModeValue(
