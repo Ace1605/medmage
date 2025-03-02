@@ -89,29 +89,29 @@ export default function AuthNavbar(props) {
   });
 
   let applicationsObject = {};
-  routes.forEach((route) => {
-    if (route.items) {
-      applicationsObject = route.items.find(
-        (link) => link.name === "Applications"
-      );
-    }
-  });
+  // routes.forEach((route) => {
+  //   if (route.items) {
+  //     applicationsObject = route.items.find(
+  //       (link) => link.name === "Applications"
+  //     );
+  //   }
+  // });
 
   let ecommerceObject = {};
-  routes.forEach((route) => {
-    if (route.items) {
-      ecommerceObject = route.items.find((link) => link.name === "Ecommerce");
-    }
-  });
+  // routes.forEach((route) => {
+  //   if (route.items) {
+  //     ecommerceObject = route.items.find((link) => link.name === "Ecommerce");
+  //   }
+  // });
 
   let extraArr = [];
-  routes.forEach((route) => {
-    route.items.forEach((item) => {
-      if (item.items && item.name === "Pages") {
-        extraArr = item.items.filter((link) => !link.collapse);
-      }
-    });
-  });
+  // routes.forEach((route) => {
+  //   route.items.forEach((item) => {
+  //     if (item.items && item.name === "Pages") {
+  //       extraArr = item.items.filter((link) => !link.collapse);
+  //     }
+  //   });
+  // });
 
   // Chakra color mode
 
@@ -187,99 +187,99 @@ export default function AuthNavbar(props) {
   );
 
   const createPagesLinks = (routes) => {
-    return routes.map((link, key) => {
-      if (
-        link.name === "Applications" ||
-        link.name === "Ecommerce" ||
-        link.name === "Authentication" ||
-        link.name === "RTL" ||
-        link.name === "Widgets" ||
-        link.name === "Charts" ||
-        link.name === "Alerts"
-      ) {
-        return;
-      }
-      if (link.name === "Pricing Page") {
-        return (
-          <Stack key={key} direction="column">
-            <Stack
-              direction="row"
-              spacing="6px"
-              align="center"
-              mb="6px"
-              cursor="default"
-            >
-              <IconBox bg="blue.500" color="white" h="30px" w="30px">
-                <RocketIcon color="inherit" />
-              </IconBox>
-              <Text fontWeight="bold" fontSize="sm" color={textColor}>
-                Extra
-              </Text>
-            </Stack>
-            {createExtraLinks(extraArr)}
-          </Stack>
-        );
-      }
-      if (link.authIcon) {
-        return (
-          <Stack key={key} direction="column">
-            <Stack
-              direction="row"
-              spacing="6px"
-              align="center"
-              mb="6px"
-              cursor="default"
-            >
-              <IconBox bg="blue.500" color="white" h="30px" w="30px">
-                {link.authIcon}
-              </IconBox>
-              <Text fontWeight="bold" fontSize="sm" color={textColor}>
-                {link.name}
-              </Text>
-            </Stack>
-            {createPagesLinks(link.items)}
-          </Stack>
-        );
-      } else {
-        if (link.component) {
-          return (
-            <NavLink key={key} to={link.layout + link.path}>
-              <MenuItem
-                ps="36px"
-                py="0px"
-                _hover={{ boxShadow: "none", bg: "none" }}
-                borderRadius="12px"
-              >
-                <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                  {link.name}
-                </Text>
-              </MenuItem>
-            </NavLink>
-          );
-        } else {
-          return <Fragment key={key}>{createPagesLinks(link.items)}</Fragment>;
-        }
-      }
-    });
+    // return routes.map((link, key) => {
+    //   if (
+    //     link.name === "Applications" ||
+    //     link.name === "Ecommerce" ||
+    //     link.name === "Authentication" ||
+    //     link.name === "RTL" ||
+    //     link.name === "Widgets" ||
+    //     link.name === "Charts" ||
+    //     link.name === "Alerts"
+    //   ) {
+    //     return;
+    //   }
+    //   if (link.name === "Pricing Page") {
+    //     return (
+    //       <Stack key={key} direction="column">
+    //         <Stack
+    //           direction="row"
+    //           spacing="6px"
+    //           align="center"
+    //           mb="6px"
+    //           cursor="default"
+    //         >
+    //           <IconBox bg="blue.500" color="white" h="30px" w="30px">
+    //             <RocketIcon color="inherit" />
+    //           </IconBox>
+    //           <Text fontWeight="bold" fontSize="sm" color={textColor}>
+    //             Extra
+    //           </Text>
+    //         </Stack>
+    //         {/* {createExtraLinks(extraArr)} */}
+    //       </Stack>
+    //     );
+    //   }
+    //   if (link.authIcon) {
+    //     return (
+    //       <Stack key={key} direction="column">
+    //         <Stack
+    //           direction="row"
+    //           spacing="6px"
+    //           align="center"
+    //           mb="6px"
+    //           cursor="default"
+    //         >
+    //           <IconBox bg="blue.500" color="white" h="30px" w="30px">
+    //             {link.authIcon}
+    //           </IconBox>
+    //           <Text fontWeight="bold" fontSize="sm" color={textColor}>
+    //             {link.name}
+    //           </Text>
+    //         </Stack>
+    //         {/* {createPagesLinks(link.items)} */}
+    //       </Stack>
+    //     );
+    //   } else {
+    //     if (link.component) {
+    //       return (
+    //         <NavLink key={key} to={link.layout + link.path}>
+    //           <MenuItem
+    //             ps="36px"
+    //             py="0px"
+    //             _hover={{ boxShadow: "none", bg: "none" }}
+    //             borderRadius="12px"
+    //           >
+    //             <Text color="gray.400" fontSize="sm" fontWeight="normal">
+    //               {link.name}
+    //             </Text>
+    //           </MenuItem>
+    //         </NavLink>
+    //       );
+    //     } else {
+    //       // return <Fragment key={key}>{createPagesLinks(link.items)}</Fragment>;
+    //     }
+    //   }
+    // });
   };
 
   const createExtraLinks = (routes) => {
-    return routes.map((link, key) => {
-      return (
-        <NavLink key={key} to={link.layout + link.path}>
-          <MenuItem
-            ps="36px"
-            py="0px"
-            _hover={{ boxShadow: "none", bg: "none" }}
-            borderRadius="12px"
-          >
-            <Text color="gray.400" fontSize="sm" fontWeight="normal">
-              {link.name}
-            </Text>
-          </MenuItem>
-        </NavLink>
-      );
-    });
+    // return routes.map((link, key) => {
+    //   return (
+    //     <NavLink key={key} to={link.layout + link.path}>
+    //       <MenuItem
+    //         ps="36px"
+    //         py="0px"
+    //         _hover={{ boxShadow: "none", bg: "none" }}
+    //         borderRadius="12px"
+    //       >
+    //         <Text color="gray.400" fontSize="sm" fontWeight="normal">
+    //           {link.name}
+    //         </Text>
+    //       </MenuItem>
+    //     </NavLink>
+    //   );
+    // });
   };
 
   const createAuthLinks = (routes) => {
@@ -339,65 +339,65 @@ export default function AuthNavbar(props) {
   };
 
   const createApplicationLinks = (routes) => {
-    return routes.map((link, key) => {
-      return (
-        <NavLink key={key} to={link.layout + link.path}>
-          <Stack direction="row" spacing="12px" align="center" cursor="pointer">
-            <IconBox bg="blue.500" color="white" h="30px" w="30px">
-              {link.authIcon}
-            </IconBox>
-            <Text fontWeight="bold" fontSize="sm" color={textColor}>
-              {link.name}
-            </Text>
-          </Stack>
-        </NavLink>
-      );
-    });
+    // return routes.map((link, key) => {
+    //   return (
+    //     <NavLink key={key} to={link.layout + link.path}>
+    //       <Stack direction="row" spacing="12px" align="center" cursor="pointer">
+    //         <IconBox bg="blue.500" color="white" h="30px" w="30px">
+    //           {link.authIcon}
+    //         </IconBox>
+    //         <Text fontWeight="bold" fontSize="sm" color={textColor}>
+    //           {link.name}
+    //         </Text>
+    //       </Stack>
+    //     </NavLink>
+    //   );
+    // });
   };
 
   const createEcommerceLinks = (routes) => {
-    return routes.map((link, key) => {
-      if (link.authIcon) {
-        return (
-          <Stack key={key} direction="column">
-            <Stack
-              direction="row"
-              spacing="6px"
-              align="center"
-              mb="6px"
-              cursor="default"
-            >
-              <IconBox bg="blue.500" color="white" h="30px" w="30px">
-                {link.authIcon}
-              </IconBox>
-              <Text fontWeight="bold" fontSize="sm" color={textColor}>
-                {link.name}
-              </Text>
-            </Stack>
-            {createPagesLinks(link.items)}
-          </Stack>
-        );
-      } else {
-        if (link.component) {
-          return (
-            <NavLink key={key} to={link.layout + link.path}>
-              <MenuItem
-                ps="36px"
-                py="0px"
-                _hover={{ boxShadow: "none", bg: "none" }}
-                borderRadius="12px"
-              >
-                <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                  {link.name}
-                </Text>
-              </MenuItem>
-            </NavLink>
-          );
-        } else {
-          return <>{createPagesLinks(link.items)}</>;
-        }
-      }
-    });
+    // return routes.map((link, key) => {
+    //   if (link.authIcon) {
+    //     return (
+    //       <Stack key={key} direction="column">
+    //         <Stack
+    //           direction="row"
+    //           spacing="6px"
+    //           align="center"
+    //           mb="6px"
+    //           cursor="default"
+    //         >
+    //           <IconBox bg="blue.500" color="white" h="30px" w="30px">
+    //             {link.authIcon}
+    //           </IconBox>
+    //           <Text fontWeight="bold" fontSize="sm" color={textColor}>
+    //             {link.name}
+    //           </Text>
+    //         </Stack>
+    //         {/* {createPagesLinks(link.items)} */}
+    //       </Stack>
+    //     );
+    //   } else {
+    //     if (link.component) {
+    //       return (
+    //         <NavLink key={key} to={link.layout + link.path}>
+    //           <MenuItem
+    //             ps="36px"
+    //             py="0px"
+    //             _hover={{ boxShadow: "none", bg: "none" }}
+    //             borderRadius="12px"
+    //           >
+    //             <Text color="gray.400" fontSize="sm" fontWeight="normal">
+    //               {link.name}
+    //             </Text>
+    //           </MenuItem>
+    //         </NavLink>
+    //       );
+    //     } else {
+    //       // return <>{createPagesLinks(link.items)}</>;
+    //     }
+    //   }
+    // });
   };
 
   const linksAuth = (
@@ -413,7 +413,7 @@ export default function AuthNavbar(props) {
         cursor="pointer"
         position="relative"
       >
-        <Text fontSize="sm" color={mainText}>
+        {/* <Text fontSize="sm" color={mainText}>
           Pages
         </Text>
         <Icon
@@ -422,7 +422,7 @@ export default function AuthNavbar(props) {
           w="14px"
           h="14px"
           fontWeight="2000"
-        />
+        /> */}
         <Menu isOpen={isOpenPages}>
           <MenuList
             bg={menuBg}
@@ -435,7 +435,7 @@ export default function AuthNavbar(props) {
             left="-10px"
           >
             <Grid templateColumns="repeat(3, 1fr)" gap="16px">
-              {createPagesLinks(routes)}
+              {/* {createPagesLinks(routes)} */}
             </Grid>
           </MenuList>
         </Menu>
@@ -521,7 +521,7 @@ export default function AuthNavbar(props) {
         cursor="pointer"
         position="relative"
       >
-        <Text fontSize="sm" color={mainText}>
+        {/* <Text fontSize="sm" color={mainText}>
           Application
         </Text>
         <Icon
@@ -530,7 +530,7 @@ export default function AuthNavbar(props) {
           w="14px"
           h="14px"
           fontWeight="2000"
-        />
+        /> */}
         <Menu isOpen={isOpenApplication}>
           <MenuList
             bg={menuBg}
@@ -542,7 +542,7 @@ export default function AuthNavbar(props) {
             left="-10px"
           >
             <Grid templateColumns="1fr" gap="16px">
-              {createApplicationLinks(applicationsObject.items)}
+              {/* {createApplicationLinks(applicationsObject.items)} */}
             </Grid>
           </MenuList>
         </Menu>
@@ -558,7 +558,7 @@ export default function AuthNavbar(props) {
         cursor="pointer"
         position="relative"
       >
-        <Text fontSize="sm" color={mainText}>
+        {/* <Text fontSize="sm" color={mainText}>
           Ecommerce
         </Text>
         <Icon
@@ -567,7 +567,7 @@ export default function AuthNavbar(props) {
           w="14px"
           h="14px"
           fontWeight="2000"
-        />
+        /> */}
         <Menu isOpen={isOpenEcommerce}>
           <MenuList
             bg={menuBg}
@@ -580,7 +580,7 @@ export default function AuthNavbar(props) {
             left="-10px"
           >
             <Grid templateColumns="repeat(2, 1fr)" gap="16px">
-              {createEcommerceLinks(ecommerceObject.items)}
+              {/* {createEcommerceLinks(ecommerceObject.items)} */}
             </Grid>
           </MenuList>
         </Menu>

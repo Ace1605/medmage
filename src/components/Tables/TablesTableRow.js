@@ -68,9 +68,9 @@ function TablesTableRow(props) {
             >
               {name}
             </Text>
-            <Text fontSize="sm" color="gray.400" fontWeight="normal">
+            {/* <Text fontSize="sm" color="gray.400" fontWeight="normal">
               {email}
-            </Text>
+            </Text> */}
           </Flex>
         </Flex>
       </Td>
