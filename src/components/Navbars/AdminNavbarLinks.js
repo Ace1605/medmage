@@ -82,7 +82,7 @@ export default function HeaderLinks(props) {
       flexDirection="row"
     >
       <SearchBar me="18px" />
-      <NavLink to="/auth/signin">
+      <NavLink to="/auth/authentication/sign-in">
         <Button
           ms="0px"
           px="0px"
