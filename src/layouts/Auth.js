@@ -21,7 +21,6 @@ import "assets/css/plugin-styles.css";
 // core components
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 import React from "react";
-
 import { Route, Routes, Navigate } from "react-router-dom";
 import routes from "routes.js";
 
@@ -108,16 +107,12 @@ export default function Pages(props) {
             {getRoutes(routes)}
             <Route
               path="/"
-              element={
-                <Navigate to="/auth/authentication/sign-in" replace />
-              }
+              element={<Navigate to="/auth/authentication/sign-in" replace />}
             />
           </Routes>
         </Box>
       </Box>
-      <Box px="24px" mx="auto" width="1044px" maxW="100%">
-        {/* <Footer /> */}
-      </Box>
+      <Box px="24px" mx="auto" width="1044px" maxW="100%"></Box>
     </>
   );
 }

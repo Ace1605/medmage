@@ -50,7 +50,6 @@ import React from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { FaCircle } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
-import SidebarDocs from "./SidebarDocs";
 
 // FUNCTIONS
 
@@ -58,7 +57,7 @@ function Sidebar(props) {
   // to check for active links and opened collapses
   let location = useLocation();
 
-  const { routes, landing } = props;
+  const { routes, landing, logo } = props;
 
   console.log(props);
 
@@ -97,26 +96,7 @@ function Sidebar(props) {
 
     return routes.map((prop, key) => {
       if (prop.category) {
-        return (
-          <Box key={key}>
-            {/* <Text
-              fontSize={sidebarWidth === 275 ? "md" : "xs"}
-              color={activeColor}
-              fontWeight="bold"
-              mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
-              pt="18px"
-              pb="12px"
-              key={key}
-            >
-              {prop.name}
-            </Text> */}
-            {createLinks(prop.items)}
-          </Box>
-        );
+        return <Box key={key}>{""}</Box>;
       }
       if (prop.collapse) {
         return (
@@ -600,7 +580,15 @@ function Sidebar(props) {
   let sidebarMargins = "0px";
   var brand = (
     <Flex align="center" direction="column" pt={"25px"}>
-      {props.logo}
+      <Stack direction="row" spacing="12px" align="center" justify="center">
+        <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
+          MedMage
+        </Text>
+        <Box w="1px" h="20px" bg={"black"} />
+        <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
+          Medplus
+        </Text>
+      </Stack>
       <HSeparator my="20px" />
     </Flex>
   );
@@ -612,7 +600,6 @@ function Sidebar(props) {
       <Stack direction="column" mb="40px">
         <Box>{links}</Box>
       </Stack>
-      {/* <SidebarDocs landing={landing} /> */}
     </Box>
   );
 
@@ -704,25 +691,7 @@ export function SidebarResponsive(props) {
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
       if (prop.category) {
-        return (
-          <Box key={key}>
-            {/* <Text
-              fontSize={"md"}
-              color={activeColor}
-              fontWeight="bold"
-              mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
-              py="12px"
-              key={key}
-            >
-              {prop.name}
-            </Text> */}
-            {createLinks(prop.items)}
-          </Box>
-        );
+        return <Box key={key}>{""}</Box>;
       }
       if (prop.collapse) {
         return (
@@ -1084,7 +1053,15 @@ export function SidebarResponsive(props) {
 
   var brand = (
     <Box pt={"25px"} mb="12px">
-      {logo}
+      <Stack direction="row" spacing="12px" align="center" justify="center">
+        <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
+          MedMage
+        </Text>
+        <Box w="1px" h="20px" bg={"black"} />
+        <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
+          Medplus
+        </Text>
+      </Stack>
       <HSeparator my="26px" />
     </Box>
   );
