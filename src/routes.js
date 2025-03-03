@@ -78,6 +78,14 @@ const dashRoutes = [
     collapse: false,
   },
   {
+    name: "Activity log",
+    path: "/activity-log",
+    icon: <StatsIcon color="inherit" />,
+    authIcon: <HomeIcon color="inherit" />,
+    component: <Default />,
+    layout: "/admin",
+  },
+  {
     name: "Finance",
     path: "/finance",
     icon: <CartIcon color="inherit" />,
@@ -95,6 +103,7 @@ const dashRoutes = [
     layout: "/admin",
     collapse: false,
   },
+
   {
     name: "Settings",
     icon: <SettingsIcon color="inherit" />,
