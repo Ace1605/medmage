@@ -51,8 +51,9 @@ import {
   RocketIcon,
   SettingsIcon,
 } from "components/Icons/Icons.js";
+import Pagination from "components/Pagination/Pagination";
 import TablesTableRow from "components/Tables/TablesTableRow";
-import React from "react";
+import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { RiArrowDropRightLine } from "react-icons/ri";
 import { tablesTableData } from "variables/general";
@@ -67,6 +68,9 @@ export default function Default() {
   const bgBox = useColorModeValue("gray.800", "blue.500");
 
   const { colorMode } = useColorMode();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -596,27 +600,36 @@ export default function Default() {
                 </Tr>
               </Thead>
               <Tbody>
-                {tablesTableData.map((row, index, arr) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <TablesTableRow
-                        name={row.name}
-                        logo={row.logo}
-                        // email={row.email}
-                        subdomain={row.subdomain}
-                        domain={row.domain}
-                        status={row.status}
-                        date={row.date}
-                        paddingY={"0px"}
-                        isLast={index === arr.length - 1 ? true : false}
-                      />
-                    </React.Fragment>
-                  );
-                })}
+                {tablesTableData
+                  .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+                  .map((row, index, arr) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <TablesTableRow
+                          name={row.name}
+                          logo={row.logo}
+                          // email={row.email}
+                          subdomain={row.subdomain}
+                          domain={row.domain}
+                          status={row.status}
+                          date={row.date}
+                          paddingY={"0px"}
+                          isLast={index === arr.length - 1 ? true : false}
+                        />
+                      </React.Fragment>
+                    );
+                  })}
               </Tbody>
             </Table>
           </CardBody>
         </Card>
+
+        <Pagination
+          totalCount={tablesTableData.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </Grid>
     </Flex>
   );
