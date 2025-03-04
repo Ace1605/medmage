@@ -437,6 +437,42 @@ export const tablesTableData = [
     status: "Offline",
     date: "04/09/20",
   },
+  {
+    logo: avatar7,
+    name: "Mark Wilson",
+    email: "mark@simmmple.com",
+    subdomain: "Designer",
+    domain: "UI/UX Design",
+    status: "Offline",
+    date: "04/09/20",
+  },
+  {
+    logo: avatar7,
+    name: "Mark Wilson",
+    email: "mark@simmmple.com",
+    subdomain: "Designer",
+    domain: "UI/UX Design",
+    status: "Offline",
+    date: "04/09/20",
+  },
+  {
+    logo: avatar7,
+    name: "Mark Wilson",
+    email: "mark@simmmple.com",
+    subdomain: "Designer",
+    domain: "UI/UX Design",
+    status: "Offline",
+    date: "04/09/20",
+  },
+  {
+    logo: avatar7,
+    name: "Mark Wilson",
+    email: "mark@simmmple.com",
+    subdomain: "Designer",
+    domain: "UI/UX Design",
+    status: "Offline",
+    date: "04/09/20",
+  },
 ];
 
 export const tablesProjectData = [

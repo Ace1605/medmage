@@ -42,7 +42,7 @@ import { ItemContent } from "components/Menu/ItemContent";
 import { SearchBar } from "components/Navbars/SearchBar/SearchBar";
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import routes from "routes.js";
 import {
@@ -64,6 +64,17 @@ export default function HeaderLinks(props) {
   } = props;
 
   const { colorMode } = useColorMode();
+  const notificationColor = useColorModeValue("gray.700", "white");
+
+  const hospitals = [
+    { key: "Medplus", value: "medplus" },
+    { key: "Lagoon", value: "lagoon" },
+    { key: "Luth", value: "luth" },
+    { key: "St. Ives", value: "st. ives" },
+    { key: "EverCare", value: "evercare" },
+  ];
+
+  const [selected, setSelected] = useState(hospitals[0].key);
 
   // Chakra Color Mode
   let navbarIcon =
@@ -79,104 +90,132 @@ export default function HeaderLinks(props) {
       pe={{ sm: "0px", md: "16px" }}
       w={{ sm: "100%", md: "auto" }}
       alignItems="center"
-      flexDirection="row"
+      flexDirection={{ sm: "column", md: "row" }}
     >
-      <SearchBar me="18px" />
-      <NavLink to="/auth/authentication/sign-in">
-        <Button
-          ms="0px"
-          px="0px"
-          me={{ sm: "2px", md: "16px" }}
+      <SearchBar me={{ sm: "0", md: "18px" }} w={{ sm: "100%" }} />
+      <Flex
+        alignItems={"center"}
+        justifyContent={{ sm: "end" }}
+        w={{ sm: "100%", md: "auto" }}
+        marginTop={{ sm: "15px", md: "0" }}
+        height="100%"
+      >
+        <Menu>
+          <MenuButton
+            as={Button}
+            colorScheme="blue"
+            me={{ sm: "0px", md: "10px" }}
+          >
+            <ProfileIcon
+              color={navbarIcon}
+              w="22px"
+              h="22px"
+              me={{ sm: "0px" }}
+            />{" "}
+            {selected}
+          </MenuButton>
+
+          <MenuList p="16px 8px" bg={menuBg}>
+            <Flex flexDirection="column">
+              {hospitals.map(({ key }, i) => {
+                return (
+                  <MenuItem
+                    onClick={() => setSelected(key)}
+                    key={i}
+                    borderRadius="8px"
+                    mb="10px"
+                  >
+                    <Text
+                      fontWeight="semibold"
+                      fontSize="14px"
+                      mb="5px"
+                      color={notificationColor}
+                    >
+                      {key}
+                    </Text>
+                  </MenuItem>
+                );
+              })}
+            </Flex>
+          </MenuList>
+        </Menu>
+
+        <SidebarResponsive
+          logo={
+            <Stack
+              direction="row"
+              spacing="12px"
+              align="center"
+              justify="center"
+            >
+              {colorMode === "dark" ? (
+                <ArgonLogoLight w="74px" h="27px" />
+              ) : (
+                <ArgonLogoDark w="74px" h="27px" />
+              )}
+              <Box
+                w="1px"
+                h="20px"
+                bg={colorMode === "dark" ? "white" : "gray.700"}
+              />
+              {colorMode === "dark" ? (
+                <ChakraLogoLight w="82px" h="21px" />
+              ) : (
+                <ChakraLogoDark w="82px" h="21px" />
+              )}
+            </Stack>
+          }
+          colorMode={colorMode}
+          secondary={props.secondary}
+          routes={routes}
+          {...rest}
+        />
+        <SettingsIcon
+          cursor="pointer"
+          ms={{ base: "16px", xl: "0px" }}
+          me="16px"
+          onClick={props.onOpen}
           color={navbarIcon}
-          variant="no-effects"
-          rightIcon={
-            document.documentElement.dir ? (
-              ""
-            ) : (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            )
-          }
-          leftIcon={
-            document.documentElement.dir ? (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            ) : (
-              ""
-            )
-          }
-        >
-          <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
-        </Button>
-      </NavLink>
-      <SidebarResponsive
-        logo={
-          <Stack direction="row" spacing="12px" align="center" justify="center">
-            {colorMode === "dark" ? (
-              <ArgonLogoLight w="74px" h="27px" />
-            ) : (
-              <ArgonLogoDark w="74px" h="27px" />
-            )}
-            <Box
-              w="1px"
-              h="20px"
-              bg={colorMode === "dark" ? "white" : "gray.700"}
-            />
-            {colorMode === "dark" ? (
-              <ChakraLogoLight w="82px" h="21px" />
-            ) : (
-              <ChakraLogoDark w="82px" h="21px" />
-            )}
-          </Stack>
-        }
-        colorMode={colorMode}
-        secondary={props.secondary}
-        routes={routes}
-        {...rest}
-      />
-      <SettingsIcon
-        cursor="pointer"
-        ms={{ base: "16px", xl: "0px" }}
-        me="16px"
-        onClick={props.onOpen}
-        color={navbarIcon}
-        w="18px"
-        h="18px"
-      />
-      <Menu>
-        <MenuButton>
-          <BellIcon color={navbarIcon} w="18px" h="18px" />
-        </MenuButton>
-        <MenuList p="16px 8px" bg={menuBg}>
-          <Flex flexDirection="column">
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="13 minutes ago"
-                info="from Alicia"
-                boldInfo="New Message"
-                aName="Alicia"
-                aSrc={avatar1}
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="2 days ago"
-                info="by Josh Henry"
-                boldInfo="New Album"
-                aName="Josh Henry"
-                aSrc={avatar2}
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px">
-              <ItemContent
-                time="3 days ago"
-                info="Payment succesfully completed!"
-                boldInfo=""
-                aName="Kara"
-                aSrc={avatar3}
-              />
-            </MenuItem>
-          </Flex>
-        </MenuList>
-      </Menu>
+          w="18px"
+          h="18px"
+        />
+        <Menu>
+          <MenuButton>
+            <BellIcon color={navbarIcon} w="18px" h="18px" />
+          </MenuButton>
+          <MenuList p="16px 8px" bg={menuBg}>
+            <Flex flexDirection="column">
+              <MenuItem borderRadius="8px" mb="10px">
+                <ItemContent
+                  time="13 minutes ago"
+                  info="from Alicia"
+                  boldInfo="New Message"
+                  aName="Alicia"
+                  aSrc={avatar1}
+                />
+              </MenuItem>
+              <MenuItem borderRadius="8px" mb="10px">
+                <ItemContent
+                  time="2 days ago"
+                  info="by Josh Henry"
+                  boldInfo="New Album"
+                  aName="Josh Henry"
+                  aSrc={avatar2}
+                />
+              </MenuItem>
+              <MenuItem borderRadius="8px">
+                <ItemContent
+                  time="3 days ago"
+                  info="Payment succesfully completed!"
+                  boldInfo=""
+                  aName="Kara"
+                  aSrc={avatar3}
+                />
+              </MenuItem>
+            </Flex>
+          </MenuList>
+        </Menu>
+      </Flex>
     </Flex>
   );
 }

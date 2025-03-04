@@ -16,15 +16,7 @@
 */
 
 // Chakra Imports
-import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Flex,
-  Link,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, useColorModeValue } from "@chakra-ui/react";
 import { SidebarContext } from "contexts/SidebarContext";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useContext } from "react";
@@ -153,40 +145,6 @@ export default function AdminNavbar(props) {
         }}
         alignItems={{ xl: "center" }}
       >
-        {/* <Box mb={{ sm: "8px", md: "0px" }}> */}
-        {/* <Breadcrumb>
-            <BreadcrumbItem color={mainText}>
-              <BreadcrumbLink href="#" color={secondaryText}>
-                Pages
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-
-            <BreadcrumbItem color={mainText}>
-              <BreadcrumbLink href="#" color={mainText}>
-                {brandText}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb> */}
-        {/* Here we create navbar brand, based on route name */}
-        {/* <Link
-            color={mainText}
-            href="#"
-            bg="inherit"
-            borderRadius="inherit"
-            fontWeight="bold"
-            _hover={{ color: { mainText } }}
-            _active={{
-              bg: "inherit",
-              transform: "none",
-              borderColor: "transparent",
-            }}
-            _focus={{
-              boxShadow: "none",
-            }}
-          >
-            {brandText}
-          </Link> */}
-        {/* </Box> */}
         <HamburgerIcon
           w="30px"
           h="20px"

@@ -25,10 +25,6 @@ import {
   PersonIcon,
   StatsIcon,
 } from "components/Icons/Icons";
-import Calendar from "views/Applications/Calendar";
-import DataTables from "views/Applications/DataTables";
-import Kanban from "views/Applications/Kanban.js";
-import Wizard from "views/Applications/Wizard.js";
 import SignInBasic from "views/Authentication/SignIn/SignInBasic.js";
 import LockBasic from "views/Authentication/Lock/LockBasic.js";
 import LockCover from "views/Authentication/Lock/LockCover.js";
@@ -37,20 +33,10 @@ import ResetBasic from "views/Authentication/Reset/ResetBasic.js";
 import VerificationBasic from "views/Authentication/Verification/VerificationBasic.js";
 import VerificationCover from "views/Authentication/Verification/VerificationCover.js";
 import VerificationIllustration from "views/Authentication/Verification/VerificationIllustration.js";
-import Automotive from "views/Dashboard/Automotive";
-import CRM from "views/Dashboard/CRM.js";
 import Default from "views/Dashboard/Default.js";
-import Landing from "views/Dashboard/Landing.js";
-import OrderDetails from "views/Ecommerce/Orders/OrderDetails";
-import OrderList from "views/Ecommerce/Orders/OrderList";
-import EditProduct from "views/Ecommerce/Products/EditProduct";
-import NewProduct from "views/Ecommerce/Products/NewProduct";
-import ProductPage from "views/Ecommerce/Products/ProductPage";
 import Billing from "views/Pages/Account/Billing.js";
 import Invoice from "views/Pages/Account/Invoice.js";
 import Settings from "views/Pages/Account/Settings.js";
-import Alerts from "views/Pages/Alerts";
-import Charts from "views/Pages/Charts.js";
 import Pricing from "views/Pages/Pricing.js";
 import Overview from "views/Pages/Profile/Overview.js";
 import Projects from "views/Pages/Profile/Projects.js";
@@ -60,9 +46,8 @@ import Timeline from "views/Pages/Projects/Timeline.js";
 import RTLPage from "views/Pages/RTLPage.js";
 import NewUser from "views/Pages/Users/NewUser.js";
 import Reports from "views/Pages/Users/Reports.js";
-import Widgets from "views/Pages/Widgets.js";
-import SmartHome from "views/Dashboard/SmartHome";
 import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
+import { SettingsIcon } from "components/Icons/Icons";
 
 const dashRoutes = [
   {
@@ -73,38 +58,6 @@ const dashRoutes = [
     component: <Default />,
     layout: "/admin",
     collapse: false,
-    // items: [
-    //   {
-    //     name: "Landing Page",
-    //     path: "/dashboard/landing",
-    //     component: <Landing />,
-    //     layout: "/landing",
-    //   },
-    //   {
-    //     name: "Default",
-    //     path: "/dashboard",
-    //     component: <Default />,
-    //     layout: "/admin",
-    //   },
-    //   {
-    //     name: "Automotive",
-    //     path: "/dashboard/automotive",
-    //     component: <Automotive />,
-    //     layout: "/admin",
-    //   },
-    //   {
-    //     name: "Smart Home",
-    //     path: "/dashboard/smart-home",
-    //     component: <SmartHome />,
-    //     layout: "/admin",
-    //   },
-    //   {
-    //     name: "CRM",
-    //     path: "/dashboard/crm",
-    //     component: <CRM />,
-    //     layout: "/admin",
-    //   },
-    // ],
   },
   {
     name: "Institution Management",
@@ -125,6 +78,14 @@ const dashRoutes = [
     collapse: false,
   },
   {
+    name: "Activity log",
+    path: "/activity-log",
+    icon: <StatsIcon color="inherit" />,
+    authIcon: <HomeIcon color="inherit" />,
+    component: <Default />,
+    layout: "/admin",
+  },
+  {
     name: "Finance",
     path: "/finance",
     icon: <CartIcon color="inherit" />,
@@ -134,13 +95,21 @@ const dashRoutes = [
     collapse: false,
   },
   {
-    name: "User Roles",
-    path: "/user-roles",
+    name: "User Managment",
+    path: "/user-management",
     icon: <PersonIcon color="inherit" />,
     authIcon: <HomeIcon color="inherit" />,
     component: <Default />,
     layout: "/admin",
     collapse: false,
+  },
+
+  {
+    name: "Settings",
+    icon: <SettingsIcon color="inherit" />,
+    path: "/pages/account/settings",
+    component: <Settings />,
+    layout: "/admin",
   },
   {
     name: "PAGES",
@@ -278,100 +247,101 @@ const dashRoutes = [
           //   layout: "/admin",
           // },
         ],
-        // },
-        // {
-        //   name: "Applications",
-        //   path: "/applications",
-        //   icon: <StatsIcon color="inherit" />,
-        //   collapse: true,
-        //   items: [
-        //     {
-        //       name: "Kanban",
-        //       component: <Kanban />,
-        //       authIcon: <DocumentIcon color="inherit" />,
-        //       path: "/applications/kanban",
-        //       layout: "/admin",
-        //     },
-        //     {
-        //       name: "Wizard",
-        //       component: <Wizard />,
-        //       authIcon: <CartIcon color="inherit" />,
-        //       path: "/applications/wizard",
-        //       layout: "/admin",
-        //     },
-        //     {
-        //       name: "Data Tables",
-        //       path: "/applications/data-tables",
-        //       authIcon: <PersonIcon color="inherit" />,
-        //       component: <DataTables />,
-        //       layout: "/admin",
-        //     },
-        //     {
-        //       name: "Calendar",
-        //       component: <Calendar />,
-        //       authIcon: <StatsIcon color="inherit" />,
-        //       path: "/applications/calendar",
-        //       layout: "/admin",
-        //     },
-        //   ],
-        // },
-        // {
-        //   name: "Ecommerce",
-        //   path: "/ecommerce",
-        //   icon: <CartIcon color="inherit" />,
-        //   collapse: true,
+      },
+      // {
+      //   name: "Applications",
+      //   path: "/applications",
+      //   icon: <StatsIcon color="inherit" />,
+      //   collapse: true,
+      //   items: [
+      //     {
+      //       name: "Kanban",
+      //       component: <Kanban />,
+      //       authIcon: <DocumentIcon color="inherit" />,
+      //       path: "/applications/kanban",
+      //       layout: "/admin",
+      //     },
+      //     {
+      //       name: "Wizard",
+      //       component: <Wizard />,
+      //       authIcon: <CartIcon color="inherit" />,
+      //       path: "/applications/wizard",
+      //       layout: "/admin",
+      //     },
+      //     {
+      //       name: "Data Tables",
+      //       path: "/applications/data-tables",
+      //       authIcon: <PersonIcon color="inherit" />,
+      //       component: <DataTables />,
+      //       layout: "/admin",
+      //     },
+      //     {
+      //       name: "Calendar",
+      //       component: <Calendar />,
+      //       authIcon: <StatsIcon color="inherit" />,
+      //       path: "/applications/calendar",
+      //       layout: "/admin",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Ecommerce",
+      //   path: "/ecommerce",
+      //   icon: <CartIcon color="inherit" />,
+      //   collapse: true,
 
-        //   items: [
-        //     {
-        //       name: "Products",
-        //       path: "/products",
-        //       collapse: true,
-        //       authIcon: <DocumentIcon color="inherit" />,
-        //       items: [
-        //         {
-        //           name: "New Product",
-        //           component: <NewProduct />,
-        //           secondaryNavbar: true,
-        //           path: "/ecommerce/products/new-product",
-        //           layout: "/admin",
-        //         },
-        //         {
-        //           name: "Edit Product",
-        //           component: <EditProduct />,
-        //           path: "/ecommerce/products/edit-product",
-        //           layout: "/admin",
-        //         },
-        //         {
-        //           name: "Product Page",
-        //           component: <ProductPage />,
-        //           path: "/ecommerce/products/product-page",
-        //           layout: "/admin",
-        //         },
-        //       ],
-        //     },
-        //     {
-        //       name: "Orders",
-        //       path: "/orders",
-        //       collapse: true,
-        //       authIcon: <StatsIcon color="inherit" />,
-        //       items: [
-        //         {
-        //           name: "Order List",
-        //           component: <OrderList />,
-        //           path: "/ecommerce/orders/order-list",
-        //           layout: "/admin",
-        //         },
-        //         {
-        //           name: "Order Details",
-        //           component: <OrderDetails />,
-        //           path: "/ecommerce/orders/order-details",
-        //           layout: "/admin",
-        //         },
-        //       ],
-        //     },
-        //   ],
-        // },
-        // {
+      //   items: [
+      //     {
+      //       name: "Products",
+      //       path: "/products",
+      //       collapse: true,
+      //       authIcon: <DocumentIcon color="inherit" />,
+      //       items: [
+      //         {
+      //           name: "New Product",
+      //           component: <NewProduct />,
+      //           secondaryNavbar: true,
+      //           path: "/ecommerce/products/new-product",
+      //           layout: "/admin",
+      //         },
+      //         {
+      //           name: "Edit Product",
+      //           component: <EditProduct />,
+      //           path: "/ecommerce/products/edit-product",
+      //           layout: "/admin",
+      //         },
+      //         {
+      //           name: "Product Page",
+      //           component: <ProductPage />,
+      //           path: "/ecommerce/products/product-page",
+      //           layout: "/admin",
+      //         },
+      //       ],
+      //     },
+
+      //     {
+      //       name: "Orders",
+      //       path: "/orders",
+      //       collapse: true,
+      //       authIcon: <StatsIcon color="inherit" />,
+      //       items: [
+      //         {
+      //           name: "Order List",
+      //           component: <OrderList />,
+      //           path: "/ecommerce/orders/order-list",
+      //           layout: "/admin",
+      //         },
+      //         {
+      //           name: "Order Details",
+      //           component: <OrderDetails />,
+      //           path: "/ecommerce/orders/order-details",
+      //           layout: "/admin",
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
+      {
         name: "Authentication",
         path: "/authentication",
         icon: <PersonIcon color="inherit" />,
@@ -389,19 +359,6 @@ const dashRoutes = [
                 path: "/authentication/sign-in",
                 layout: "/auth",
               },
-              // {
-              //   name: "Cover",
-              //   component: <SignInCover />,
-              //   path: "/authentication/sign-in/cover",
-              //   layout: "/auth",
-              // },
-              // {
-              //   name: "Illustration",
-              //   component: <SignInIllustration />,
-              //   secondaryNavbar: true,
-              //   path: "/authentication/sign-in/illustration",
-              //   layout: "/auth",
-              // },
             ],
           },
           // {
@@ -457,19 +414,6 @@ const dashRoutes = [
                 path: "/authentication/reset-password",
                 layout: "/auth",
               },
-              // {
-              //   name: "Cover",
-              //   component: <ResetCover />,
-              //   path: "/authentication/reset/cover",
-              //   layout: "/auth",
-              // },
-              // {
-              //   name: "Illustration",
-              //   secondaryNavbar: true,
-              //   component: <ResetIllustration />,
-              //   path: "/authentication/reset/illustration",
-              //   layout: "/auth",
-              // },
             ],
           },
           {
