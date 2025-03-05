@@ -154,14 +154,14 @@ function SignInCover() {
           </Text> */}
           <FormControl>
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Name
+              Email
             </FormLabel>
             <Input
               variant="auth"
               fontSize="sm"
               ms="4px"
               type="text"
-              placeholder="Your full name"
+              placeholder="Your email address"
               mb="24px"
               size="lg"
             />
@@ -177,12 +177,12 @@ function SignInCover() {
               mb="24px"
               size="lg"
             />
-            <FormControl display="flex" alignItems="center" mb="24px">
+            {/* <FormControl display="flex" alignItems="center" mb="24px">
               <Switch id="remember-login" colorScheme="blue" me="10px" />
               <FormLabel htmlFor="remember-login" mb="0" fontWeight="normal">
                 Remember me
               </FormLabel>
-            </FormControl>
+            </FormControl> */}
             <Button
               onClick={() => navigate("/admin/dashboard")}
               fontSize="10px"
