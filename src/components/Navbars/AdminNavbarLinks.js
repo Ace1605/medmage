@@ -43,7 +43,6 @@ import { SearchBar } from "components/Navbars/SearchBar/SearchBar";
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
 import routes from "routes.js";
 import {
   ArgonLogoDark,

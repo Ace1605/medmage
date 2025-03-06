@@ -24,6 +24,7 @@ import {
   FormControl,
   FormLabel,
   Grid,
+  GridItem,
   Icon,
   Input,
   Stack,
@@ -35,6 +36,11 @@ import {
   Text,
   Textarea,
   useColorModeValue,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Box,
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/Card/Card";
@@ -42,46 +48,82 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 // Assets
 import { BsCircleFill } from "react-icons/bs";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 function NewUser() {
   const textColor = useColorModeValue("gray.700", "white");
   const bgTextarea = useColorModeValue("white", "navy.900");
   const borderColor = useColorModeValue("gray.200", "transparent");
   const placeholderColor = useColorModeValue("gray.300", "gray.400");
+  const selectColor = useColorModeValue("gray.700", "white");
+  let menuBg = useColorModeValue("white", "navy.800");
   const [activeBullets, setActiveBullets] = useState({
     userInfo: true,
     address: false,
-    socials: false,
     profile: false,
   });
 
   const userInfoTab = useRef();
   const addressTab = useRef();
-  const socialsTab = useRef();
   const profileTab = useRef();
+
+  const userRoles = [
+    { key: "Super Admin", value: "super admin" },
+    { key: "State Admin", value: "state admin" },
+    {
+      key: "Institution Administrative Staff",
+      value: "institution administrative staff",
+    },
+    { key: "Doctor", value: "doctor" },
+    { key: "Nurse", value: "nurse" },
+    { key: "Pharmacist", value: "pharmacist" },
+    { key: "Medical Assistant", value: "medical assistant" },
+  ];
+
+  const [selected, setSelected] = useState(userRoles[0].key);
+  const [userInfo, setUserInfo] = useState({
+    firstName: "",
+    lastName: "",
+    emailAddress: "",
+    phoneNumber: "",
+    providersName: "",
+    permissions: selected,
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+  });
+
+  const handleonChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const disabledButton = Object.entries(userInfo)
+    .slice(0, 5)
+    .some(([_, value]) => !value);
+  const disabledAddressButton = Object.entries(userInfo)
+    .slice(7)
+    .some(([_, value]) => !value);
 
   return (
     <Flex
       direction="column"
       minH="89vh"
       align="center"
-      pt={{ sm: "120px", md: "75px" }}
+      pt={{ sm: "90px", md: "60px" }}
     >
-      <Tabs variant="unstyled" mt="24px">
+      <Tabs
+        variant="unstyled"
+        mt="24px"
+        maxW={{ sm: "300px", md: "800px" }}
+        w={{ sm: "100%", md: "100%" }}
+      >
         <TabList display="flex" align="center" justifyContent="center">
-          <Tab
-            ref={userInfoTab}
-            _focus={{}}
-            w={{ sm: "80px", md: "200px" }}
-            onClick={() =>
-              setActiveBullets({
-                userInfo: true,
-                address: false,
-                socials: false,
-                profile: false,
-              })
-            }
-          >
+          <Tab ref={userInfoTab} _focus={{}} w={{ sm: "80px", md: "200px" }}>
             <Flex
               direction="column"
               justify="center"
@@ -118,17 +160,10 @@ function NewUser() {
             </Flex>
           </Tab>
           <Tab
+            isDisabled={disabledButton}
             ref={addressTab}
             _focus={{}}
             w={{ sm: "80px", md: "200px" }}
-            onClick={() =>
-              setActiveBullets({
-                userInfo: true,
-                address: true,
-                socials: false,
-                profile: false,
-              })
-            }
           >
             <Flex
               direction="column"
@@ -139,7 +174,7 @@ function NewUser() {
                 content: "''",
                 width: { sm: "80px", md: "200px" },
                 height: "3px",
-                bg: activeBullets.socials ? "white" : "blue.300",
+                bg: activeBullets.profile ? "white" : "blue.300",
                 left: { sm: "12px", md: "32px" },
                 top: { sm: activeBullets.address ? "6px" : "4px", md: null },
                 position: "absolute",
@@ -168,67 +203,10 @@ function NewUser() {
             </Flex>
           </Tab>
           <Tab
-            ref={socialsTab}
-            _focus={{}}
-            w={{ sm: "80px", md: "200px" }}
-            onClick={() =>
-              setActiveBullets({
-                userInfo: true,
-                address: true,
-                socials: true,
-                profile: false,
-              })
-            }
-          >
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: "80px", md: "200px" },
-                height: "3px",
-                bg: activeBullets.profile ? "white" : "blue.300",
-                left: { sm: "12px", md: "32px" },
-                top: { sm: activeBullets.socials ? "6px" : "4px", md: null },
-                position: "absolute",
-                bottom: activeBullets.socials ? "40px" : "38px",
-
-                transition: "all .3s ease",
-              }}
-            >
-              <Icon
-                zIndex="1"
-                as={BsCircleFill}
-                color={activeBullets.socials ? "white" : "blue.300"}
-                w={activeBullets.socials ? "16px" : "12px"}
-                h={activeBullets.socials ? "16px" : "12px"}
-                mb="8px"
-              />
-              <Text
-                color={activeBullets.socials ? "white" : "gray.300"}
-                fontWeight={activeBullets.socials ? "bold" : "normal"}
-                transition="all .3s ease"
-                _hover={{ color: "white" }}
-                display={{ sm: "none", md: "block" }}
-              >
-                Socials
-              </Text>
-            </Flex>
-          </Tab>
-          <Tab
+            isDisabled={disabledAddressButton}
             ref={profileTab}
             _focus={{}}
             w={{ sm: "80px", md: "200px" }}
-            onClick={() =>
-              setActiveBullets({
-                userInfo: true,
-                address: true,
-                socials: true,
-                profile: true,
-              })
-            }
           >
             <Flex direction="column" justify="center" align="center">
               <Icon
@@ -262,10 +240,7 @@ function NewUser() {
                     fontWeight="bold"
                     mb="3px"
                   >
-                    About Me
-                  </Text>
-                  <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    Mandatory Informations
+                    Invite New User
                   </Text>
                 </Flex>
               </CardHeader>
@@ -286,8 +261,11 @@ function NewUser() {
                       </FormLabel>
                       <Input
                         variant="main"
-                        placeholder="eg. Michael"
+                        placeholder="Enter new user's first name"
                         fontSize="xs"
+                        name="firstName"
+                        onChange={handleonChange}
+                        value={userInfo.firstName}
                       />
                     </FormControl>
                     <FormControl>
@@ -300,22 +278,11 @@ function NewUser() {
                       </FormLabel>
                       <Input
                         variant="main"
-                        placeholder="eg. Jackson"
+                        placeholder="Enter new user's last name"
                         fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        Company
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="eg. Simmmple"
-                        fontSize="xs"
+                        name="lastName"
+                        onChange={handleonChange}
+                        value={userInfo.lastName}
                       />
                     </FormControl>
                     <FormControl>
@@ -329,8 +296,11 @@ function NewUser() {
                       <Input
                         variant="main"
                         type="email"
-                        placeholder="eg. example@yahoo.com"
+                        placeholder="Enter email address"
                         fontSize="xs"
+                        name="emailAddress"
+                        onChange={handleonChange}
+                        value={userInfo.emailAddress}
                       />
                     </FormControl>
                     <FormControl>
@@ -339,13 +309,16 @@ function NewUser() {
                         fontWeight="bold"
                         fontSize="xs"
                       >
-                        Password
+                        Phone Number
                       </FormLabel>
                       <Input
+                        type="number"
                         variant="main"
-                        type="password"
-                        placeholder="******"
+                        placeholder="Enter Phone number"
                         fontSize="xs"
+                        name="phoneNumber"
+                        onChange={handleonChange}
+                        value={userInfo.phoneNumber}
                       />
                     </FormControl>
                     <FormControl>
@@ -354,13 +327,74 @@ function NewUser() {
                         fontWeight="bold"
                         fontSize="xs"
                       >
-                        Repeat Password
+                        Provider
                       </FormLabel>
                       <Input
                         variant="main"
-                        placeholder="******"
+                        placeholder="Enter Provider's name"
                         fontSize="xs"
+                        name="providersName"
+                        onChange={handleonChange}
+                        value={userInfo.providersName}
                       />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="xs"
+                      >
+                        Permissions
+                      </FormLabel>
+                      <Menu>
+                        <MenuButton
+                          as={Button}
+                          colorScheme=""
+                          color={selectColor}
+                          textAlign="start"
+                          w={"80%"}
+                          fontSize="sm"
+                          shadow="md"
+                          border={borderColor}
+                          rightIcon={<ChevronDownIcon />}
+                        >
+                          {selected}
+                        </MenuButton>
+
+                        <MenuList
+                          p="16px 8px"
+                          bg={menuBg}
+                          h="170px"
+                          overflowY="scroll"
+                          sx={{
+                            "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                            "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                            "scrollbar-width": "none", // Hide scrollbar in Firefox
+                          }}
+                        >
+                          <Flex flexDirection="column">
+                            {userRoles.map(({ key }, i) => {
+                              return (
+                                <MenuItem
+                                  onClick={() => setSelected(key)}
+                                  key={i}
+                                  borderRadius="8px"
+                                  mb="10px"
+                                >
+                                  <Text
+                                    fontWeight="semibold"
+                                    fontSize="14px"
+                                    mb="5px"
+                                    color={selectColor}
+                                  >
+                                    {key}
+                                  </Text>
+                                </MenuItem>
+                              );
+                            })}
+                          </Flex>
+                        </MenuList>
+                      </Menu>
                     </FormControl>
                   </Grid>
                   <Button
@@ -369,7 +403,16 @@ function NewUser() {
                     mt="24px"
                     w="100px"
                     h="35px"
-                    onClick={() => addressTab.current.click()}
+                    disabled={disabledButton}
+                    _hover="none"
+                    onClick={() => {
+                      setActiveBullets({
+                        userInfo: true,
+                        address: true,
+                        profile: false,
+                      });
+                      addressTab.current.click();
+                    }}
                   >
                     NEXT
                   </Button>
@@ -398,28 +441,18 @@ function NewUser() {
                         fontWeight="bold"
                         fontSize="xs"
                       >
-                        Address 1
+                        Address
                       </FormLabel>
                       <Input
                         variant="main"
-                        placeholder="eg. Street 120"
+                        placeholder="Enter provider's address"
                         fontSize="xs"
+                        name="address"
+                        onChange={handleonChange}
+                        value={userInfo.address}
                       />
                     </FormControl>
-                    <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        Address 2
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="eg. Street 220"
-                        fontSize="xs"
-                      />
-                    </FormControl>
+
                     <Grid
                       templateColumns={{ sm: "1fr 1fr", lg: "2fr 1fr 1fr" }}
                       gap="30px"
@@ -434,8 +467,11 @@ function NewUser() {
                         </FormLabel>
                         <Input
                           variant="main"
-                          placeholder="eg. Tokyo"
+                          placeholder=""
                           fontSize="xs"
+                          name="city"
+                          onChange={handleonChange}
+                          value={userInfo.city}
                         />
                       </FormControl>
                       <FormControl>
@@ -446,7 +482,14 @@ function NewUser() {
                         >
                           State
                         </FormLabel>
-                        <Input variant="main" placeholder="..." fontSize="xs" />
+                        <Input
+                          variant="main"
+                          placeholder="..."
+                          fontSize="xs"
+                          name="state"
+                          onChange={handleonChange}
+                          value={userInfo.state}
+                        />
                       </FormControl>
                       <FormControl>
                         <FormLabel
@@ -454,12 +497,15 @@ function NewUser() {
                           fontWeight="bold"
                           fontSize="xs"
                         >
-                          ZIP
+                          Country
                         </FormLabel>
                         <Input
                           variant="main"
-                          placeholder="7 letters"
+                          placeholder=""
                           fontSize="xs"
+                          name="country"
+                          onChange={handleonChange}
+                          value={userInfo.country}
                         />
                       </FormControl>
                     </Grid>
@@ -471,7 +517,14 @@ function NewUser() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => userInfoTab.current.click()}
+                      onClick={() => {
+                        setActiveBullets({
+                          userInfo: true,
+                          address: false,
+                          profile: false,
+                        });
+                        userInfoTab.current.click();
+                      }}
                     >
                       PREV
                     </Button>
@@ -481,7 +534,15 @@ function NewUser() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => socialsTab.current.click()}
+                      isDisabled={disabledAddressButton}
+                      onClick={() => {
+                        setActiveBullets({
+                          userInfo: true,
+                          address: true,
+                          profile: true,
+                        });
+                        profileTab.current.click();
+                      }}
                     >
                       NEXT
                     </Button>
@@ -499,131 +560,40 @@ function NewUser() {
                   fontWeight="bold"
                   mb="3px"
                 >
-                  Socials
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <Flex direction="column" w="100%">
-                  <Grid
-                    templateColumns="1fr"
-                    templateRows="repeat(3, 1fr)"
-                    gap="24px"
-                  >
-                    <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        Twitter Handle
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="@Argon"
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        Facebook Account
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="http://..."
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        Instagram Account
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="http://..."
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Flex justify="space-between">
-                    <Button
-                      variant="light"
-                      alignSelf="flex-end"
-                      mt="24px"
-                      w="100px"
-                      h="35px"
-                      onClick={() => addressTab.current.click()}
-                    >
-                      PREV
-                    </Button>
-                    <Button
-                      variant="dark"
-                      alignSelf="flex-end"
-                      mt="24px"
-                      w="100px"
-                      h="35px"
-                      onClick={() => profileTab.current.click()}
-                    >
-                      NEXT
-                    </Button>
-                  </Flex>
-                </Flex>
-              </CardBody>
-            </Card>
-          </TabPanel>
-          <TabPanel>
-            <Card>
-              <CardHeader mb="40px">
-                <Text
-                  color={textColor}
-                  fontSize="lg"
-                  fontWeight="bold"
-                  mb="3px"
-                >
-                  Profile
+                  Confirm Information
                 </Text>
               </CardHeader>
               <CardBody>
                 <Flex direction="column" w="100%">
                   <Stack direction="column" spacing="24px">
-                    <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        Public Email
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="Use an address you don't use frequently"
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        Bio
-                      </FormLabel>
-                      <Textarea
-                        placeholder="Say a few words about who you are or what you are working on."
-                        minH="120px"
-                        bg={bgTextarea}
-                        borderColor={borderColor}
-                        _placeholder={{ color: placeholderColor }}
-                        fontSize="xs"
-                      />
-                    </FormControl>
+                    <Grid
+                      templateColumns={{ sm: "1fr", md: "repeat(3, 1fr)" }}
+                      templateRows={{ md: "repeat(3, 1fr)" }}
+                      gap="14px"
+                    >
+                      {Object.entries(userInfo).map(([key, value], i) => (
+                        <GridItem
+                          key={key}
+                          colSpan={i === 6 ? { sm: 1, md: 3 } : 1} // Address takes full width
+                        >
+                          <Box p={3}>
+                            <Text fontWeight="bold">
+                              {key
+                                .replace(/([A-Z])/g, " $1")
+                                .replace(/^./, (char) => char.toUpperCase())}
+                            </Text>
+                            <Text
+                              p={2}
+                              borderBottom="1px solid"
+                              borderColor="#e2e8f0"
+                              borderRadius="sm"
+                            >
+                              {value || "N/A"}
+                            </Text>
+                          </Box>
+                        </GridItem>
+                      ))}
+                    </Grid>
                   </Stack>
                   <Flex justify="space-between">
                     <Button
@@ -632,13 +602,20 @@ function NewUser() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => socialsTab.current.click()}
+                      onClick={() => {
+                        setActiveBullets({
+                          userInfo: true,
+                          address: true,
+                          profile: false,
+                        });
+                        addressTab.current.click();
+                      }}
                     >
                       PREV
                     </Button>
                     <Button variant="primary" mt="24px" w="100px" h="35px">
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        SEND
+                        Create
                       </Text>
                     </Button>
                   </Flex>
