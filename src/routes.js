@@ -44,10 +44,10 @@ import Teams from "views/Pages/Profile/Teams.js";
 import General from "views/Pages/Projects/General.js";
 import Timeline from "views/Pages/Projects/Timeline.js";
 import RTLPage from "views/Pages/RTLPage.js";
-import NewUser from "views/Pages/Users/NewUser.js";
 import Reports from "views/Pages/Users/Reports.js";
 import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
 import { SettingsIcon } from "components/Icons/Icons";
+import NewUser from "views/Pages/UserManagement/NewUser";
 
 const dashRoutes = [
   {
