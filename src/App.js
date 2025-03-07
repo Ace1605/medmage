@@ -14,46 +14,28 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Visionware.
 
 */
-import { Routes, Route, Navigate } from 'react-router-dom'; 
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import AuthLayout from "layouts/Auth.js";
 import AdminLayout from "layouts/Admin.js";
 import RTLLayout from "layouts/RTL.js";
 import LandingLayout from "layouts/Landing";
-import theme from './theme/theme';   
-import {
-  ChakraProvider, 
-} from '@chakra-ui/react'; 
+import theme from "./theme/theme";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Toaster } from "sonner";
 // Chakra imports
 
-export default function Main() { 
+export default function Main() {
   return (
     <ChakraProvider theme={theme}>
       <Routes>
         <Route path="auth/*" element={<AuthLayout />} />
-        <Route
-          path="admin/*"
-          element={
-            <AdminLayout />
-          }
-        />
-        <Route
-          path="landing/*"
-          element={
-            <LandingLayout />
-          }
-        /> 
-        <Route
-          path="rtl/*"
-          element={
-            <RTLLayout  />
-          }
-        />
+        <Route path="admin/*" element={<AdminLayout />} />
+        <Route path="landing/*" element={<LandingLayout />} />
+        <Route path="rtl/*" element={<RTLLayout />} />
         <Route path="/" element={<Navigate to="/auth" replace />} />
-
-
-  
       </Routes>
+      <Toaster richColors duration={3000} position="top-right" />
     </ChakraProvider>
   );
 }

@@ -49,6 +49,7 @@ import CardHeader from "components/Card/CardHeader";
 // Assets
 import { BsCircleFill } from "react-icons/bs";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { toast } from "sonner";
 
 function NewUser() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -93,6 +94,24 @@ function NewUser() {
     state: "",
     country: "",
   });
+
+  const handledCreateUser = () => {
+    toast.success("User created successfully");
+    userInfoTab.current.click();
+
+    setUserInfo({
+      firstName: "",
+      lastName: "",
+      emailAddress: "",
+      phoneNumber: "",
+      providersName: "",
+      permissions: selected, // Ensure `selected` is defined
+      address: "",
+      city: "",
+      state: "",
+      country: "",
+    });
+  };
 
   const handleonChange = (e) => {
     const { name, value } = e.target;
@@ -613,7 +632,13 @@ function NewUser() {
                     >
                       PREV
                     </Button>
-                    <Button variant="primary" mt="24px" w="100px" h="35px">
+                    <Button
+                      onClick={handledCreateUser}
+                      variant="primary"
+                      mt="24px"
+                      w="100px"
+                      h="35px"
+                    >
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         Create
                       </Text>

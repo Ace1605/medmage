@@ -57,6 +57,7 @@
     "react-tagsinput": "3.19.0",
     "react-to-print": "^2.13.0",
     "sass": "^1.49.9",
+    "sonner": "^2.0.1",
     "styled-components": "^5.3.11",
     "stylis": "^4.0.10",
     "stylis-plugin-rtl": "^2.1.1",
