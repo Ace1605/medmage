@@ -96,9 +96,16 @@ const dashRoutes = [
     name: "User Managment",
     path: "/user-management",
     icon: <PersonIcon color="inherit" />,
-    component: <NewUser />,
-    layout: "/admin",
-    collapse: false,
+    collapse: true,
+    items: [
+      {
+        name: "Invite user",
+        secondaryNavbar: false,
+        path: "/user-management/invite-new-user",
+        component: <NewUser />,
+        layout: "/admin",
+      },
+    ],
   },
 
   {
