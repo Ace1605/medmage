@@ -218,11 +218,11 @@ export default function Dashboard(props) {
           {/* <Box>
 						<Footer />
 					</Box> */}
-          <Portal>
+          {/* <Portal>
             <Box>
               <FixedPlugin fixed={fixed} onOpen={onOpen} />
             </Box>
-          </Portal>
+          </Portal> */}
           <Configurator
             secondary={getActiveNavbar(routes)}
             isOpen={isOpen}

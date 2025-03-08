@@ -91,7 +91,7 @@ export default function HeaderLinks(props) {
       alignItems="center"
       flexDirection={{ sm: "column", md: "row" }}
     >
-      <SearchBar me={{ sm: "0", md: "18px" }} w={{ sm: "100%" }} />
+      {/* <SearchBar me={{ sm: "0", md: "18px" }} w={{ sm: "100%" }} /> */}
       <Flex
         alignItems={"center"}
         justifyContent={{ sm: "end" }}
@@ -99,18 +99,22 @@ export default function HeaderLinks(props) {
         marginTop={{ sm: "15px", md: "0" }}
         height="100%"
       >
+        <Text fontWeight="semibold" fontSize="16px" me="10px" color="white">
+          <ProfileIcon
+            color={navbarIcon}
+            w="22px"
+            h="22px"
+            me={{ sm: "0px" }}
+          />{" "}
+          Ebuka
+        </Text>
+
         <Menu>
           <MenuButton
             as={Button}
             colorScheme="blue"
             me={{ sm: "0px", md: "10px" }}
           >
-            <ProfileIcon
-              color={navbarIcon}
-              w="22px"
-              h="22px"
-              me={{ sm: "0px" }}
-            />{" "}
             {selected}
           </MenuButton>
 

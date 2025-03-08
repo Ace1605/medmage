@@ -585,7 +585,13 @@ function Sidebar(props) {
           MedMage
         </Text>
         <Box w="1px" h="20px" bg={"black"} />
-        <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
+        <Text
+          display={sidebarWidth === 275 ? "block" : "none"}
+          fontSize="sm"
+          mt="3px"
+          fontWeight="semibold"
+          letterSpacing="1px"
+        >
           Medplus
         </Text>
       </Stack>
