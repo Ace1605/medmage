@@ -15,6 +15,65 @@
 
 */
 
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { Flex, Icon, useColorModeValue } from "@chakra-ui/react";
+
+export const Userscolumns = [
+  {
+    Header: "Id",
+    accessor: "id",
+  },
+  {
+    Header: "NAME",
+    accessor: "name",
+  },
+  {
+    Header: "EMAIL",
+    accessor: "email",
+  },
+  {
+    Header: "ROLE",
+    accessor: "role",
+  },
+  {
+    Header: "CREATED",
+    accessor: "dateCreated",
+  },
+  {
+    Header: "CREATED BY",
+    accessor: "createdBy",
+  },
+  {
+    Header: "Action",
+    accessor: "action",
+    disableSortBy: true,
+    sortType: false,
+    Cell: ({ row }) => {
+      const textColor = useColorModeValue("blue.600", "white");
+      return (
+        <Flex gap="16px" alignItems="center">
+          <Icon
+            as={EditIcon}
+            w="18px"
+            h="18px"
+            color={textColor}
+            cursor="pointer"
+            onClick={() => handleEdit(row.original)}
+          />
+          <Icon
+            as={DeleteIcon}
+            w="18px"
+            h="18px"
+            color="red.400"
+            cursor="pointer"
+            onClick={() => handleDelete(row.original)}
+          />
+        </Flex>
+      );
+    },
+  },
+];
+
 export const columnsData1 = [
   {
     Header: "NAME",

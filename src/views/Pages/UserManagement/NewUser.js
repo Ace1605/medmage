@@ -15,63 +15,22 @@
 
 */
 
-import React, { useRef, useState } from "react";
-
-// Chakra imports
-// import {
-//   Button,
-//   Flex,
-//   FormControl,
-//   FormLabel,
-//   GridItem,
-//   Icon,
-//   Input,
-//   Stack,
-//   Tab,
-//   TabList,
-//   TabPanel,
-//   TabPanels,
-//   Tabs,
-//   Text,
-//   Textarea,
-//   useColorModeValue,
-//   Menu,
-//   MenuButton,
-//   MenuItem,
-//   MenuList,
-//   Box,
-// } from "@chakra-ui/react";
-// // Custom components
-// import Card from "components/Card/Card";
-// import CardBody from "components/Card/CardBody";
-// import CardHeader from "components/Card/CardHeader";
-// // Assets
-// import { BsCircleFill } from "react-icons/bs";
-// import { ChevronDownIcon } from "@chakra-ui/icons";
-// import { toast } from "sonner";
+import React, { useState } from "react";
 
 // NEW imports
 
 import {
-  Button,
   Flex,
   Grid,
   Icon,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Progress,
-  Stack,
-  Table,
-  Tbody,
   Text,
-  Th,
-  Thead,
-  Tr,
   useColorModeValue,
   useColorMode,
-  useDisclosure,
+  FormLabel,
+  Input,
+  Select,
+  Button,
+  FormControl,
 } from "@chakra-ui/react";
 import bgCardReports from "assets/img/background-card-reports.png";
 // Custom components
@@ -79,102 +38,35 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import IconBox from "components/Icons/IconBox";
-import { CartIcon, RocketIcon } from "components/Icons/Icons";
-import TablesReportsRow from "components/Tables/TablesReportsRow";
-import { AiFillLike } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
-import { IoEllipsisHorizontalSharp } from "react-icons/io5";
-import { tablesReportsData } from "variables/general";
-import { PlusSquareIcon } from "@chakra-ui/icons";
-import { BsPlusCircleFill } from "react-icons/bs";
-import Pagination from "components/Pagination/Pagination";
+import UsersTable from "components/Tables/UsersTable";
+import { Userscolumns } from "variables/columnsData";
+import usersData from "variables/usersData.json";
+import Modal from "components/Modal/Modal";
+import { toast } from "sonner";
+import { BiPlus } from "react-icons/bi";
 
 function NewUser() {
-  // const textColor = useColorModeValue("gray.700", "white");
-  // const bgTextarea = useColorModeValue("white", "navy.900");
-  // const borderColor = useColorModeValue("gray.200", "transparent");
-  // const placeholderColor = useColorModeValue("gray.300", "gray.400");
-  // const selectColor = useColorModeValue("gray.700", "white");
-  // let menuBg = useColorModeValue("white", "navy.800");
-  // const [activeBullets, setActiveBullets] = useState({
-  //   userInfo: true,
-  //   address: false,
-  //   profile: false,
-  // });
-
-  // const userInfoTab = useRef();
-  // const addressTab = useRef();
-  // const profileTab = useRef();
-
-  // const userRoles = [
-  //   { key: "Super Admin", value: "super admin" },
-  //   { key: "State Admin", value: "state admin" },
-  //   {
-  //     key: "Institution Administrative Staff",
-  //     value: "institution administrative staff",
-  //   },
-  //   { key: "Doctor", value: "doctor" },
-  //   { key: "Nurse", value: "nurse" },
-  //   { key: "Pharmacist", value: "pharmacist" },
-  //   { key: "Medical Assistant", value: "medical assistant" },
-  // ];
-
-  // const [selected, setSelected] = useState(userRoles[0].key);
-  // const [userInfo, setUserInfo] = useState({
-  //   firstName: "",
-  //   lastName: "",
-  //   emailAddress: "",
-  //   phoneNumber: "",
-  //   providersName: "",
-  //   permissions: selected,
-  //   address: "",
-  //   city: "",
-  //   state: "",
-  //   country: "",
-  // });
-
-  // const handledCreateUser = () => {
-  //   toast.success("User created successfully");
-  //   userInfoTab.current.click();
-
-  //   setUserInfo({
-  //     firstName: "",
-  //     lastName: "",
-  //     emailAddress: "",
-  //     phoneNumber: "",
-  //     providersName: "",
-  //     permissions: selected, // Ensure `selected` is defined
-  //     address: "",
-  //     city: "",
-  //     state: "",
-  //     country: "",
-  //   });
-  // };
-
-  // const handleonChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUserInfo((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // const disabledButton = Object.entries(userInfo)
-  //   .slice(0, 5)
-  //   .some(([_, value]) => !value);
-  // const disabledAddressButton = Object.entries(userInfo)
-  //   .slice(7)
-  //   .some(([_, value]) => !value);
-
   const textColor = useColorModeValue("gray.700", "white");
   const secondaryColor = useColorModeValue("gray.400", "white");
-  const iconColor = useColorModeValue("blue.900", "blue.500");
+  const iconColor = useColorModeValue("white", "black");
   const bgProgress = useColorModeValue("gray.200", "navy.900");
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
   const { colorMode } = useColorMode();
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6;
+
+  const [addUser, setAddUser] = useState(true);
+
+  const userRoles = [
+    { key: "Super Admin", value: "super admin" },
+    { key: "State Admin", value: "state admin" },
+    {
+      key: "Institution Administrative Staff",
+      value: "institution administrative staff",
+    },
+    { key: "Doctor", value: "doctor" },
+    { key: "Nurse", value: "nurse" },
+  ];
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
@@ -273,85 +165,98 @@ function NewUser() {
         </Grid>
       </Grid>
 
-      <Card>
-        <Flex alignItems="center" justifyContent="space-between">
-          <Text
-            ps="10px"
-            color="gray.400"
-            fontSize="20px"
-            fontWeight="bold"
-            borderColor={borderColor}
-          >
+      <Flex mb="10px" alignItems="center" justifyContent="end" pe="8px">
+        <Button
+          px="10px"
+          fontSize="12px"
+          colorScheme="blue"
+          fontWeight="bold"
+          w="fit"
+          h="35"
+          onClick={() => setAddUser(true)}
+        >
+          Add user
+          <Icon
+            as={BiPlus}
+            w="24px"
+            h="24px"
+            color={iconColor}
+            cursor="pointer"
+          />
+        </Button>
+      </Flex>
+
+      <Card px="0px">
+        <CardHeader px="22px">
+          <Text color={iconColor} fontSize="lg" fontWeight="bold" mb="6px">
             Users
           </Text>
-          <Flex alignItems="center" gap="5px" justifyContent="between">
-            <Text
-              fontSize="17px"
-              fontWeight="semibold"
-              color="gray.400"
-              borderColor={borderColor}
-            >
-              Add user
-            </Text>
-            <IconBox cursor="pointer" w="35px" h="30px">
-              <Icon as={BsPlusCircleFill} w="25px" h="25px" color="blue.600" />
-            </IconBox>
-          </Flex>
-        </Flex>
-        <CardBody overflowX={{ sm: "scroll", lg: "hidden" }}>
-          <Table variant="simple" color={textColor}>
-            <Thead>
-              <Tr my=".8rem" color="gray.400">
-                <Th color="gray.400" ps="0px" borderColor={borderColor}>
-                  Id
-                </Th>
-                <Th color="gray.400" ps="0px" borderColor={borderColor}>
-                  Name
-                </Th>
-                <Th color="gray.400" ps="0px" borderColor={borderColor}>
-                  Email
-                </Th>
-                <Th color="gray.400" ps="0px" borderColor={borderColor}>
-                  Role
-                </Th>
-                <Th color="gray.400" ps="0px" borderColor={borderColor}>
-                  Created
-                </Th>
-                <Th color="gray.400" ps="0px" borderColor={borderColor}>
-                  Created By
-                </Th>
-                <Th color="gray.400" ps="0px" borderColor={borderColor}>
-                  Action
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody pb="0px">
-              {tablesReportsData
-                .slice((currentPage - 1) * pageSize, currentPage * pageSize)
-                .map((row, index, arr) => {
-                  return (
-                    <TablesReportsRow
-                      id={row.id}
-                      name={row.name}
-                      email={row.email}
-                      role={row.role}
-                      dateCreated={row.dateCreated}
-                      createdBy={row.createdBy}
-                      isLast={index === arr.length - 1 ? true : false}
-                      key={index}
-                    />
-                  );
-                })}
-            </Tbody>
-          </Table>
+        </CardHeader>
+        <CardBody>
+          <UsersTable tableData={usersData} columnsData={Userscolumns} />
         </CardBody>
       </Card>
-      <Pagination
-        totalCount={tablesReportsData.length}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        onPageChange={(page) => setCurrentPage(page)}
-      />
+
+      {addUser && (
+        <Modal
+          label="Invite New User"
+          handleCloseModal={() => setAddUser(false)}
+        >
+          <FormControl>
+            <FormLabel ms="4px" mt="8px" fontSize="sm" fontWeight="normal">
+              Email
+            </FormLabel>
+            <Input
+              variant="auth"
+              fontSize="sm"
+              ms="4px"
+              type="text"
+              placeholder="Enter user's email address"
+              mb="24px"
+              size="lg"
+            />
+
+            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+              Role
+            </FormLabel>
+            <Select
+              variant="main"
+              _selected={userRoles[0].key}
+              color="gray.400"
+              isReadOnly
+              fontSize="sm"
+              ms="4px"
+              type="email"
+              mb="24px"
+              size="lg"
+              cursor="pointer"
+            >
+              {userRoles.map(({ key, value }, i) => {
+                return (
+                  <option key={i} value={value} style={{ cursor: "pointer" }}>
+                    {key}
+                  </option>
+                );
+              })}
+            </Select>
+
+            <Button
+              fontSize="14px"
+              variant="dark"
+              fontWeight="bold"
+              w="100%"
+              h="45"
+              mb="24px"
+              onClick={() => {
+                setAddUser(false);
+                toast.success("New user invited successfully");
+              }}
+            >
+              Invite
+            </Button>
+          </FormControl>
+        </Modal>
+      )}
     </Flex>
   );
 }
