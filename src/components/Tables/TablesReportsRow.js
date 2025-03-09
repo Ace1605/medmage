@@ -15,6 +15,7 @@
 
 */
 
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Flex,
@@ -24,17 +25,16 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import IconBox from "components/Icons/IconBox";
 import React from "react";
-import { BsCircleFill } from "react-icons/bs";
 
 function TablesReportsRow(props) {
   const {
-    image,
     name,
     email,
-    domain,
-    review,
-    employed,
+    role,
+    createdBy,
+    dateCreated,
     id,
     isLast,
     paddingY,
@@ -48,6 +48,21 @@ function TablesReportsRow(props) {
     <Tr border="none">
       <Td
         borderColor={borderColor}
+        minW={{ sm: "80px", lg: "80px" }}
+        border={isLast ? "none" : null}
+        px={{ xl: "2px", "2xl": "20px" }}
+      >
+        <Text
+          fontSize={{ sm: "md", xl: "sm", "2xl": "md" }}
+          color={secondaryColor}
+          fontWeight="normal"
+          pb=".5rem"
+        >
+          {id}
+        </Text>
+      </Td>
+      <Td
+        borderColor={borderColor}
         minW={{ sm: "220px", xl: "180px", "2xl": "220px" }}
         ps="0px"
         border={isLast ? "none" : null}
@@ -59,11 +74,6 @@ function TablesReportsRow(props) {
           minWidth="100%"
           flexWrap="nowrap"
         >
-          <Avatar
-            src={image}
-            borderRadius="12px"
-            me={{ sm: "18px", xl: "6px", "2xl": "18px" }}
-          />
           <Text
             fontSize={{ sm: "md", xl: "sm", "2xl": "md" }}
             color={textColor}
@@ -71,51 +81,6 @@ function TablesReportsRow(props) {
             minWidth="100%"
           >
             {name}
-          </Text>
-        </Flex>
-      </Td>
-
-      <Td
-        borderColor={borderColor}
-        minW={{ sm: "150px", lg: "150px" }}
-        border={isLast ? "none" : null}
-        px={{ xl: "2px", "2xl": "20px" }}
-      >
-        <Flex direction="column">
-          <Text
-            fontSize={{ sm: "md", xl: "sm", "2xl": "md" }}
-            color={mainColor}
-            fontWeight="bold"
-          >
-            {domain}
-          </Text>
-        </Flex>
-      </Td>
-      <Td
-        borderColor={borderColor}
-        minW={{ sm: "150px", lg: "120px" }}
-        border={isLast ? "none" : null}
-        px={{ xl: "2px", "2xl": "20px" }}
-      >
-        <Flex align="center">
-          <Icon
-            as={BsCircleFill}
-            w="8px"
-            h="8px"
-            color={
-              review === "Positive"
-                ? "teal.300"
-                : review === "Negative"
-                ? "red.500"
-                : "gray.700"
-            }
-            me="6px"
-          />
-          <Text
-            color={secondaryColor}
-            fontSize={{ sm: "md", xl: "sm", "2xl": "md" }}
-          >
-            {review}
           </Text>
         </Flex>
       </Td>
@@ -134,20 +99,22 @@ function TablesReportsRow(props) {
           {email}
         </Text>
       </Td>
+
       <Td
         borderColor={borderColor}
-        minW={{ sm: "150px", lg: "170px" }}
+        minW={{ sm: "150px", lg: "150px" }}
         border={isLast ? "none" : null}
         px={{ xl: "2px", "2xl": "20px" }}
       >
-        <Text
-          fontSize={{ sm: "md", xl: "sm", "2xl": "md" }}
-          color={secondaryColor}
-          fontWeight="normal"
-          pb=".5rem"
-        >
-          {employed}
-        </Text>
+        <Flex direction="column">
+          <Text
+            fontSize={{ sm: "md", xl: "sm", "2xl": "md" }}
+            color={mainColor}
+            fontWeight="bold"
+          >
+            {role}
+          </Text>
+        </Flex>
       </Td>
       <Td
         borderColor={borderColor}
@@ -161,8 +128,39 @@ function TablesReportsRow(props) {
           fontWeight="normal"
           pb=".5rem"
         >
-          {id}
+          {dateCreated}
         </Text>
+      </Td>
+
+      <Td
+        borderColor={borderColor}
+        minW={{ sm: "150px", lg: "170px" }}
+        border={isLast ? "none" : null}
+        px={{ xl: "2px", "2xl": "20px" }}
+      >
+        <Text
+          fontSize={{ sm: "md", xl: "sm", "2xl": "md" }}
+          color={secondaryColor}
+          fontWeight="normal"
+          pb=".5rem"
+        >
+          {createdBy}
+        </Text>
+      </Td>
+      <Td
+        borderColor={borderColor}
+        minW={{ sm: "100px", lg: "100px" }}
+        border={isLast ? "none" : null}
+        px={{ xl: "2px", "2xl": "20px" }}
+      >
+        <Flex gap="16px" alignItems="center">
+          <IconBox cursor="pointer" w="20px" h="20px">
+            <Icon as={EditIcon} w="18px" h="18px" color="blue.600" />
+          </IconBox>
+          <IconBox cursor="pointer" w="20px" h="20px">
+            <Icon as={DeleteIcon} w="18px" h="18px" color="red.400" />
+          </IconBox>
+        </Flex>
       </Td>
     </Tr>
   );

@@ -60,15 +60,6 @@ const dashRoutes = [
     collapse: false,
   },
   {
-    name: "Institution Management",
-    path: "/institution-management",
-    icon: <StatsIcon color="inherit" />,
-    authIcon: <HomeIcon color="inherit" />,
-    component: <Default />,
-    layout: "/admin",
-    collapse: false,
-  },
-  {
     name: "Personnel Management",
     path: "/personnel-management",
     icon: <PersonIcon color="inherit" />,
@@ -93,15 +84,22 @@ const dashRoutes = [
     collapse: false,
   },
   {
-    name: "User Managment",
-    path: "/user-management",
+    name: "Managment",
+    path: "/management",
     icon: <PersonIcon color="inherit" />,
     collapse: true,
     items: [
       {
-        name: "Invite user",
+        name: "Users",
         secondaryNavbar: false,
-        path: "/user-management/invite-new-user",
+        path: "/management/users",
+        component: <NewUser />,
+        layout: "/admin",
+      },
+      {
+        name: "Institution",
+        secondaryNavbar: false,
+        path: "/management/institution",
         component: <NewUser />,
         layout: "/admin",
       },
