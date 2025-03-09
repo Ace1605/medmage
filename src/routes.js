@@ -44,10 +44,10 @@ import Teams from "views/Pages/Profile/Teams.js";
 import General from "views/Pages/Projects/General.js";
 import Timeline from "views/Pages/Projects/Timeline.js";
 import RTLPage from "views/Pages/RTLPage.js";
-import NewUser from "views/Pages/Users/NewUser.js";
 import Reports from "views/Pages/Users/Reports.js";
 import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
 import { SettingsIcon } from "components/Icons/Icons";
+import NewUser from "views/Pages/UserManagement/NewUser";
 
 const dashRoutes = [
   {
@@ -72,7 +72,6 @@ const dashRoutes = [
     name: "Personnel Management",
     path: "/personnel-management",
     icon: <PersonIcon color="inherit" />,
-    authIcon: <HomeIcon color="inherit" />,
     component: <Default />,
     layout: "/admin",
     collapse: false,
@@ -89,7 +88,6 @@ const dashRoutes = [
     name: "Finance",
     path: "/finance",
     icon: <CartIcon color="inherit" />,
-    authIcon: <HomeIcon color="inherit" />,
     component: <Default />,
     layout: "/admin",
     collapse: false,
@@ -98,10 +96,16 @@ const dashRoutes = [
     name: "User Managment",
     path: "/user-management",
     icon: <PersonIcon color="inherit" />,
-    authIcon: <HomeIcon color="inherit" />,
-    component: <Default />,
-    layout: "/admin",
-    collapse: false,
+    collapse: true,
+    items: [
+      {
+        name: "Invite user",
+        secondaryNavbar: false,
+        path: "/user-management/invite-new-user",
+        component: <NewUser />,
+        layout: "/admin",
+      },
+    ],
   },
 
   {

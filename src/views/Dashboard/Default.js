@@ -249,7 +249,7 @@ export default function Default() {
         gap="20px"
         mb="10px"
       >
-        <Card>
+        {/* <Card>
           <Flex direction="column">
             <Text color={textColor} fontSize="lg" fontWeight="bold" mb="14px">
               Pending task
@@ -393,9 +393,9 @@ export default function Default() {
               </Flex>
             </Stack>
           </Flex>
-        </Card>
+        </Card> */}
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <Text fontSize="lg" text={textColor} fontWeight="bold">
               Recent Activities
@@ -570,7 +570,7 @@ export default function Default() {
               </Flex>
             </Stack>
           </CardBody>
-        </Card>
+        </Card> */}
       </Grid>
 
       <Grid
@@ -579,7 +579,7 @@ export default function Default() {
         mt="10px"
         mb="20px"
       >
-        <Card overflowX={{ sm: "scroll", xl: "hidden" }} pb="0px">
+        {/* <Card overflowX={{ sm: "scroll", xl: "hidden" }} pb="0px">
           <CardBody>
             <Table variant="simple" color={textColor}>
               <Thead>
@@ -629,7 +629,7 @@ export default function Default() {
           pageSize={pageSize}
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
-        />
+        /> */}
       </Grid>
     </Flex>
   );
