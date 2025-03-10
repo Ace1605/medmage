@@ -101,7 +101,7 @@ const dashRoutes = [
         name: "Institution",
         secondaryNavbar: false,
         path: "/management/institution",
-        component: <NewUser />,
+        component: "",
         layout: "/admin",
       },
     ],
