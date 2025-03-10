@@ -15,9 +15,12 @@
 
 */
 
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
+  FormControl,
+  FormLabel,
   Icon,
   Input,
   Select,
@@ -31,7 +34,8 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import Modal from "components/Modal/Modal";
+import React, { useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
@@ -44,11 +48,65 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
+import { toast } from "sonner";
 
 function UsersTable(props) {
   const { columnsData, tableData } = props;
+  const [editUser, setEditUser] = useState(false);
+  const [deleteUser, setdeleteUser] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-  const columns = useMemo(() => columnsData, []);
+  const userRoles = [
+    { key: "Super Admin", value: "super admin" },
+    { key: "State Admin", value: "state admin" },
+    {
+      key: "Administrative Staff",
+      value: "institution administrative staff",
+    },
+    { key: "Doctor", value: "doctor" },
+    { key: "Nurse", value: "nurse" },
+  ];
+  const columns = useMemo(() => {
+    return [
+      ...columnsData,
+      {
+        Header: "Action",
+        accessor: "action",
+        disableSortBy: true,
+        sortType: false,
+        Cell: ({ row }) => {
+          const textColor = useColorModeValue("blue.600", "white");
+          return (
+            <Flex gap="16px" alignItems="center">
+              <Icon
+                as={EditIcon}
+                w="18px"
+                h="18px"
+                color={textColor}
+                cursor="pointer"
+                onClick={() => {
+                  setSelectedUser(row.original);
+                  setEditUser(true);
+                }}
+              />
+              <Icon
+                as={DeleteIcon}
+                w="18px"
+                h="18px"
+                color="red.400"
+                cursor="pointer"
+                onClick={() => {
+                  setSelectedUser(row.original);
+                  setdeleteUser(true);
+                }}
+              />
+            </Flex>
+          );
+        },
+      },
+    ];
+  }, []);
+
   const data = useMemo(() => tableData, []);
 
   const tableInstance = useTable(
@@ -288,6 +346,151 @@ function UsersTable(props) {
           </Stack>
         </Flex>
       </Flex>
+      {deleteUser && (
+        <Modal
+          w="50% !important'"
+          label="Delete User"
+          handleCloseModal={() => {
+            setSelectedUser(null);
+            setdeleteUser(false);
+          }}
+        >
+          <Text
+            color={textColor}
+            fontWeight="bold"
+            fontSize="22px"
+            textAlign="center"
+            my="20px"
+          >
+            Are you sure you want to delete User?
+          </Text>
+
+          <Text
+            color={textColor}
+            fontWeight="bold"
+            fontSize="md"
+            textAlign="center"
+            mb="10px"
+          >{`Email: ${selectedUser.email}`}</Text>
+
+          <Flex
+            alignItems="center"
+            justifyContent="space-evenly"
+            gap="15px"
+            mt="30px"
+          >
+            <Button
+              fontSize="14px"
+              variant="dark"
+              fontWeight="bold"
+              w="100%"
+              h="35"
+              px="30px"
+              onClick={() => {
+                setSelectedUser(null);
+                setdeleteUser(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              fontSize="14px"
+              colorScheme="red"
+              fontWeight="bold"
+              w="100%"
+              h="35"
+              px="30px"
+              onClick={() => {
+                setdeleteUser(false);
+                toast.success("User deleted successfully");
+              }}
+            >
+              Delete
+            </Button>
+          </Flex>
+        </Modal>
+      )}
+      {editUser && (
+        <Modal
+          label="Edit User"
+          handleCloseModal={() => {
+            setSelectedUser(null);
+            setEditUser(false);
+          }}
+        >
+          <Text
+            color={textColor}
+            fontWeight="bold"
+            fontSize="md"
+            my="30px"
+          >{`Email: ${selectedUser.email}`}</Text>
+          <FormControl>
+            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+              Role
+            </FormLabel>
+            <Select
+              variant="main"
+              color="gray.400"
+              //   isReadOnly
+              fontSize="sm"
+              ms="4px"
+              type="email"
+              mb="24px"
+              size="lg"
+              cursor="pointer"
+            >
+              {userRoles.map(({ key, value }, i) => {
+                return (
+                  <option
+                    key={i}
+                    selected={selectedUser.role === key}
+                    value={value}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {key}
+                  </option>
+                );
+              })}
+            </Select>
+
+            <Flex
+              alignItems="center"
+              justifyContent="space-evenly"
+              gap="15px"
+              mt="30px"
+            >
+              <Button
+                fontSize="14px"
+                variant="dark"
+                fontWeight="bold"
+                w="100%"
+                h="35"
+                px="30px"
+                onClick={() => {
+                  setSelectedUser(null);
+                  setEditUser(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                fontSize="14px"
+                colorScheme="blue"
+                fontWeight="bold"
+                w="100%"
+                h="35"
+                px="30px"
+                onClick={() => {
+                  setEditUser(false);
+                  toast.success(" User Role Edited successfully");
+                }}
+              >
+                Confirm
+              </Button>
+            </Flex>
+          </FormControl>
+        </Modal>
+      )}
     </>
   );
 }

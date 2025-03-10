@@ -55,7 +55,7 @@ function NewUser() {
 
   const { colorMode } = useColorMode();
 
-  const [addUser, setAddUser] = useState(true);
+  const [addUser, setAddUser] = useState(false);
 
   const userRoles = [
     { key: "Super Admin", value: "super admin" },
@@ -70,7 +70,7 @@ function NewUser() {
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
-      <Grid templateColumns={{ md: "1fr" }} gap="24px" mb="24px">
+      <Grid templateColumns={{ md: "1fr" }} gap="24px" mb="26px">
         <Grid templateColumns={{ md: "repeat(2, 1fr)" }} gap="24px">
           <Card
             bgImage={
@@ -188,7 +188,7 @@ function NewUser() {
 
       <Card px="0px">
         <CardHeader px="22px">
-          <Text color={iconColor} fontSize="lg" fontWeight="bold" mb="6px">
+          <Text color={textColor} fontSize="lg" fontWeight="bold" mb="6px">
             Users
           </Text>
         </CardHeader>
@@ -242,7 +242,7 @@ function NewUser() {
 
             <Button
               fontSize="14px"
-              variant="dark"
+              colorScheme="blue"
               fontWeight="bold"
               w="100%"
               h="45"
