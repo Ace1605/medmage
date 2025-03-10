@@ -15,6 +15,33 @@
 
 */
 
+export const Userscolumns = [
+  {
+    Header: "Id",
+    accessor: "id",
+  },
+  {
+    Header: "NAME",
+    accessor: "name",
+  },
+  {
+    Header: "EMAIL",
+    accessor: "email",
+  },
+  {
+    Header: "ROLE",
+    accessor: "role",
+  },
+  {
+    Header: "CREATED",
+    accessor: "dateCreated",
+  },
+  {
+    Header: "CREATED BY",
+    accessor: "createdBy",
+  },
+];
+
 export const columnsData1 = [
   {
     Header: "NAME",
