@@ -17,10 +17,12 @@
 
 // Chakra imports
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
+  Grid,
   Input,
   Switch,
   Text,
@@ -32,7 +34,7 @@ import React from "react";
 import AuthBasic from "layouts/AuthBasic";
 import { useNavigate } from "react-router-dom";
 
-function SignInCover() {
+function NewUserValidation() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const forgotPasswordColor = useColorModeValue("blue.400", "blue");
@@ -41,7 +43,7 @@ function SignInCover() {
   return (
     <AuthBasic
       title="Welcome!"
-      description="Sign in to your account to get started"
+      description="Kindly fill out the required information to get started"
       image={BasicImage}
     >
       <Flex
@@ -56,7 +58,7 @@ function SignInCover() {
         <Flex
           zIndex="2"
           direction="column"
-          maxW="388px"
+          maxW="470px"
           w="full"
           background="transparent"
           borderRadius="15px"
@@ -75,25 +77,56 @@ function SignInCover() {
             fontWeight="bold"
             textAlign="center"
             mb="10px"
-          >
-            Sign In
-          </Text>
+          ></Text>
 
           <FormControl>
+            <Grid
+              templateColumns={{ md: "repeat(2, 1fr)" }}
+              gap={{ md: "14px" }}
+            >
+              <Box>
+                <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                  First Name
+                </FormLabel>
+                <Input
+                  variant="auth"
+                  fontSize="sm"
+                  ms="4px"
+                  type="text"
+                  placeholder="Enter first name"
+                  mb="24px"
+                  size="lg"
+                />
+              </Box>
+              <Box>
+                <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                  Last Name
+                </FormLabel>
+                <Input
+                  variant="auth"
+                  fontSize="sm"
+                  ms="4px"
+                  type="text"
+                  placeholder="Enter last Name"
+                  mb="24px"
+                  size="lg"
+                />
+              </Box>
+            </Grid>
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Email
+              Password
             </FormLabel>
             <Input
               variant="auth"
               fontSize="sm"
               ms="4px"
-              type="text"
+              type="password"
               placeholder="Your email address"
               mb="24px"
               size="lg"
             />
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Password
+              Confirm Password
             </FormLabel>
             <Input
               variant="auth"
@@ -116,20 +149,10 @@ function SignInCover() {
               SIGN IN
             </Button>
           </FormControl>
-          <Text
-            onClick={() => navigate("/auth/authentication/forgot-password")}
-            cursor="pointer"
-            textAlign="middle"
-            fontSize="14px"
-            color={forgotPasswordColor}
-            fontWeight="medium"
-          >
-            Forgot password?
-          </Text>
         </Flex>
       </Flex>
     </AuthBasic>
   );
 }
 
-export default SignInCover;
+export default NewUserValidation;
