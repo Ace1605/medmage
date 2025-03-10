@@ -27,9 +27,11 @@ const Modal = ({ label, children, handleCloseModal }) => {
         p={{ base: "5", sm: "7" }}
       >
         <CardHeader>
-          <Text color={textColor} fontSize="lg" fontWeight="bold" mb="6px">
-            {label}
-          </Text>
+          {label && (
+            <Text color={textColor} fontSize="lg" fontWeight="bold" mb="6px">
+              {label}
+            </Text>
+          )}
         </CardHeader>
         <CardBody>{children}</CardBody>
       </Card>

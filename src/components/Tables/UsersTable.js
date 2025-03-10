@@ -349,7 +349,6 @@ function UsersTable(props) {
       {deleteUser && (
         <Modal
           w="50% !important'"
-          label="Delete User"
           handleCloseModal={() => {
             setSelectedUser(null);
             setdeleteUser(false);
@@ -360,7 +359,8 @@ function UsersTable(props) {
             fontWeight="bold"
             fontSize="22px"
             textAlign="center"
-            my="20px"
+            mt="10px"
+            mb="20px"
           >
             Are you sure you want to delete User?
           </Text>
@@ -412,7 +412,6 @@ function UsersTable(props) {
       )}
       {editUser && (
         <Modal
-          label="Edit User"
           handleCloseModal={() => {
             setSelectedUser(null);
             setEditUser(false);
@@ -421,9 +420,20 @@ function UsersTable(props) {
           <Text
             color={textColor}
             fontWeight="bold"
+            fontSize="22px"
+            textAlign="center"
+            mt="10px"
+            mb="20px"
+          >
+            You are currently editing
+          </Text>
+          <Text
+            color={textColor}
+            fontWeight="bold"
             fontSize="md"
-            my="30px"
-          >{`Email: ${selectedUser.email}`}</Text>
+            mb="10px"
+            textAlign="center"
+          >{`User: ${selectedUser.email}`}</Text>
           <FormControl>
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Role
@@ -431,7 +441,7 @@ function UsersTable(props) {
             <Select
               variant="main"
               color="gray.400"
-              //   isReadOnly
+              isReadOnly
               fontSize="sm"
               ms="4px"
               type="email"
