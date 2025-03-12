@@ -48,6 +48,7 @@ import Reports from "views/Pages/Users/Reports.js";
 import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
 import { SettingsIcon } from "components/Icons/Icons";
 import NewUser from "views/Pages/UserManagement/NewUser";
+import NewUserValidation from "views/Authentication/newUserValidation/newUserValidation";
 
 const dashRoutes = [
   {
@@ -100,7 +101,7 @@ const dashRoutes = [
         name: "Institution",
         secondaryNavbar: false,
         path: "/management/institution",
-        component: <NewUser />,
+        component: "",
         layout: "/admin",
       },
     ],
@@ -390,6 +391,20 @@ const dashRoutes = [
           //     },
           //   ],
           // },
+          {
+            name: "New User Validation",
+            path: "/authentication/new-user-validation",
+            collapse: true,
+            authIcon: <DocumentIcon color="inherit" />,
+            items: [
+              {
+                name: "Basic",
+                component: <NewUserValidation />,
+                path: "/authentication/new-user-validation",
+                layout: "/auth",
+              },
+            ],
+          },
           {
             name: "Forgot password",
             path: "/authentication/forgot-password",
