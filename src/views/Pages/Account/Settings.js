@@ -72,12 +72,14 @@ function Settings() {
   const secondaryColor = useColorModeValue("gray.500", "white");
   const bgVerificationCard = useColorModeValue("gray.100", "navy.700");
   const textColor = useColorModeValue("gray.700", "white");
+  const iconColor = useColorModeValue("white", "white");
   const bgSkillsInput = useColorModeValue("white", "navy.900");
   const bgSkill = useColorModeValue("gray.700", "blue.500");
   const borderColor = useColorModeValue("gray.200", "transparent");
   const borderTableColor = useColorModeValue("gray.200", "gray.600");
 
   const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   const [activeButtons, setActiveButtons] = useState({
     Profile: true,
@@ -120,7 +122,6 @@ function Settings() {
   const scrollContainerRef = useRef(null);
 
   const handleScrollToId = (id) => {
-    console.log(id);
     const container = scrollContainerRef.current;
     const targetElement = document.getElementById(id);
     if (container && targetElement) {
@@ -167,7 +168,7 @@ function Settings() {
                 : "none"
             }
             transition="all .5s ease"
-            w={{ sm: "100%", lg: "135px" }}
+            w={{ sm: "100%", lg: "95%" }}
             h="35px"
             _focus={{ boxShadow: "0px 2px 5.5px rgba(0, 0, 0, 0.06)" }}
             _active={{
@@ -186,6 +187,14 @@ function Settings() {
               });
             }}
           >
+            <Icon
+              as={FaUser}
+              me="8px"
+              w="18px"
+              h="18px"
+              color={activeButtons.Profile && !isDark ? "black" : iconColor}
+              display={{ sm: "none", lg: "block" }}
+            />
             <Text
               color={!activeButtons.Profile && "white"}
               fontWeight="bold"
@@ -209,7 +218,7 @@ function Settings() {
                 : "none"
             }
             transition="all .5s ease"
-            w={{ sm: "100%", lg: "135px" }}
+            w={{ sm: "100%", lg: "95%" }}
             h="35px"
             _focus={{ boxShadow: "0px 2px 5.5px rgba(0, 0, 0, 0.06)" }}
             _active={{
@@ -228,6 +237,14 @@ function Settings() {
               });
             }}
           >
+            <Icon
+              as={IoDocumentText}
+              me="8px"
+              w="18px"
+              h="18px"
+              color={activeButtons.basicInfo && !isDark ? "black" : iconColor}
+              display={{ sm: "none", lg: "block" }}
+            />
             <Text
               color={!activeButtons.basicInfo && "white"}
               fontWeight="bold"
@@ -250,7 +267,7 @@ function Settings() {
                 : "none"
             }
             transition="all .5s ease"
-            w={{ sm: "100%", lg: "135px" }}
+            w={{ sm: "100%", lg: "95%" }}
             h="35px"
             _focus={{ boxShadow: "0px 2px 5.5px rgba(0, 0, 0, 0.06)" }}
             _active={{
@@ -270,6 +287,16 @@ function Settings() {
               });
             }}
           >
+            <Icon
+              as={FaCube}
+              me="8px"
+              w="18px"
+              h="18px"
+              color={
+                activeButtons.changePassword && !isDark ? "black" : iconColor
+              }
+              display={{ sm: "none", lg: "block" }}
+            />
             <Text
               color={!activeButtons.changePassword && "white"}
               fontWeight="bold"
@@ -293,7 +320,7 @@ function Settings() {
                 : "none"
             }
             transition="all .5s ease"
-            w={{ sm: "100%", lg: "135px" }}
+            w={{ sm: "100%", lg: "95%" }}
             h="35px"
             _focus={{ boxShadow: "0px 2px 5.5px rgba(0, 0, 0, 0.06)" }}
             _active={{
@@ -313,6 +340,16 @@ function Settings() {
               });
             }}
           >
+            <Icon
+              as={BsToggleOn}
+              me="8px"
+              w="18px"
+              h="18px"
+              color={
+                activeButtons.twoFactorAuth && !isDark ? "black" : iconColor
+              }
+              display={{ sm: "none", lg: "block" }}
+            />
             <Text
               color={!activeButtons.twoFactorAuth && "white"}
               fontWeight="bold"
@@ -335,7 +372,7 @@ function Settings() {
                 : "none"
             }
             transition="all .5s ease"
-            w={{ sm: "100%", lg: "135px" }}
+            w={{ sm: "100%", lg: "95%" }}
             h="35px"
             _focus={{ boxShadow: "0px 2px 5.5px rgba(0, 0, 0, 0.06)" }}
             _active={{
@@ -355,6 +392,16 @@ function Settings() {
               });
             }}
           >
+            <Icon
+              as={IoMdNotifications}
+              me="8px"
+              w="18px"
+              h="18px"
+              color={
+                activeButtons.notifications && !isDark ? "black" : iconColor
+              }
+              display={{ sm: "none", lg: "block" }}
+            />
             <Text
               color={!activeButtons.notifications && "white"}
               fontWeight="bold"
@@ -377,7 +424,7 @@ function Settings() {
                 : "none"
             }
             transition="all .5s ease"
-            w={{ sm: "100%", lg: "135px" }}
+            w={{ sm: "100%", lg: "95%" }}
             h="35px"
             _focus={{ boxShadow: "0px 2px 5.5px rgba(0, 0, 0, 0.06)" }}
             _active={{
@@ -397,6 +444,16 @@ function Settings() {
               });
             }}
           >
+            <Icon
+              as={AiFillDelete}
+              me="8px"
+              w="18px"
+              h="18px"
+              color={
+                activeButtons.deleteAccount && !isDark ? "black" : iconColor
+              }
+              display={{ sm: "none", lg: "block" }}
+            />
             <Text
               color={!activeButtons.deleteAccount && "white"}
               fontWeight="bold"
@@ -410,7 +467,7 @@ function Settings() {
 
       <Box
         ref={scrollContainerRef}
-        height={{ sm: "415px", md: "450px", lg: "550px" }}
+        height={{ sm: "480px", md: "900px", lg: "550px" }}
         overflowY={{ sm: "scroll", xl: "scroll" }}
         sx={{
           "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
