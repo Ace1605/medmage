@@ -467,7 +467,11 @@ function Settings() {
 
       <Box
         ref={scrollContainerRef}
-        height={{ sm: "480px", md: "900px", lg: "550px" }}
+        height={{
+          sm: "calc(100svh - 255px)",
+          md: "calc(100vh - 216px)",
+          lg: "calc(100vh - 188px)",
+        }}
         overflowY={{ sm: "scroll", xl: "scroll" }}
         sx={{
           "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
