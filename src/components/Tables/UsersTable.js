@@ -357,12 +357,21 @@ function UsersTable(props) {
           <Text
             color={textColor}
             fontWeight="bold"
-            fontSize="22px"
+            fontSize={{ sm: "20px", lg: "22px" }}
             textAlign="center"
             mt="10px"
-            mb="20px"
+            mb="10px"
           >
-            Are you sure you want to delete User?
+            Are you sure you want to delete this user?
+          </Text>
+          <Text
+            color={textColor}
+            fontWeight="bold"
+            textAlign="center"
+            mb="16px"
+            fontSize={{ sm: "16px", lg: "18px" }}
+          >
+            This action cannot be undone
           </Text>
 
           <Text
@@ -370,7 +379,6 @@ function UsersTable(props) {
             fontWeight="bold"
             fontSize="md"
             textAlign="center"
-            mb="10px"
           >{`Email: ${selectedUser.email}`}</Text>
 
           <Flex
@@ -378,13 +386,14 @@ function UsersTable(props) {
             justifyContent="space-evenly"
             gap="15px"
             mt="30px"
+            mb="10px"
           >
             <Button
-              fontSize="14px"
+              fontSize="16px"
               variant="dark"
               fontWeight="bold"
               w="100%"
-              h="35"
+              h="45"
               px="30px"
               onClick={() => {
                 setSelectedUser(null);
@@ -394,18 +403,18 @@ function UsersTable(props) {
               Cancel
             </Button>
             <Button
-              fontSize="14px"
-              colorScheme="red"
+              fontSize="16px"
+              colorScheme="blue"
               fontWeight="bold"
               w="100%"
-              h="35"
+              h="45"
               px="30px"
               onClick={() => {
                 setdeleteUser(false);
                 toast.success("User deleted successfully");
               }}
             >
-              Delete
+              Confirm
             </Button>
           </Flex>
         </Modal>
@@ -420,10 +429,10 @@ function UsersTable(props) {
           <Text
             color={textColor}
             fontWeight="bold"
-            fontSize="22px"
+            fontSize={{ sm: "20px", lg: "22px" }}
             textAlign="center"
             mt="10px"
-            mb="20px"
+            mb="16px"
           >
             You are currently editing
           </Text>
@@ -431,7 +440,7 @@ function UsersTable(props) {
             color={textColor}
             fontWeight="bold"
             fontSize="md"
-            mb="10px"
+            mb="20px"
             textAlign="center"
           >{`User: ${selectedUser.email}`}</Text>
           <FormControl>
@@ -470,11 +479,11 @@ function UsersTable(props) {
               mt="30px"
             >
               <Button
-                fontSize="14px"
+                fontSize="16px"
                 variant="dark"
                 fontWeight="bold"
                 w="100%"
-                h="35"
+                h="45"
                 px="30px"
                 onClick={() => {
                   setSelectedUser(null);
@@ -484,11 +493,11 @@ function UsersTable(props) {
                 Cancel
               </Button>
               <Button
-                fontSize="14px"
+                fontSize="16px"
                 colorScheme="blue"
                 fontWeight="bold"
                 w="100%"
-                h="35"
+                h="45"
                 px="30px"
                 onClick={() => {
                   setEditUser(false);

@@ -17,60 +17,40 @@
 
 // Chakra imports
 import {
-  Button,
   Checkbox,
-  Flex,
-  Grid,
-  Icon,
   SimpleGrid,
-  Spacer,
-  Stack,
   Stat,
   StatLabel,
   StatNumber,
-  Table,
-  Tbody,
-  Td,
+  Flex,
+  Grid,
+  Icon,
+  Stack,
   Text,
-  Th,
-  Thead,
-  Tr,
-  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-// Custom components
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import CardHeader from "components/Card/CardHeader.js";
-import IconBox from "components/Icons/IconBox";
-
 // Custom icons
-import {
-  DocumentIcon,
-  RocketIcon,
-  SettingsIcon,
-} from "components/Icons/Icons.js";
-import Pagination from "components/Pagination/Pagination";
-import TablesTableRow from "components/Tables/TablesTableRow";
-import React, { useState } from "react";
-import { FaUser } from "react-icons/fa";
-import { RiArrowDropRightLine } from "react-icons/ri";
-import { tablesTableData } from "variables/general";
+import EventCalendar from "components/Calendars/EventCalendar";
+// Custom components
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody";
+import CardHeader from "components/Card/CardHeader";
+import IconBox from "components/Icons/IconBox";
+import { ClockIcon, DocumentIcon, WalletIcon } from "components/Icons/Icons";
+import { FaPalette, FaShip } from "react-icons/fa";
+import { calendarDataCalendar } from "variables/calendar";
+import dayjs from "dayjs";
 
 export default function Default() {
   // Chakra Color Mode
-  const iconBlue = useColorModeValue("blue.500", "blue.500");
-  const iconBoxInside = useColorModeValue("white", "white");
   const textColor = useColorModeValue("gray.700", "white");
   const borderColor = useColorModeValue("gray.200", "gray.600");
-  const cardColor = useColorModeValue("gray.800", "navy.800");
-  const bgBox = useColorModeValue("gray.800", "blue.500");
+  const calendarTextColor = useColorModeValue("gray.700", "white");
+  const calenderIconBlue = useColorModeValue("blue.500", "white");
+  const iconBoxColor = useColorModeValue("gray.100", "blue.500");
 
-  const { colorMode } = useColorMode();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6;
+  const today = new Date();
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -242,395 +222,340 @@ export default function Default() {
         </Card>
       </SimpleGrid>
 
-      <Grid
-        templateColumns={{ sm: "1fr", xl: "1fr 1fr" }}
-        templateRows={{ xl: "auto auto" }}
-        maxW={{ sm: "1fr" }}
-        gap="20px"
-        mb="10px"
-      >
-        {/* <Card>
-          <Flex direction="column">
-            <Text color={textColor} fontSize="lg" fontWeight="bold" mb="14px">
-              Pending task
-            </Text>
-            <Stack
-              direction="column"
-              spacing="14px"
-              height={{ sm: "300px", xl: "436px" }}
-              overflowY={{ sm: "scroll", xl: "scroll" }}
-              sx={{
-                "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                "scrollbar-width": "none", // Hide scrollbar in Firefox
-              }}
-            >
-              <Flex
-                justify="space-between"
-                align="center"
-                borderBottom="1px solid"
-                borderColor={borderColor}
-                py="12px"
-              >
-                <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb="3.5px"
-                  >
-                    Call with Dave
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    09:30 AM
-                  </Text>
-                </Flex>
-                <Checkbox colorScheme="blue" defaultChecked size="lg" />
-              </Flex>
-              <Flex
-                justify="space-between"
-                align="center"
-                borderBottom="1px solid"
-                borderColor={borderColor}
-                py="12px"
-              >
-                <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb="3.5px"
-                  >
-                    Brunch Meeting
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    11:00 AM
-                  </Text>
-                </Flex>
-                <Checkbox colorScheme="blue" size="lg" />
-              </Flex>
-              <Flex
-                justify="space-between"
-                align="center"
-                borderBottom="1px solid"
-                borderColor={borderColor}
-                pt="12px"
-              >
-                <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb="3.5px"
-                  >
-                    Argon Dashboard Launch
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    02:00 PM
-                  </Text>
-                </Flex>
-                <Checkbox colorScheme="blue" size="lg" />
-              </Flex>
-              <Flex
-                borderBottom="1px solid"
-                borderColor={borderColor}
-                justify="space-between"
-                align="center"
-                py="14px"
-              >
-                <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb="3.5px"
-                  >
-                    Winter Hackaton
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    11:30 AM
-                  </Text>
-                </Flex>
-                <Checkbox colorScheme="blue" defaultChecked size="lg" />
-              </Flex>
-              <Flex
-                borderBottom="1px solid"
-                borderColor={borderColor}
-                justify="space-between"
-                align="center"
-                py="14px"
-              >
-                <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb="3.5px"
-                  >
-                    Hackaton
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    11:30 AM
-                  </Text>
-                </Flex>
-                <Checkbox colorScheme="blue" defaultChecked size="lg" />
-              </Flex>
-              <Flex justify="space-between" align="center" py="14px">
-                <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb="3.5px"
-                  >
-                    Google meeet
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    11:30 AM
-                  </Text>
-                </Flex>
-                <Checkbox colorScheme="blue" defaultChecked size="lg" />
-              </Flex>
-            </Stack>
-          </Flex>
-        </Card> */}
+      <Flex direction="column">
+        {/* use add icon later */}
+        {/* <IconButton
+              w="40px"
+              h="40px"
+              bg={useColorModeValue("white", "blue.500")}
+              aria-label="Search database"
+              icon={
+                <AddIcon
+                  w="12px"
+                  h="12px"
+                  color={useColorModeValue("blue.500", "white")}
+                />
+              }
+            /> */}
 
-        {/* <Card>
-          <CardHeader>
-            <Text fontSize="lg" text={textColor} fontWeight="bold">
-              Recent Activities
-            </Text>
-          </CardHeader>
-          <CardBody w="100%" pt="28px">
-            <Stack
-              direction="column"
-              spacing="24px"
-              w="100%"
-              height={{ sm: "300px", xl: "436px" }}
-              overflowY={{ sm: "scroll", xl: "scroll" }}
-              sx={{
-                "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                "scrollbar-width": "none", // Hide scrollbar in Firefox
-              }}
-            >
-              <Flex align="center" w="100%" py="14px">
-                <Flex align="center">
-                  <IconBox h={"40px"} w={"40px"} bg={bgBox} me="18px">
-                    <RocketIcon h={"20px"} w={"20px"} color={iconBoxInside} />
-                  </IconBox>
-                  <Flex direction="column">
-                    <Text fontSize="sm" fontWeight="bold" color={textColor}>
-                      Devices
-                    </Text>
-                    <Text color="gray.400" fontSize="xs">
-                      250 in stock,{" "}
-                      <Text as="span" fontWeight="bold">
-                        346+ sold
-                      </Text>
-                    </Text>
-                  </Flex>
-                </Flex>
-                <Spacer />
-                <Button variant="no-effects" px="0px">
-                  <Icon
-                    as={RiArrowDropRightLine}
-                    color="gray.400"
-                    w="30px"
-                    h="30px"
-                    cursor="pointer"
-                    transition="all .25s ease"
-                    _hover={{ transform: "translateX(25%)" }}
-                  />
-                </Button>
+        <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="24px">
+          <Card minH="570px">
+            <CardHeader mb="6px">
+              <Flex direction="column">
+                <Text
+                  color={calendarTextColor}
+                  fontSize="lg"
+                  fontWeight="bold"
+                  mb="6px"
+                >
+                  Calendar
+                </Text>
+                <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                  {dayjs(today).format("DD MMM, YYYY")}
+                </Text>
               </Flex>
-              <Flex align="center" w="100%" py="14px">
-                <Flex align="center">
-                  <IconBox h={"40px"} w={"40px"} bg={bgBox} me="18px">
-                    <SettingsIcon h={"20px"} w={"20px"} color={iconBoxInside} />
-                  </IconBox>
-                  <Flex direction="column">
-                    <Text fontSize="sm" fontWeight="bold" color={textColor}>
-                      Tickets
-                    </Text>
-                    <Text color="gray.400" fontSize="xs">
-                      123 closed,{" "}
-                      <Text as="span" fontWeight="bold">
-                        15 open
+            </CardHeader>
+            <CardBody position="relative" display="block" height="100%">
+              <EventCalendar
+                initialDate="2022-10-01"
+                calendarData={calendarDataCalendar}
+              />
+            </CardBody>
+          </Card>
+          <Stack
+            direction={{ sm: "column", md: "row", lg: "column" }}
+            spacing="24px"
+          >
+            <Card>
+              <CardHeader>
+                <Text
+                  color={calendarTextColor}
+                  fontSize="lg"
+                  fontWeight="bold"
+                  mb="28px"
+                >
+                  Upcoming events
+                </Text>
+              </CardHeader>
+              <CardBody>
+                <Stack
+                  direction="column"
+                  spacing="20px"
+                  height={{ sm: "300px", md: "230px", lg: "150px" }}
+                  overflowY={{ sm: "scroll", xl: "scroll" }}
+                  sx={{
+                    "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                    "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                    "scrollbar-width": "none", // Hide scrollbar in Firefox
+                  }}
+                >
+                  <Flex align="center">
+                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
+                      <Icon
+                        as={WalletIcon}
+                        h={"22px"}
+                        w={"22px"}
+                        color={calenderIconBlue}
+                      />
+                    </IconBox>
+                    <Flex direction="column">
+                      <Text
+                        color={calendarTextColor}
+                        fontSize="sm"
+                        fontWeight="bold"
+                      >
+                        Polio awareness week
                       </Text>
-                    </Text>
-                  </Flex>
-                </Flex>
-                <Spacer />
-                <Button variant="no-effects" px="0px">
-                  <Icon
-                    as={RiArrowDropRightLine}
-                    color="gray.400"
-                    w="30px"
-                    h="30px"
-                    cursor="pointer"
-                    transition="all .25s ease"
-                    _hover={{ transform: "translateX(25%)" }}
-                  />
-                </Button>
-              </Flex>
-              <Flex align="center" w="100%" py="14px">
-                <Flex align="center">
-                  <IconBox h={"40px"} w={"40px"} bg={bgBox} me="18px">
-                    <DocumentIcon h={"20px"} w={"20px"} color={iconBoxInside} />
-                  </IconBox>
-                  <Flex direction="column">
-                    <Text fontSize="sm" fontWeight="bold" color={textColor}>
-                      Error logs
-                    </Text>
-                    <Text color="gray.400" fontSize="xs">
-                      1 is active,{" "}
-                      <Text as="span" fontWeight="bold">
-                        40 closed
+                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                        27 March 2020, at 12:30 PM
                       </Text>
-                    </Text>
+                    </Flex>
                   </Flex>
-                </Flex>
-                <Spacer />
-                <Button variant="no-effects" px="0px">
-                  <Icon
-                    as={RiArrowDropRightLine}
-                    color="gray.400"
-                    w="30px"
-                    h="30px"
-                    cursor="pointer"
-                    transition="all .25s ease"
-                    _hover={{ transform: "translateX(25%)" }}
-                  />
-                </Button>
-              </Flex>
-              <Flex align="center" w="100%" py="14px">
-                <Flex align="center">
-                  <IconBox h={"40px"} w={"40px"} bg={bgBox} me="18px">
-                    <Icon
-                      as={FaUser}
-                      h={"20px"}
-                      w={"20px"}
-                      color={iconBoxInside}
-                    />
-                  </IconBox>
-                  <Flex direction="column">
-                    <Text fontSize="sm" fontWeight="bold" color={textColor}>
-                      Happy Users
-                    </Text>
-                    <Text color="gray.400" fontSize="xs">
-                      <Text as="span" fontWeight="bold">
-                        +430
+                  <Flex align="center">
+                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
+                      <Icon
+                        as={ClockIcon}
+                        h={"22px"}
+                        w={"22px"}
+                        color={calenderIconBlue}
+                      />
+                    </IconBox>
+                    <Flex direction="column">
+                      <Text
+                        color={calendarTextColor}
+                        fontSize="sm"
+                        fontWeight="bold"
+                      >
+                        Health Talk
                       </Text>
-                    </Text>
-                  </Flex>
-                </Flex>
-                <Spacer />
-                <Button variant="no-effects" px="0px">
-                  <Icon
-                    as={RiArrowDropRightLine}
-                    color="gray.400"
-                    w="30px"
-                    h="30px"
-                    cursor="pointer"
-                    transition="all .25s ease"
-                    _hover={{ transform: "translateX(25%)" }}
-                  />
-                </Button>
-              </Flex>
-              <Flex align="center" w="100%" py="14px">
-                <Flex align="center">
-                  <IconBox h={"40px"} w={"40px"} bg={bgBox} me="18px">
-                    <SettingsIcon h={"20px"} w={"20px"} color={iconBoxInside} />
-                  </IconBox>
-                  <Flex direction="column">
-                    <Text fontSize="sm" fontWeight="bold" color={textColor}>
-                      Tickets
-                    </Text>
-                    <Text color="gray.400" fontSize="xs">
-                      123 closed,{" "}
-                      <Text as="span" fontWeight="bold">
-                        15 open
+                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                        22 March 2020, at 10:00 PM
                       </Text>
-                    </Text>
+                    </Flex>
                   </Flex>
-                </Flex>
-                <Spacer />
-                <Button variant="no-effects" px="0px">
-                  <Icon
-                    as={RiArrowDropRightLine}
-                    color="gray.400"
-                    w="30px"
-                    h="30px"
-                    cursor="pointer"
-                    transition="all .25s ease"
-                    _hover={{ transform: "translateX(25%)" }}
-                  />
-                </Button>
-              </Flex>
-            </Stack>
-          </CardBody>
-        </Card> */}
-      </Grid>
+                  <Flex align="center">
+                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
+                      <Icon
+                        as={DocumentIcon}
+                        h={"22px"}
+                        w={"22px"}
+                        color={calenderIconBlue}
+                      />
+                    </IconBox>
+                    <Flex direction="column">
+                      <Text
+                        color={calendarTextColor}
+                        fontSize="sm"
+                        fontWeight="bold"
+                      >
+                        Book Deposit Hall
+                      </Text>
+                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                        25 March 2022, at 9:30 AM
+                      </Text>
+                    </Flex>
+                  </Flex>
+                  <Flex align="center">
+                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
+                      <Icon
+                        as={FaShip}
+                        h={"22px"}
+                        w={"22px"}
+                        color={calenderIconBlue}
+                      />
+                    </IconBox>
+                    <Flex direction="column">
+                      <Text
+                        color={calendarTextColor}
+                        fontSize="sm"
+                        fontWeight="bold"
+                      >
+                        Medical shipment
+                      </Text>
+                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                        25 March 2022, at 2:00 PM
+                      </Text>
+                    </Flex>
+                  </Flex>
+                  <Flex align="center" mb="22px">
+                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
+                      <Icon
+                        as={FaPalette}
+                        h={"22px"}
+                        w={"22px"}
+                        color={calenderIconBlue}
+                      />
+                    </IconBox>
+                    <Flex direction="column">
+                      <Text
+                        color={calendarTextColor}
+                        fontSize="sm"
+                        fontWeight="bold"
+                      >
+                        Sickle cell awarness
+                      </Text>
+                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                        26 March 2022, at 9:00 AM
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Stack>
+              </CardBody>
+            </Card>
 
-      <Grid
-        templateColumns={{ sm: "1fr", xl: " 1fr" }}
-        gap="20px"
-        mt="10px"
-        mb="20px"
-      >
-        {/* <Card overflowX={{ sm: "scroll", xl: "hidden" }} pb="0px">
-          <CardBody>
-            <Table variant="simple" color={textColor}>
-              <Thead>
-                <Tr my=".8rem" pl="0px" color="gray.400">
-                  <Th pl="0px" borderColor={borderColor} color="gray.400">
-                    Patient's Name
-                  </Th>
-                  <Th borderColor={borderColor} color="gray.400">
-                    Ward
-                  </Th>
-                  <Th borderColor={borderColor} color="gray.400">
-                    Status
-                  </Th>
-                  <Th borderColor={borderColor} color="gray.400">
-                    Date Admitted
-                  </Th>
-                  <Th borderColor={borderColor}></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {tablesTableData
-                  .slice((currentPage - 1) * pageSize, currentPage * pageSize)
-                  .map((row, index, arr) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <TablesTableRow
-                          name={row.name}
-                          logo={row.logo}
-                          // email={row.email}
-                          subdomain={row.subdomain}
-                          domain={row.domain}
-                          status={row.status}
-                          date={row.date}
-                          paddingY={"0px"}
-                          isLast={index === arr.length - 1 ? true : false}
-                        />
-                      </React.Fragment>
-                    );
-                  })}
-              </Tbody>
-            </Table>
-          </CardBody>
-        </Card>
-
-        <Pagination
-          totalCount={tablesTableData.length}
-          pageSize={pageSize}
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-        /> */}
-      </Grid>
+            <Card>
+              <Flex direction="column">
+                <Text
+                  color={textColor}
+                  fontSize="lg"
+                  fontWeight="bold"
+                  mb="14px"
+                >
+                  To Do List
+                </Text>
+                <Stack
+                  direction="column"
+                  spacing="14px"
+                  height={{ sm: "300px", md: "230px" }}
+                  overflowY={{ sm: "scroll", xl: "scroll" }}
+                  sx={{
+                    "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                    "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                    "scrollbar-width": "none", // Hide scrollbar in Firefox
+                  }}
+                >
+                  <Flex
+                    justify="space-between"
+                    align="center"
+                    borderBottom="1px solid"
+                    borderColor={borderColor}
+                    py="12px"
+                  >
+                    <Flex direction="column">
+                      <Text
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="sm"
+                        mb="3.5px"
+                      >
+                        Call with Kev
+                      </Text>
+                      <Text color="gray.400" fontSize="sm">
+                        09:30 AM
+                      </Text>
+                    </Flex>
+                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
+                  </Flex>
+                  <Flex
+                    justify="space-between"
+                    align="center"
+                    borderBottom="1px solid"
+                    borderColor={borderColor}
+                    py="12px"
+                  >
+                    <Flex direction="column">
+                      <Text
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="sm"
+                        mb="3.5px"
+                      >
+                        Meeting with Ministry of health
+                      </Text>
+                      <Text color="gray.400" fontSize="sm">
+                        11:00 AM
+                      </Text>
+                    </Flex>
+                    <Checkbox colorScheme="blue" size="lg" />
+                  </Flex>
+                  <Flex
+                    justify="space-between"
+                    align="center"
+                    borderBottom="1px solid"
+                    borderColor={borderColor}
+                    pt="12px"
+                  >
+                    <Flex direction="column">
+                      <Text
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="sm"
+                        mb="3.5px"
+                      >
+                        Launch with the team
+                      </Text>
+                      <Text color="gray.400" fontSize="sm">
+                        02:00 PM
+                      </Text>
+                    </Flex>
+                    <Checkbox colorScheme="blue" size="lg" />
+                  </Flex>
+                  <Flex
+                    borderBottom="1px solid"
+                    borderColor={borderColor}
+                    justify="space-between"
+                    align="center"
+                    py="14px"
+                  >
+                    <Flex direction="column">
+                      <Text
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="sm"
+                        mb="3.5px"
+                      >
+                        Winter Hackaton
+                      </Text>
+                      <Text color="gray.400" fontSize="sm">
+                        11:30 AM
+                      </Text>
+                    </Flex>
+                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
+                  </Flex>
+                  <Flex
+                    borderBottom="1px solid"
+                    borderColor={borderColor}
+                    justify="space-between"
+                    align="center"
+                    py="14px"
+                  >
+                    <Flex direction="column">
+                      <Text
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="sm"
+                        mb="3.5px"
+                      >
+                        Hackaton
+                      </Text>
+                      <Text color="gray.400" fontSize="sm">
+                        11:30 AM
+                      </Text>
+                    </Flex>
+                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
+                  </Flex>
+                  <Flex justify="space-between" align="center" py="14px">
+                    <Flex direction="column">
+                      <Text
+                        color={textColor}
+                        fontWeight="bold"
+                        fontSize="sm"
+                        mb="3.5px"
+                      >
+                        Google meet
+                      </Text>
+                      <Text color="gray.400" fontSize="sm">
+                        11:30 AM
+                      </Text>
+                    </Flex>
+                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
+                  </Flex>
+                </Stack>
+              </Flex>
+            </Card>
+          </Stack>
+        </Grid>
+      </Flex>
     </Flex>
   );
 }

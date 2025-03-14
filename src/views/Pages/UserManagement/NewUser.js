@@ -50,8 +50,6 @@ function NewUser() {
   const textColor = useColorModeValue("gray.700", "white");
   const secondaryColor = useColorModeValue("gray.400", "white");
   const iconColor = useColorModeValue("white", "black");
-  const bgProgress = useColorModeValue("gray.200", "navy.900");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   const { colorMode } = useColorMode();
 
@@ -165,34 +163,39 @@ function NewUser() {
         </Grid>
       </Grid>
 
-      <Flex mb="10px" alignItems="center" justifyContent="end" pe="8px">
-        <Button
-          px="10px"
-          fontSize="12px"
-          colorScheme="blue"
-          fontWeight="bold"
-          w="fit"
-          h="35"
-          onClick={() => setAddUser(true)}
-        >
-          Add user
-          <Icon
-            as={BiPlus}
-            w="24px"
-            h="24px"
-            color={iconColor}
-            cursor="pointer"
-          />
-        </Button>
-      </Flex>
-
       <Card px="0px">
         <CardHeader px="22px">
-          <Text color={textColor} fontSize="lg" fontWeight="bold" mb="6px">
-            Users
-          </Text>
+          <Flex
+            mb="10px"
+            alignItems="center"
+            justifyContent="space-between"
+            pe="8px"
+            px="24px"
+          >
+            <Text color={textColor} fontSize="lg" fontWeight="bold" mb="6px">
+              Users
+            </Text>{" "}
+            <Button
+              px="10px"
+              fontSize="12px"
+              colorScheme="blue"
+              fontWeight="bold"
+              w="fit"
+              h="35"
+              onClick={() => setAddUser(true)}
+            >
+              Add user
+              <Icon
+                as={BiPlus}
+                w="24px"
+                h="24px"
+                color={iconColor}
+                cursor="pointer"
+              />
+            </Button>
+          </Flex>
         </CardHeader>
-        <CardBody>
+        <CardBody px="22px">
           <UsersTable tableData={usersData} columnsData={Userscolumns} />
         </CardBody>
       </Card>
@@ -241,12 +244,12 @@ function NewUser() {
             </Select>
 
             <Button
-              fontSize="14px"
+              fontSize="16px"
               colorScheme="blue"
               fontWeight="bold"
               w="100%"
-              h="45"
-              mb="24px"
+              h="50"
+              mb="10px"
               onClick={() => {
                 setAddUser(false);
                 toast.success("New user invited successfully");
