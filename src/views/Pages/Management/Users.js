@@ -180,8 +180,8 @@ function Users() {
               fontSize="12px"
               colorScheme="blue"
               fontWeight="bold"
-              w="fit"
-              h="35"
+              w="110px"
+              h="40px"
               onClick={() => setAddUser(true)}
             >
               Add user
@@ -202,6 +202,7 @@ function Users() {
 
       {addUser && (
         <Modal
+          maxWidth={'500px'}
           label="Invite New User"
           handleCloseModal={() => setAddUser(false)}
         >
