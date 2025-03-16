@@ -49,7 +49,7 @@ import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
 import { SettingsIcon } from "components/Icons/Icons";
 import NewUser from "views/Pages/UserManagement/NewUser";
 import NewUserValidation from "views/Authentication/newUserValidation/newUserValidation";
-
+import { FaUsersGear } from "react-icons/fa6";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -64,7 +64,7 @@ const dashRoutes = [
     name: "Personnel Management",
     path: "/personnel-management",
     icon: <PersonIcon color="inherit" />,
-    component: <Default />,
+    component: "",
     layout: "/admin",
     collapse: false,
   },
@@ -72,22 +72,21 @@ const dashRoutes = [
     name: "Activity log",
     path: "/activity-log",
     icon: <StatsIcon color="inherit" />,
-    authIcon: <HomeIcon color="inherit" />,
-    component: <Default />,
+    component: "",
     layout: "/admin",
   },
   {
     name: "Finance",
     path: "/finance",
     icon: <CartIcon color="inherit" />,
-    component: <Default />,
+    component: "",
     layout: "/admin",
     collapse: false,
   },
   {
     name: "Managment",
     path: "/management",
-    icon: <PersonIcon color="inherit" />,
+    icon: <FaUsersGear color="inherit" />,
     collapse: true,
     items: [
       {

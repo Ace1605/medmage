@@ -28,10 +28,12 @@ import {
   Flex,
   HStack,
   Icon,
+  Image,
   List,
   ListItem,
   Stack,
   Text,
+  useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -50,6 +52,8 @@ import React from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { FaCircle } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
+import logoFullColor from "assets/logos/logo_full colour.png";
+import logoWhite from "assets/logos/Logo_white.png";
 
 // FUNCTIONS
 
@@ -578,13 +582,31 @@ function Sidebar(props) {
   let sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarRadius = "20px";
   let sidebarMargins = "0px";
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
   var brand = (
-    <Flex align="center" direction="column" pt={"25px"}>
+    <Flex align="center" direction="column" pt={"25px"} pr="25px">
       <Stack direction="row" spacing="12px" align="center" justify="center">
-        <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
+        <Image
+          src={isDark ? logoWhite : logoFullColor}
+          w={sidebarWidth === 275 ? "20px" : "36px"}
+          h={sidebarWidth === 275 ? "20px" : "36px"}
+        />
+        <Text
+          display={sidebarWidth === 275 ? "block" : "none"}
+          fontSize="sm"
+          mt="3px"
+          fontWeight="semibold"
+          letterSpacing="1px"
+        >
           MedMage
         </Text>
-        <Box w="1px" h="20px" bg={"black"} />
+        <Box
+          display={sidebarWidth === 275 ? "block" : "none"}
+          w="1px"
+          h="20px"
+          bg={"black"}
+        />
         <Text
           display={sidebarWidth === 275 ? "block" : "none"}
           fontSize="sm"
@@ -1050,7 +1072,9 @@ export function SidebarResponsive(props) {
       );
     });
   };
-  const { logo, display, routes } = props;
+  const { display, routes } = props;
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   let links = <Box>{createLinks(routes)}</Box>;
   //  BRAND
@@ -1060,6 +1084,7 @@ export function SidebarResponsive(props) {
   var brand = (
     <Box pt={"25px"} mb="12px">
       <Stack direction="row" spacing="12px" align="center" justify="center">
+        <Image src={isDark ? logoWhite : logoFullColor} w="20px" h="20px" />
         <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
           MedMage
         </Text>
