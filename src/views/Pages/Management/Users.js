@@ -46,7 +46,7 @@ import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
 import { BiPlus } from "react-icons/bi";
 
-function NewUser() {
+function Users() {
   const textColor = useColorModeValue("gray.700", "white");
   const secondaryColor = useColorModeValue("gray.400", "white");
   const iconColor = useColorModeValue("white", "black");
@@ -264,4 +264,4 @@ function NewUser() {
   );
 }
 
-export default NewUser;
+export default Users;

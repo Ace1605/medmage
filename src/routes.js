@@ -36,7 +36,7 @@ import VerificationIllustration from "views/Authentication/Verification/Verifica
 import Default from "views/Dashboard/Default.js";
 import Billing from "views/Pages/Account/Billing.js";
 import Invoice from "views/Pages/Account/Invoice.js";
-import Settings from "views/Pages/Account/Settings.js";
+import Settings from "views/Pages/Settings/Settings.js";
 import Pricing from "views/Pages/Pricing.js";
 import Overview from "views/Pages/Profile/Overview.js";
 import Projects from "views/Pages/Profile/Projects.js";
@@ -47,9 +47,11 @@ import RTLPage from "views/Pages/RTLPage.js";
 import Reports from "views/Pages/Users/Reports.js";
 import ForgotPassword from "views/Authentication/ForgotPassword/ForgotPassword";
 import { SettingsIcon } from "components/Icons/Icons";
-import NewUser from "views/Pages/UserManagement/NewUser";
 import NewUserValidation from "views/Authentication/newUserValidation/newUserValidation";
 import { FaUsersGear } from "react-icons/fa6";
+import Users from "views/Pages/Management/Users";
+import PatientManagment from "views/Pages/PatientManagment/PatientManagment";
+import PatientInfo from "views/Pages/PatientManagment/PatientInfo";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -64,7 +66,7 @@ const dashRoutes = [
     name: "Personnel Management",
     path: "/personnel-management",
     icon: <PersonIcon color="inherit" />,
-    component: "",
+    component: <PatientManagment />,
     layout: "/admin",
     collapse: false,
   },
@@ -93,7 +95,7 @@ const dashRoutes = [
         name: "Users",
         secondaryNavbar: false,
         path: "/management/users",
-        component: <NewUser />,
+        component: <Users />,
         layout: "/admin",
       },
       {
@@ -109,14 +111,20 @@ const dashRoutes = [
   {
     name: "Settings",
     icon: <SettingsIcon color="inherit" />,
-    path: "/pages/account/settings",
+    path: "/pages/settings",
     component: <Settings />,
     layout: "/admin",
   },
   {
-    name: "PAGES",
-    category: "pages",
+    name: "ROUTES",
+    category: "routes",
     items: [
+      {
+        name: "PatientInformation",
+        component: <PatientInfo />,
+        path: "/personnel-management/patient-information",
+        layout: "/admin",
+      },
       {
         name: "Pages",
         path: "/pages",
@@ -167,7 +175,7 @@ const dashRoutes = [
               {
                 name: "New User",
                 path: "/pages/users/new-user",
-                component: <NewUser />,
+                component: "",
                 layout: "/admin",
               },
             ],
@@ -250,99 +258,6 @@ const dashRoutes = [
           // },
         ],
       },
-      // {
-      //   name: "Applications",
-      //   path: "/applications",
-      //   icon: <StatsIcon color="inherit" />,
-      //   collapse: true,
-      //   items: [
-      //     {
-      //       name: "Kanban",
-      //       component: <Kanban />,
-      //       authIcon: <DocumentIcon color="inherit" />,
-      //       path: "/applications/kanban",
-      //       layout: "/admin",
-      //     },
-      //     {
-      //       name: "Wizard",
-      //       component: <Wizard />,
-      //       authIcon: <CartIcon color="inherit" />,
-      //       path: "/applications/wizard",
-      //       layout: "/admin",
-      //     },
-      //     {
-      //       name: "Data Tables",
-      //       path: "/applications/data-tables",
-      //       authIcon: <PersonIcon color="inherit" />,
-      //       component: <DataTables />,
-      //       layout: "/admin",
-      //     },
-      //     {
-      //       name: "Calendar",
-      //       component: <Calendar />,
-      //       authIcon: <StatsIcon color="inherit" />,
-      //       path: "/applications/calendar",
-      //       layout: "/admin",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Ecommerce",
-      //   path: "/ecommerce",
-      //   icon: <CartIcon color="inherit" />,
-      //   collapse: true,
-
-      //   items: [
-      //     {
-      //       name: "Products",
-      //       path: "/products",
-      //       collapse: true,
-      //       authIcon: <DocumentIcon color="inherit" />,
-      //       items: [
-      //         {
-      //           name: "New Product",
-      //           component: <NewProduct />,
-      //           secondaryNavbar: true,
-      //           path: "/ecommerce/products/new-product",
-      //           layout: "/admin",
-      //         },
-      //         {
-      //           name: "Edit Product",
-      //           component: <EditProduct />,
-      //           path: "/ecommerce/products/edit-product",
-      //           layout: "/admin",
-      //         },
-      //         {
-      //           name: "Product Page",
-      //           component: <ProductPage />,
-      //           path: "/ecommerce/products/product-page",
-      //           layout: "/admin",
-      //         },
-      //       ],
-      //     },
-
-      //     {
-      //       name: "Orders",
-      //       path: "/orders",
-      //       collapse: true,
-      //       authIcon: <StatsIcon color="inherit" />,
-      //       items: [
-      //         {
-      //           name: "Order List",
-      //           component: <OrderList />,
-      //           path: "/ecommerce/orders/order-list",
-      //           layout: "/admin",
-      //         },
-      //         {
-      //           name: "Order Details",
-      //           component: <OrderDetails />,
-      //           path: "/ecommerce/orders/order-details",
-      //           layout: "/admin",
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
       {
         name: "Authentication",
         path: "/authentication",
@@ -363,33 +278,6 @@ const dashRoutes = [
               },
             ],
           },
-          // {
-          //   name: "Sign Up",
-          //   path: "/authentication/sign-up",
-          //   collapse: true,
-          //   authIcon: <DocumentIcon color="inherit" />,
-          //   items: [
-          //     {
-          //       name: "Basic",
-          //       component: <SignUpBasic />,
-          //       path: "/authentication/sign-up/basic",
-          //       layout: "/auth",
-          //     },
-          //     {
-          //       name: "Cover",
-          //       component: <SignUpCover />,
-          //       path: "/authentication/sign-up/cover",
-          //       layout: "/auth",
-          //     },
-          //     {
-          //       name: "Illustration",
-          //       secondaryNavbar: true,
-          //       component: <SignUpIllustration />,
-          //       path: "/authentication/sign-up/illustration",
-          //       layout: "/auth",
-          //     },
-          //   ],
-          // },
           {
             name: "New User Validation",
             path: "/authentication/new-user-validation",

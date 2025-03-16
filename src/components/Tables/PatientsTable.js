@@ -42,6 +42,7 @@ import {
   TiArrowSortedUp,
   TiArrowUnsorted,
 } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 import {
   useGlobalFilter,
   usePagination,
@@ -50,22 +51,13 @@ import {
 } from "react-table";
 import { toast } from "sonner";
 
-function UsersTable(props) {
+function PatientsTable(props) {
   const { columnsData, tableData } = props;
-  const [editUser, setEditUser] = useState(false);
-  const [deleteUser, setDeleteUser] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  //   const [editPatient, setEditPatient] = useState(false);
+  const [deletePatient, setDeletePatient] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const navigate = useNavigate();
 
-  const userRoles = [
-    { key: "Super Admin", value: "super admin" },
-    { key: "State Admin", value: "state admin" },
-    {
-      key: "Administrative Staff",
-      value: "institution administrative staff",
-    },
-    { key: "Doctor", value: "doctor" },
-    { key: "Nurse", value: "nurse" },
-  ];
   const columns = useMemo(() => {
     return [
       ...columnsData,
@@ -76,6 +68,7 @@ function UsersTable(props) {
         sortType: false,
         Cell: ({ row }) => {
           const textColor = useColorModeValue("blue.600", "white");
+
           return (
             <Flex gap="16px" alignItems="center">
               <Icon
@@ -85,8 +78,8 @@ function UsersTable(props) {
                 color={textColor}
                 cursor="pointer"
                 onClick={() => {
-                  setSelectedUser(row.original);
-                  setEditUser(true);
+                  setSelectedPatient(row.original);
+                  navigate("/admin/personnel-management/patient-information");
                 }}
               />
               <Icon
@@ -96,8 +89,8 @@ function UsersTable(props) {
                 color="red.400"
                 cursor="pointer"
                 onClick={() => {
-                  setSelectedUser(row.original);
-                  setDeleteUser(true);
+                  setSelectedPatient(row.original);
+                  setDeletePatient(true);
                 }}
               />
             </Flex>
@@ -242,6 +235,16 @@ function UsersTable(props) {
                     {row.cells.map((cell, index) => {
                       return (
                         <Td
+                          cursor={cell.column.id !== "action" && "pointer"}
+                          onClick={() => {
+                            if (cell.column.id !== "action") {
+                              setSelectedPatient(row.original);
+                              navigate(
+                                "/admin/personnel-management/patient-information"
+                              );
+                            }
+                            return;
+                          }}
                           color={textColor}
                           {...cell.getCellProps()}
                           fontSize={{ sm: "14px" }}
@@ -346,12 +349,12 @@ function UsersTable(props) {
           </Stack>
         </Flex>
       </Flex>
-      {deleteUser && (
+      {deletePatient && (
         <Modal
           w="50% !important'"
           handleCloseModal={() => {
-            setSelectedUser(null);
-            setDeleteUser(false);
+            setSelectedPatient(null);
+            setDeletePatient(false);
           }}
         >
           <Text
@@ -362,24 +365,17 @@ function UsersTable(props) {
             mt="10px"
             mb="10px"
           >
-            Are you sure you want to delete this user?
+            Are you sure you want to delete this Paitent's Data?
           </Text>
           <Text
             color={textColor}
             fontWeight="bold"
             textAlign="center"
-            mb="16px"
+            mb="25px"
             fontSize={{ sm: "16px", lg: "18px" }}
           >
             This action cannot be undone
           </Text>
-
-          <Text
-            color={textColor}
-            fontWeight="bold"
-            fontSize="md"
-            textAlign="center"
-          >{`Email: ${selectedUser.email}`}</Text>
 
           <Flex
             alignItems="center"
@@ -410,8 +406,8 @@ function UsersTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setDeleteUser(false);
-                toast.success("User deleted successfully");
+                setDeletePatient(false);
+                toast.success("Patient's data deleted successfully");
               }}
             >
               Confirm
@@ -419,99 +415,8 @@ function UsersTable(props) {
           </Flex>
         </Modal>
       )}
-      {editUser && (
-        <Modal
-          handleCloseModal={() => {
-            setSelectedUser(null);
-            setEditUser(false);
-          }}
-        >
-          <Text
-            color={textColor}
-            fontWeight="bold"
-            fontSize={{ sm: "20px", lg: "22px" }}
-            textAlign="center"
-            mt="10px"
-            mb="16px"
-          >
-            You are currently editing
-          </Text>
-          <Text
-            color={textColor}
-            fontWeight="bold"
-            fontSize="md"
-            mb="20px"
-            textAlign="center"
-          >{`User: ${selectedUser.email}`}</Text>
-          <FormControl>
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Role
-            </FormLabel>
-            <Select
-              variant="main"
-              color="gray.400"
-              isReadOnly
-              fontSize="sm"
-              ms="4px"
-              type="email"
-              mb="24px"
-              size="lg"
-              cursor="pointer"
-            >
-              {userRoles.map(({ key, value }, i) => {
-                return (
-                  <option
-                    key={i}
-                    selected={selectedUser.role === key}
-                    value={value}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {key}
-                  </option>
-                );
-              })}
-            </Select>
-
-            <Flex
-              alignItems="center"
-              justifyContent="space-evenly"
-              gap="15px"
-              mt="30px"
-            >
-              <Button
-                fontSize="16px"
-                variant="dark"
-                fontWeight="bold"
-                w="100%"
-                h="45"
-                px="30px"
-                onClick={() => {
-                  setSelectedUser(null);
-                  setEditUser(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                fontSize="16px"
-                colorScheme="blue"
-                fontWeight="bold"
-                w="100%"
-                h="45"
-                px="30px"
-                onClick={() => {
-                  setEditUser(false);
-                  toast.success(" User Role Edited successfully");
-                }}
-              >
-                Confirm
-              </Button>
-            </Flex>
-          </FormControl>
-        </Modal>
-      )}
     </>
   );
 }
 
-export default UsersTable;
+export default PatientsTable;

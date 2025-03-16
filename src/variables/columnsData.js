@@ -42,6 +42,35 @@ export const Userscolumns = [
   },
 ];
 
+export const PatientsColumns = [
+  {
+    Header: "Id",
+    accessor: "id",
+  },
+  {
+    Header: "NAME",
+    accessor: "name",
+  },
+
+  {
+    Header: "CREATED",
+    accessor: "dateCreated",
+  },
+  {
+    Header: "CREATED BY",
+    accessor: "createdBy",
+  },
+
+  {
+    Header: "UPADATED",
+    accessor: "updatedDate",
+  },
+  {
+    Header: "UPDATED BY",
+    accessor: "updatedBy",
+  },
+];
+
 export const columnsData1 = [
   {
     Header: "NAME",
