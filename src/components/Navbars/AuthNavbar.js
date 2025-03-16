@@ -107,7 +107,7 @@ export default function AuthNavbar(props) {
         justify="center"
       >
         {/* <ArgonLogoLight w="74px" h="27px" /> */}
-        <Image src={logoWhite} w="24px" h="24px" />
+        <Image src={logoWhite} w="22px" />
         <Text fontSize="sm" mt="2px" letterSpacing="1px">
           {"Medmage"}
         </Text>

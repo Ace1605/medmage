@@ -478,7 +478,7 @@ function Sidebar(props) {
                         {prop.icon}
                       </IconBox>
                       <Text
-                        color={inactiveColor}
+                        color={prop.name === 'Logout' ? '#FF3B30': inactiveColor}
                         my="auto"
                         fontSize="sm"
                         display={sidebarWidth === 275 ? "block" : "none"}
@@ -589,8 +589,7 @@ function Sidebar(props) {
       <Stack direction="row" spacing="12px" align="center" justify="center">
         <Image
           src={isDark ? logoWhite : logoFullColor}
-          w={sidebarWidth === 275 ? "20px" : "36px"}
-          h={sidebarWidth === 275 ? "20px" : "36px"}
+          w={sidebarWidth === 275 ? "22px" : "36px"}
         />
         <Text
           display={sidebarWidth === 275 ? "block" : "none"}

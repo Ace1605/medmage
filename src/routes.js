@@ -52,6 +52,9 @@ import { FaUsersGear } from "react-icons/fa6";
 import Users from "views/Pages/Management/Users";
 import PatientManagment from "views/Pages/PatientManagment/PatientManagment";
 import PatientInfo from "views/Pages/PatientManagment/PatientInfo";
+import { ExitIcon } from "components/Icons/Icons";
+import { UsersGroupIcon } from "components/Icons/Icons";
+import { InstitutionIcon } from "components/Icons/Icons";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -94,6 +97,7 @@ const dashRoutes = [
       {
         name: "Users",
         secondaryNavbar: false,
+        icon: <UsersGroupIcon color="inherit"/>,
         path: "/management/users",
         component: <Users />,
         layout: "/admin",
@@ -101,6 +105,7 @@ const dashRoutes = [
       {
         name: "Institution",
         secondaryNavbar: false,
+        icon: <InstitutionIcon color="inherit"/>,
         path: "/management/institution",
         component: "",
         layout: "/admin",
@@ -114,6 +119,13 @@ const dashRoutes = [
     path: "/pages/settings",
     component: <Settings />,
     layout: "/admin",
+  },
+    {
+    name: "Logout",
+    icon: <ExitIcon color="inherit" />,
+    component: <SignInBasic/>,
+    path: "/authentication/sign-in",
+    layout: "/auth",
   },
   {
     name: "ROUTES",

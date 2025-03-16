@@ -348,7 +348,7 @@ function UsersTable(props) {
       </Flex>
       {deleteUser && (
         <Modal
-          w="50% !important'"
+          maxWidth={'500px'}
           handleCloseModal={() => {
             setSelectedUser(null);
             setDeleteUser(false);
@@ -421,6 +421,7 @@ function UsersTable(props) {
       )}
       {editUser && (
         <Modal
+          maxWidth={'500px'}
           handleCloseModal={() => {
             setSelectedUser(null);
             setEditUser(false);

@@ -351,7 +351,7 @@ function PatientsTable(props) {
       </Flex>
       {deletePatient && (
         <Modal
-          w="50% !important'"
+          maxWidth="500px"
           handleCloseModal={() => {
             setSelectedPatient(null);
             setDeletePatient(false);
@@ -392,8 +392,8 @@ function PatientsTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setSelectedUser(null);
-                setDeleteUser(false);
+                setSelectedPatient(null);
+                setDeletePatient(false);
               }}
             >
               Cancel

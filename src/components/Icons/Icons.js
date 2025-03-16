@@ -83,6 +83,50 @@ export const ClockIcon = createIcon({
     </g>
   ),
 });
+export const ExitIcon = createIcon({
+  displayName: 'ExitIcon',
+  viewBox: '0 0 24 24',
+  path: (
+    <g>
+      <path
+        d="M10 2H4C2.9 2 2 2.9 2 4V20C2 21.1 2.9 22 4 22H10C11.1 22 12 21.1 12 20V16H10V20H4V4H10V8H12V4C12 2.9 11.1 2 10 2Z"
+        fill="#FF3B30"
+      />
+      <path
+        d="M21 11H14V13H21V16L24 12L21 8V11Z"
+        fill="#FF3B30"
+      />
+    </g>
+  ),
+});
+
+export const UsersGroupIcon = createIcon({
+  displayName: 'UsersGroupIcon',
+  viewBox: '0 0 24 24',
+  path: (
+    <g>
+      <path
+        d="M16 11C18.21 11 20 9.21 20 7C20 4.79 18.21 3 16 3C13.79 3 12 4.79 12 7C12 9.21 13.79 11 16 11ZM8 11C10.21 11 12 9.21 12 7C12 4.79 10.21 3 8 3C5.79 3 4 4.79 4 7C4 9.21 5.79 11 8 11ZM8 13C5.33 13 0 14.34 0 17V19C0 19.55 0.45 20 1 20H15C15.55 20 16 19.55 16 19V17C16 14.34 10.67 13 8 13ZM16 13C15.7 13 15.37 13.02 15.03 13.05C16.78 14.07 18 15.43 18 17V19C18 19.55 18.45 20 19 20H23C23.55 20 24 19.55 24 19V17C24 14.34 18.67 13 16 13Z"
+        fill="currentColor"
+      />
+    </g>
+  ),
+});
+
+export const InstitutionIcon = createIcon({
+  displayName: 'InstitutionIcon',
+  viewBox: "0 0 24 24",
+  path: (
+    <g>
+      <path
+        d="M21 19H3V21H21V19ZM10 2V6H7V8H10V12H14V8H17V6H14V2H10ZM3 9V17H5V9H3ZM19 9V17H21V9H19ZM7 9V17H17V9H7Z"
+        fill="currentColor"
+      />
+    </g>
+  ),
+});
+
+
 export const CreativeTimLogo = createIcon({
   displayName: 'CreativeTimLogo',
   viewBox: '0 0 100 100',
