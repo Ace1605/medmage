@@ -173,7 +173,7 @@ export default function HeaderLinks(props) {
           routes={routes}
           {...rest}
         />
-        <SettingsIcon
+        {/* <SettingsIcon
           cursor="pointer"
           ms={{ base: "16px", xl: "0px" }}
           me="16px"
@@ -181,7 +181,7 @@ export default function HeaderLinks(props) {
           color={navbarIcon}
           w="18px"
           h="18px"
-        />
+        /> */}
         <Menu>
           <MenuButton>
             <BellIcon color={navbarIcon} w="18px" h="18px" />

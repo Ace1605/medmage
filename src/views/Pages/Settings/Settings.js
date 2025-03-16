@@ -38,7 +38,6 @@ import {
   Text,
   Th,
   Thead,
-  Tooltip,
   Grid,
   Tr,
   useColorMode,
@@ -49,22 +48,13 @@ import avatar4 from "assets/img/avatars/avatar4.png";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import {
-  AtlassianLogo,
-  InvisionLogo,
-  SlackLogo,
-  SpotifyLogo,
-} from "components/Icons/Icons";
 import { HSeparator } from "components/Separator/Separator";
 import React, { useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { BsArrowRight, BsCircleFill, BsToggleOn } from "react-icons/bs";
+import { BsCircleFill, BsToggleOn } from "react-icons/bs";
 import { FaCube, FaUser } from "react-icons/fa";
-import { GiSmartphone } from "react-icons/gi";
-import { IoIosArrowUp, IoIosRocket, IoMdNotifications } from "react-icons/io";
+import { IoMdNotifications } from "react-icons/io";
 import { IoDocumentText } from "react-icons/io5";
-import { MdPowerSettingsNew } from "react-icons/md";
-import { RiComputerLine } from "react-icons/ri";
 import { Element, Link } from "react-scroll";
 
 function Settings() {
@@ -787,6 +777,16 @@ function Settings() {
                     </FormControl>
                   </Stack>
                 </Stack>
+                <Flex justify="end" mt="18px">
+                  <Button
+                    variant="dark"
+                    w="150px"
+                    h="35px"
+                    alignSelf="flex-end"
+                  >
+                    UPDATE
+                  </Button>
+                </Flex>
               </CardBody>
             </Element>
           </Card>

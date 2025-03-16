@@ -24,17 +24,17 @@ import {
   Text,
   useColorModeValue,
   useColorMode,
+  Image,
 } from "@chakra-ui/react";
 import {
   ChakraLogoDark,
   ChakraLogoLight,
   ArgonLogoDark,
   ArgonLogoLight,
-  ChakraLogoBlue,
 } from "components/Icons/Icons";
 import PropTypes from "prop-types";
 import { SidebarContext } from "contexts/SidebarContext";
-import routes from "routes.js";
+import logoWhite from "assets/logos/Logo_white.png";
 
 export default function AuthNavbar(props) {
   const { logo, logoText, secondary, sidebarWidth, ...rest } = props;
@@ -71,6 +71,7 @@ export default function AuthNavbar(props) {
             <ChakraLogoLight w="82px" h="21px" />
           )}
         </Stack>
+
         <Text fontSize="sm" mt="3px">
           {logoText}
         </Text>
@@ -106,6 +107,7 @@ export default function AuthNavbar(props) {
         justify="center"
       >
         {/* <ArgonLogoLight w="74px" h="27px" /> */}
+        <Image src={logoWhite} w="24px" h="24px" />
         <Text fontSize="sm" mt="2px" letterSpacing="1px">
           {"Medmage"}
         </Text>
