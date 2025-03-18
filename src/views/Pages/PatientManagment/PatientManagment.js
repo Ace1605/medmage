@@ -29,6 +29,10 @@ import {
   Icon,
   Input,
   Select,
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -48,9 +52,83 @@ function PatientManagment() {
   const secondaryColor = useColorModeValue("gray.400", "white");
   const iconColor = useColorModeValue("white", "black");
   const [addPatient, setAddPatient] = useState(false);
+  const overViewPatientsInfo = [
+    {
+      label: "Total Patients",
+      number: "1,250",
+      variance: 3,
+      period: "last 7 days",
+    },
+    {
+      label: "New Admissions",
+      number: "25",
+      variance: 5,
+      period: "last 7 days",
+    },
+    {
+      label: "Discharged Today",
+      number: "15",
+      variance: -20,
+      period: "last 7 days",
+    },
+    {
+      label: "Outpatients",
+      number: "300",
+      variance: 3,
+      period: "last 7 days",
+    },
+  ];
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
+      <SimpleGrid columns={{ sm: 1, md: 4 }} spacing="24px" mb="30px">
+        {overViewPatientsInfo.map(({ label, number, variance, period }) => {
+          return (
+            <Card minH="125px">
+              <Flex direction="column">
+                <Flex
+                  flexDirection="row"
+                  align="center"
+                  justify="center"
+                  w="100%"
+                  mb="25px"
+                >
+                  <Stat me="auto">
+                    <StatLabel
+                      fontSize="xs"
+                      color="gray.400"
+                      fontWeight="bold"
+                      textTransform="uppercase"
+                    >
+                      {label}
+                    </StatLabel>
+                    <Flex>
+                      <StatNumber
+                        fontSize="lg"
+                        color={textColor}
+                        fontWeight="bold"
+                      >
+                        {number}
+                      </StatNumber>
+                    </Flex>
+                  </Stat>
+                </Flex>
+                <Text color="gray.400" fontSize="sm">
+                  <Text
+                    as="span"
+                    color={variance >= 0 ? "green.400" : "red.400"}
+                    fontWeight="bold"
+                    pr="10px"
+                  >
+                    {`${variance >= 0 ? "+" : ""}${variance}%`}
+                  </Text>
+                  {period}
+                </Text>
+              </Flex>
+            </Card>
+          );
+        })}
+      </SimpleGrid>
       <Card px="0px">
         <CardHeader px="22px">
           <Flex

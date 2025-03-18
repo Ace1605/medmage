@@ -66,8 +66,8 @@ const dashRoutes = [
     collapse: false,
   },
   {
-    name: "Personnel Management",
-    path: "/personnel-management",
+    name: "Patient Management",
+    path: "/patient-management",
     icon: <PersonIcon color="inherit" />,
     component: <PatientManagment />,
     layout: "/admin",
@@ -97,7 +97,7 @@ const dashRoutes = [
       {
         name: "Users",
         secondaryNavbar: false,
-        icon: <UsersGroupIcon color="inherit"/>,
+        icon: <UsersGroupIcon color="inherit" />,
         path: "/management/users",
         component: <Users />,
         layout: "/admin",
@@ -105,8 +105,16 @@ const dashRoutes = [
       {
         name: "Institution",
         secondaryNavbar: false,
-        icon: <InstitutionIcon color="inherit"/>,
+        icon: <InstitutionIcon color="inherit" />,
         path: "/management/institution",
+        component: "",
+        layout: "/admin",
+      },
+      {
+        name: "Events",
+        secondaryNavbar: false,
+        icon: <InstitutionIcon color="inherit" />,
+        path: "/management/events",
         component: "",
         layout: "/admin",
       },
@@ -120,10 +128,10 @@ const dashRoutes = [
     component: <Settings />,
     layout: "/admin",
   },
-    {
+  {
     name: "Logout",
     icon: <ExitIcon color="inherit" />,
-    component: <SignInBasic/>,
+    component: <SignInBasic />,
     path: "/authentication/sign-in",
     layout: "/auth",
   },

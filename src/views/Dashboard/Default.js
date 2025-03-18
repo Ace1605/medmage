@@ -223,21 +223,6 @@ export default function Default() {
       </SimpleGrid>
 
       <Flex direction="column">
-        {/* use add icon later */}
-        {/* <IconButton
-              w="40px"
-              h="40px"
-              bg={useColorModeValue("white", "blue.500")}
-              aria-label="Search database"
-              icon={
-                <AddIcon
-                  w="12px"
-                  h="12px"
-                  color={useColorModeValue("blue.500", "white")}
-                />
-              }
-            /> */}
-
         <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="24px">
           <Card minH="570px">
             <CardHeader mb="6px">
