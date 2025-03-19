@@ -35,7 +35,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Modal from "components/Modal/Modal";
-import React, { useMemo, useState } from "react";
+import { RoleContext } from "contexts/RoleContext";
+import React, { useContext, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
@@ -57,6 +58,7 @@ function PatientsTable(props) {
   const [deletePatient, setDeletePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const navigate = useNavigate();
+  const { setIsSuperAdmin } = useContext(RoleContext);
 
   const columns = useMemo(() => {
     return [
@@ -78,6 +80,7 @@ function PatientsTable(props) {
                 color={textColor}
                 cursor="pointer"
                 onClick={() => {
+                  setIsSuperAdmin(true);
                   setSelectedPatient(row.original);
                   navigate("/admin/personnel-management/patient-information");
                 }}
@@ -238,6 +241,7 @@ function PatientsTable(props) {
                           cursor={cell.column.id !== "action" && "pointer"}
                           onClick={() => {
                             if (cell.column.id !== "action") {
+                              setIsSuperAdmin(false);
                               setSelectedPatient(row.original);
                               navigate(
                                 "/admin/personnel-management/patient-information"
@@ -360,7 +364,7 @@ function PatientsTable(props) {
           <Text
             color={textColor}
             fontWeight="bold"
-            fontSize={{ sm: "20px", lg: "22px" }}
+            fontSize={{ sm: "18px", lg: "20px" }}
             textAlign="center"
             mt="10px"
             mb="10px"

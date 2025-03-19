@@ -16,7 +16,7 @@
 */
 
 // Chakra imports
-import { InfoIcon, PhoneIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, InfoIcon, PhoneIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Button,
@@ -40,7 +40,8 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { PersonIcon } from "components/Icons/Icons";
-import React, { useState } from "react";
+import { RoleContext } from "contexts/RoleContext";
+import React, { useContext, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BiPlusMedical } from "react-icons/bi";
 import { IoDocumentText } from "react-icons/io5";
@@ -53,7 +54,7 @@ function PatientInfo() {
   const textColor = useColorModeValue("gray.700", "white");
 
   const [toggle, setToggle] = useState(false);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(true);
+  const { isSuperAdmin } = useContext(RoleContext);
 
   return (
     <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
@@ -251,7 +252,6 @@ function PatientInfo() {
         <Card
           w={{ sm: "100%", lg: "70%" }}
           alignSelf="flex-end"
-          display={isSuperAdmin ? "block" : "none"}
           justifySelf="flex-end"
         >
           <Element id="info" name="info">
@@ -390,14 +390,14 @@ function PatientInfo() {
                   <Select
                     cursor="pointer"
                     variant="main"
-                    placeholder="Male"
-                    color="gray.400"
+                    color="gray.700"
                     fontSize="xs"
-                    icon={isSuperAdmin ? "none" : "block"}
+                    icon={isSuperAdmin ? <ChevronDownIcon /> : ""}
                     disabled={!isSuperAdmin}
+                    isReadOnly={isSuperAdmin ? false : true}
                     sx={{
                       _readOnly: {
-                        color: "gray.700",
+                        color: "gray.400",
                         fontWeight: "semibold",
                         border: 0,
                         pl: 0,
@@ -406,7 +406,9 @@ function PatientInfo() {
                       },
                     }}
                   >
-                    <option value="option1">Male</option>
+                    <option value="option1" selected>
+                      Male
+                    </option>
                     <option value="option2">Female</option>
                   </Select>
                 </FormControl>
@@ -459,7 +461,6 @@ function PatientInfo() {
                       _readOnly: {
                         color: "gray.700",
                         fontWeight: "semibold",
-
                         border: 0,
                         pl: 0,
                         opacity: 1,
@@ -726,10 +727,8 @@ function PatientInfo() {
                       _readOnly: {
                         color: "gray.700",
                         fontWeight: "semibold",
-
                         border: 0,
                         pl: 0,
-
                         opacity: 1,
                         cursor: "default",
                       },
@@ -756,16 +755,13 @@ function PatientInfo() {
         <Card
           w={{ sm: "100%", lg: "70%" }}
           alignSelf="flex-end"
-          display={isSuperAdmin ? "block" : "none"}
           justifySelf="flex-end"
         >
           <Element id="medical" name="medical">
             <CardHeader mb="32px">
-              <Flex justify="space-between" w="100%">
-                <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                  Medical
-                </Text>
-              </Flex>
+              <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                Medical
+              </Text>
             </CardHeader>
             <CardBody>
               <FormControl mb="16px" isReadOnly={!isSuperAdmin}>
@@ -868,7 +864,6 @@ function PatientInfo() {
         <Card
           w={{ sm: "100%", lg: "70%" }}
           alignSelf="flex-end"
-          display={isSuperAdmin ? "block" : "none"}
           justifySelf="flex-end"
         >
           <Element to="insurance" name="insurance">
@@ -952,7 +947,6 @@ function PatientInfo() {
         <Card
           w={{ sm: "100%", lg: "70%" }}
           alignSelf="flex-end"
-          display={isSuperAdmin ? "block" : "none"}
           justifySelf="flex-end"
         >
           <Element to="additional-info" name="additional-info">

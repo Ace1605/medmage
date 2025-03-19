@@ -56,6 +56,7 @@ import { ExitIcon } from "components/Icons/Icons";
 import { UsersGroupIcon } from "components/Icons/Icons";
 import { InstitutionIcon } from "components/Icons/Icons";
 import Events from "views/Pages/Management/Events";
+import { MdEvent } from "react-icons/md";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -114,7 +115,7 @@ const dashRoutes = [
       {
         name: "Events",
         secondaryNavbar: false,
-        icon: <InstitutionIcon color="inherit" />,
+        icon: <MdEvent color="inherit" />,
         path: "/management/events",
         component: <Events />,
         layout: "/admin",

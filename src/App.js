@@ -23,19 +23,23 @@ import LandingLayout from "layouts/Landing";
 import theme from "./theme/theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Toaster } from "sonner";
+import { RoleProvider } from "contexts/RoleContext";
+
 // Chakra imports
 
 export default function Main() {
   return (
-    <ChakraProvider theme={theme}>
-      <Routes>
-        <Route path="auth/*" element={<AuthLayout />} />
-        <Route path="admin/*" element={<AdminLayout />} />
-        <Route path="landing/*" element={<LandingLayout />} />
-        <Route path="rtl/*" element={<RTLLayout />} />
-        <Route path="/" element={<Navigate to="/auth" replace />} />
-      </Routes>
-      <Toaster richColors duration={3000} position="top-right" />
-    </ChakraProvider>
+    <RoleProvider>
+      <ChakraProvider theme={theme}>
+        <Routes>
+          <Route path="auth/*" element={<AuthLayout />} />
+          <Route path="admin/*" element={<AdminLayout />} />
+          <Route path="landing/*" element={<LandingLayout />} />
+          <Route path="rtl/*" element={<RTLLayout />} />
+          <Route path="/" element={<Navigate to="/auth" replace />} />
+        </Routes>
+        <Toaster richColors duration={3000} position="top-right" />
+      </ChakraProvider>
+    </RoleProvider>
   );
 }

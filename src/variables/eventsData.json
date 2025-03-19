@@ -25,5 +25,23 @@
     "endTime": "3:00pm",
     "status": "Upcoming",
     "members": ["Achugo Ebuka", "Kevin Akaluzia"]
+  },
+  {
+    "name": "Health talk",
+    "dateCreated": "14/06/2025",
+    "createdBy": " Mercy Joel",
+    "startTime": "1:00pm",
+    "endTime": "3:00pm",
+    "status": "Upcoming",
+    "members": ["Kevin Akaluzia", "Gilbert Emeka"]
+  },
+  {
+    "name": "Sickle cell day",
+    "dateCreated": "14/06/2025",
+    "createdBy": "Ademola Sam",
+    "startTime": ":00am",
+    "endTime": "3:00pm",
+    "status": "Upcoming",
+    "members": ["Achugo Ebuka"]
   }
 ]
