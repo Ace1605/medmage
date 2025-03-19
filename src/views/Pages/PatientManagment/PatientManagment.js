@@ -66,7 +66,7 @@ function PatientManagment() {
       period: "last 7 days",
     },
     {
-      label: "Discharged Today",
+      label: "Discharged Patients",
       number: "15",
       variance: -20,
       period: "last 7 days",

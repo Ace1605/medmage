@@ -55,6 +55,7 @@ import PatientInfo from "views/Pages/PatientManagment/PatientInfo";
 import { ExitIcon } from "components/Icons/Icons";
 import { UsersGroupIcon } from "components/Icons/Icons";
 import { InstitutionIcon } from "components/Icons/Icons";
+import Events from "views/Pages/Management/Events";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -115,7 +116,7 @@ const dashRoutes = [
         secondaryNavbar: false,
         icon: <InstitutionIcon color="inherit" />,
         path: "/management/events",
-        component: "",
+        component: <Events />,
         layout: "/admin",
       },
     ],
