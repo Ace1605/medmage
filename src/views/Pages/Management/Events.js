@@ -56,7 +56,7 @@ function Events() {
             </Text>
             <Button
               px="10px"
-              fontSize="12px"
+              fontSize="14px"
               colorScheme="blue"
               fontWeight="bold"
               w="90px"
@@ -66,8 +66,8 @@ function Events() {
               Add
               <Icon
                 as={BiPlus}
-                w="24px"
-                h="24px"
+                w="22px"
+                h="22px"
                 color={iconColor}
                 cursor="pointer"
                 ms="8px"

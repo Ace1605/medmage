@@ -143,7 +143,7 @@ function PatientManagment() {
             </Text>
             <Button
               px="10px"
-              fontSize="12px"
+              fontSize="14px"
               colorScheme="blue"
               fontWeight="bold"
               w="90px"
@@ -153,8 +153,8 @@ function PatientManagment() {
               Add
               <Icon
                 as={BiPlus}
-                w="24px"
-                h="24px"
+                w="22px"
+                h="22px"
                 color={iconColor}
                 cursor="pointer"
                 ms="8px"
@@ -260,6 +260,7 @@ function PatientManagment() {
                       Christian
                     </option>
                     <option value="muslim">Muslim</option>
+                    <option value="muslim">Other</option>
                   </Select>
                 </FormControl>
                 <FormControl minW={{ sm: "35%", lg: null }}>
@@ -304,16 +305,14 @@ function PatientManagment() {
                   <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                     Blood Pressure rate
                   </FormLabel>
-                  <Flex alignItems="center ">
+                  <Flex alignItems="center " gap="10px">
                     <Input
                       variant="main"
                       type="number"
-                      placeholder="SDP "
+                      placeholder="SDP"
                       fontSize="xs"
                     />
-                    <Text color={textColor} fontWeight="bold" fontSize="lg">
-                      /
-                    </Text>
+                    <Box w="22px" h="2px" bg="black" />
                     <Input
                       variant="main"
                       type="number"
