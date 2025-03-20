@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Health week",
+    "dateCreated": "14/06/2025",
+    "createdBy": "Ebuka Achugo",
+    "startTime": "11:00am",
+    "endTime": "2:00pm",
+    "status": "On-going",
+    "members": ["Dammy Ayobami", "Jay Ademola", "Samuel Davis"]
+  },
+  {
+    "name": "WHO Conference",
+    "dateCreated": "14/06/2025",
+    "createdBy": "Dammy Ayobami ",
+    "startTime": "12:00pm",
+    "endTime": "5:00pm",
+    "status": "Completed",
+    "members": ["Achugo Ebuka", "Kevin Akaluzia", "Gilbert Emeka"]
+  },
+  {
+    "name": "Vaccinate the young",
+    "dateCreated": "14/06/2025",
+    "createdBy": "Ademola Jay",
+    "startTime": "10:00am",
+    "endTime": "3:00pm",
+    "status": "Upcoming",
+    "members": ["Achugo Ebuka", "Kevin Akaluzia"]
+  },
+  {
+    "name": "Health talk",
+    "dateCreated": "14/06/2025",
+    "createdBy": " Mercy Joel",
+    "startTime": "1:00pm",
+    "endTime": "3:00pm",
+    "status": "Upcoming",
+    "members": ["Kevin Akaluzia", "Gilbert Emeka"]
+  },
+  {
+    "name": "Sickle cell day",
+    "dateCreated": "14/06/2025",
+    "createdBy": "Ademola Sam",
+    "startTime": ":00am",
+    "endTime": "3:00pm",
+    "status": "Upcoming",
+    "members": ["Achugo Ebuka"]
+  }
+]

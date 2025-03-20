@@ -55,6 +55,8 @@ import PatientInfo from "views/Pages/PatientManagment/PatientInfo";
 import { ExitIcon } from "components/Icons/Icons";
 import { UsersGroupIcon } from "components/Icons/Icons";
 import { InstitutionIcon } from "components/Icons/Icons";
+import Events from "views/Pages/Management/Events";
+import { MdEvent } from "react-icons/md";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -66,8 +68,8 @@ const dashRoutes = [
     collapse: false,
   },
   {
-    name: "Personnel Management",
-    path: "/personnel-management",
+    name: "Patient Management",
+    path: "/patient-management",
     icon: <PersonIcon color="inherit" />,
     component: <PatientManagment />,
     layout: "/admin",
@@ -97,7 +99,7 @@ const dashRoutes = [
       {
         name: "Users",
         secondaryNavbar: false,
-        icon: <UsersGroupIcon color="inherit"/>,
+        icon: <UsersGroupIcon color="inherit" />,
         path: "/management/users",
         component: <Users />,
         layout: "/admin",
@@ -105,9 +107,17 @@ const dashRoutes = [
       {
         name: "Institution",
         secondaryNavbar: false,
-        icon: <InstitutionIcon color="inherit"/>,
+        icon: <InstitutionIcon color="inherit" />,
         path: "/management/institution",
         component: "",
+        layout: "/admin",
+      },
+      {
+        name: "Events",
+        secondaryNavbar: false,
+        icon: <MdEvent color="inherit" />,
+        path: "/management/events",
+        component: <Events />,
         layout: "/admin",
       },
     ],
@@ -120,10 +130,10 @@ const dashRoutes = [
     component: <Settings />,
     layout: "/admin",
   },
-    {
+  {
     name: "Logout",
     icon: <ExitIcon color="inherit" />,
-    component: <SignInBasic/>,
+    component: <SignInBasic />,
     path: "/authentication/sign-in",
     layout: "/auth",
   },

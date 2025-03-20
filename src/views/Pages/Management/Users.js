@@ -177,20 +177,21 @@ function Users() {
             </Text>{" "}
             <Button
               px="10px"
-              fontSize="12px"
+              fontSize="14px"
               colorScheme="blue"
               fontWeight="bold"
-              w="110px"
+              w="90px"
               h="40px"
               onClick={() => setAddUser(true)}
             >
-              Add user
+              Add
               <Icon
                 as={BiPlus}
-                w="24px"
-                h="24px"
+                w="22px"
+                h="22px"
                 color={iconColor}
                 cursor="pointer"
+                ms="8px"
               />
             </Button>
           </Flex>
@@ -202,7 +203,7 @@ function Users() {
 
       {addUser && (
         <Modal
-          maxWidth={'500px'}
+          maxWidth={"500px"}
           label="Invite New User"
           handleCloseModal={() => setAddUser(false)}
         >

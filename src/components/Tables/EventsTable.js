@@ -17,10 +17,12 @@
 
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
+  Grid,
   Icon,
   Input,
   Select,
@@ -35,15 +37,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Modal from "components/Modal/Modal";
-import { RoleContext } from "contexts/RoleContext";
-import React, { useContext, useMemo, useState } from "react";
+import MultiSelect from "components/MultiSelect/MultiSelect";
+import React, { useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
   TiArrowSortedUp,
   TiArrowUnsorted,
 } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
 import {
   useGlobalFilter,
   usePagination,
@@ -52,17 +53,42 @@ import {
 } from "react-table";
 import { toast } from "sonner";
 
-function PatientsTable(props) {
-  const { columnsData, tableData } = props;
-  //   const [editPatient, setEditPatient] = useState(false);
-  const [deletePatient, setDeletePatient] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const navigate = useNavigate();
-  const { setIsSuperAdmin } = useContext(RoleContext);
+function EventsTable(props) {
+  const { options, tableData } = props;
+  const [editEvent, setEditEvent] = useState(false);
+  const [deleteEvent, setDeleteEvent] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const columns = useMemo(() => {
     return [
-      ...columnsData,
+      {
+        Header: "NAME",
+        accessor: "name",
+      },
+      {
+        Header: "DATE",
+        accessor: "dateCreated",
+      },
+      {
+        Header: "TIME",
+        accessor: "startTime",
+        Cell: ({ row }) => {
+          return (
+            <Text color={textColor}>
+              {`${row.original.startTime}-${row.original.endTime}`}
+            </Text>
+          );
+        },
+      },
+      {
+        Header: "ORGANIZER",
+        accessor: "createdBy",
+      },
+      {
+        Header: "STATUS",
+        accessor: "status",
+      },
+
       {
         Header: "Action",
         accessor: "action",
@@ -70,7 +96,6 @@ function PatientsTable(props) {
         sortType: false,
         Cell: ({ row }) => {
           const textColor = useColorModeValue("blue.600", "white");
-
           return (
             <Flex gap="16px" alignItems="center">
               <Icon
@@ -80,9 +105,8 @@ function PatientsTable(props) {
                 color={textColor}
                 cursor="pointer"
                 onClick={() => {
-                  setIsSuperAdmin(true);
-                  setSelectedPatient(row.original);
-                  navigate("/admin/personnel-management/patient-information");
+                  setSelectedEvent(row.original);
+                  setEditEvent(true);
                 }}
               />
               <Icon
@@ -92,8 +116,8 @@ function PatientsTable(props) {
                 color="red.400"
                 cursor="pointer"
                 onClick={() => {
-                  setSelectedPatient(row.original);
-                  setDeletePatient(true);
+                  setSelectedEvent(row.original);
+                  setDeleteEvent(true);
                 }}
               />
             </Flex>
@@ -140,40 +164,13 @@ function PatientsTable(props) {
     return arrPageCount;
   };
 
-  const { pageIndex, pageSize, globalFilter } = state;
+  const { pageIndex, pageSize = 10, globalFilter } = state;
+
   const textColor = useColorModeValue("gray.600", "white");
   return (
     <>
       <Flex direction="column" w="100%">
         <Flex justify="space-between" align="center" w="100%" px="22px">
-          <Stack
-            direction={{ sm: "column", md: "row" }}
-            spacing={{ sm: "4px", md: "12px" }}
-            align="center"
-            me="12px"
-            my="10px"
-            minW={{ sm: "100px", md: "200px" }}
-          >
-            <Select
-              variant="main"
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-              color="gray.500"
-              size="sm"
-              borderRadius="12px"
-              maxW="75px"
-              cursor="pointer"
-            >
-              <option>5</option>
-              <option>10</option>
-              <option>15</option>
-              <option>20</option>
-              <option>25</option>
-            </Select>
-            <Text fontSize="xs" color={textColor} fontWeight="normal">
-              entries per page
-            </Text>
-          </Stack>
           <Input
             variant="main"
             type="text"
@@ -238,17 +235,6 @@ function PatientsTable(props) {
                     {row.cells.map((cell, index) => {
                       return (
                         <Td
-                          cursor={cell.column.id !== "action" && "pointer"}
-                          onClick={() => {
-                            if (cell.column.id !== "action") {
-                              setIsSuperAdmin(false);
-                              setSelectedPatient(row.original);
-                              navigate(
-                                "/admin/personnel-management/patient-information"
-                              );
-                            }
-                            return;
-                          }}
                           color={textColor}
                           {...cell.getCellProps()}
                           fontSize={{ sm: "14px" }}
@@ -353,12 +339,12 @@ function PatientsTable(props) {
           </Stack>
         </Flex>
       </Flex>
-      {deletePatient && (
+      {deleteEvent && (
         <Modal
-          maxWidth="500px"
+          maxWidth={"500px"}
           handleCloseModal={() => {
-            setSelectedPatient(null);
-            setDeletePatient(false);
+            setSelectedEvent(null);
+            setDeleteEvent(false);
           }}
         >
           <Text
@@ -369,16 +355,26 @@ function PatientsTable(props) {
             mt="10px"
             mb="10px"
           >
-            Are you sure you want to delete this Paitent's Data?
+            Are you sure you want to delete this event?
           </Text>
           <Text
             color={textColor}
             fontWeight="bold"
             textAlign="center"
-            mb="25px"
+            mb="16px"
             fontSize={{ sm: "16px", lg: "18px" }}
           >
             This action cannot be undone
+          </Text>
+
+          <Text
+            color={textColor}
+            fontWeight="semibold"
+            textAlign="center"
+            mb="16px"
+            fontSize={{ sm: "16px" }}
+          >
+            {`Event: ${selectedEvent.name}`}
           </Text>
 
           <Flex
@@ -396,8 +392,8 @@ function PatientsTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setSelectedPatient(null);
-                setDeletePatient(false);
+                setSelectedEvent(null);
+                setDeleteEvent(false);
               }}
             >
               Cancel
@@ -410,8 +406,8 @@ function PatientsTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setDeletePatient(false);
-                toast.success("Patient's data deleted successfully");
+                setDeleteEvent(false);
+                toast.success("Event deleted successfully");
               }}
             >
               Confirm
@@ -419,8 +415,129 @@ function PatientsTable(props) {
           </Flex>
         </Modal>
       )}
+      {editEvent && (
+        <Modal
+          maxWidth={{ sm: "400px", md: "500px" }}
+          label={`Edit: ${selectedEvent.name}`}
+          handleCloseModal={() => {
+            setSelectedEvent(null);
+            setEditEvent(false);
+          }}
+        >
+          <FormControl>
+            <Box pb="15px">
+              <Grid
+                templateColumns={{
+                  base: "1fr",
+                  sm: "1fr",
+                }}
+                gap="15px"
+                spacing={{ sm: "8px", lg: "30px" }}
+                w={{ sm: "100%", lg: null }}
+                my="18px"
+              >
+                <FormControl>
+                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                    Name
+                  </FormLabel>
+                  <Input
+                    variant="main"
+                    placeholder="Enter event name"
+                    fontSize="xs"
+                    value={selectedEvent.name}
+                  />
+                </FormControl>
+                <Grid
+                  templateColumns={{
+                    base: "1fr",
+                    sm: "1fr",
+                    md: "repeat(2, 1fr)",
+                  }}
+                  gap="15px"
+                >
+                  <FormControl width="100%">
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Date
+                    </FormLabel>
+                    <Input
+                      variant="main"
+                      placeholder="Enter date"
+                      fontSize="xs"
+                      value={selectedEvent.dateCreated}
+                    />
+                  </FormControl>
+
+                  <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
+                    gap="10px"
+                  >
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Start Time
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        type="text"
+                        placeholder="Start time "
+                        fontSize="xs"
+                        value={selectedEvent.startTime}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        End Time
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        type="text"
+                        placeholder="End time"
+                        fontSize="xs"
+                        value={selectedEvent.endTime}
+                      />
+                    </FormControl>
+                  </Flex>
+                </Grid>
+              </Grid>
+
+              <MultiSelect
+                options={options}
+                preselected={selectedEvent.members}
+              />
+            </Box>
+            <Flex alignItems="center" gap="18px">
+              {" "}
+              <Button
+                fontSize="16px"
+                variant="dark"
+                fontWeight="bold"
+                w="100%"
+                h="45"
+                mb="10px"
+                onClick={() => setEditEvent(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                fontSize="16px"
+                colorScheme="blue"
+                fontWeight="bold"
+                w="100%"
+                h="45"
+                mb="10px"
+                onClick={() => {
+                  setEditEvent(false);
+                  toast.success("Event saved successfully");
+                }}
+              >
+                Save Changes
+              </Button>
+            </Flex>
+          </FormControl>
+        </Modal>
+      )}
     </>
   );
 }
 
-export default PatientsTable;
+export default EventsTable;

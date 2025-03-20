@@ -16,7 +16,7 @@
 */
 
 // Chakra imports
-import { InfoIcon, PhoneIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, InfoIcon, PhoneIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Button,
@@ -40,7 +40,8 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { PersonIcon } from "components/Icons/Icons";
-import React, { useState } from "react";
+import { RoleContext } from "contexts/RoleContext";
+import React, { useContext, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BiPlusMedical } from "react-icons/bi";
 import { IoDocumentText } from "react-icons/io5";
@@ -51,48 +52,9 @@ function PatientInfo() {
   const secondaryColor = useColorModeValue("gray.500", "white");
   const bgVerificationCard = useColorModeValue("gray.100", "navy.700");
   const textColor = useColorModeValue("gray.700", "white");
-  const bgSkillsInput = useColorModeValue("white", "navy.900");
-  const bgSkill = useColorModeValue("gray.700", "blue.500");
-  const borderColor = useColorModeValue("gray.200", "transparent");
-  const borderTableColor = useColorModeValue("gray.200", "gray.600");
-
-  const { colorMode } = useColorMode();
-
-  const [activeButtons, setActiveButtons] = useState({
-    messages: true,
-    social: false,
-    notifications: false,
-    backup: false,
-  });
-  const [skills, setSkills] = useState([
-    {
-      name: "chakra-ui",
-      id: 1,
-    },
-    {
-      name: "react",
-      id: 2,
-    },
-    {
-      name: "javascript",
-      id: 3,
-    },
-  ]);
 
   const [toggle, setToggle] = useState(false);
-
-  const keyPress = (e) => {
-    if (e.keyCode === 13) {
-      setSkills([
-        ...skills,
-        {
-          name: e.target.value,
-          id: skills.length === 0 ? 1 : skills[skills.length - 1].id + 1,
-        },
-      ]);
-      e.target.value = "";
-    }
-  };
+  const { isSuperAdmin } = useContext(RoleContext);
 
   return (
     <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
@@ -310,76 +272,184 @@ function PatientInfo() {
                 spacing={{ sm: "8px", lg: "30px" }}
                 w={{ sm: "100%", lg: null }}
               >
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     First Name
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter first name"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Middle Name
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter middle name"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Last Name
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter last name"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
 
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl
+                  minW={{ sm: "35%", lg: null }}
+                  isReadOnly={!isSuperAdmin}
+                >
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Birth Date
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="YYYY-MM-DD"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
 
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                  >
                     Sex
                   </FormLabel>
                   <Select
                     cursor="pointer"
                     variant="main"
-                    placeholder="Male"
-                    color="gray.400"
+                    color="gray.700"
                     fontSize="xs"
-                    isReadOnly
+                    icon={isSuperAdmin ? <ChevronDownIcon /> : ""}
+                    disabled={!isSuperAdmin}
+                    isReadOnly={isSuperAdmin ? false : true}
+                    sx={{
+                      _readOnly: {
+                        color: "gray.400",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   >
-                    <option value="option1">Male</option>
+                    <option value="option1" selected>
+                      Male
+                    </option>
                     <option value="option2">Female</option>
                   </Select>
                 </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl
+                  minW={{ sm: "35%", lg: null }}
+                  isReadOnly={!isSuperAdmin}
+                >
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Blood Type
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter blood group"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl
+                  minW={{ sm: "35%", lg: null }}
+                  isReadOnly={!isSuperAdmin}
+                >
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     National Id
                   </FormLabel>
                   <Input
@@ -387,11 +457,26 @@ function PatientInfo() {
                     type="number"
                     placeholder="Enter Id number"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
 
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Phone
                   </FormLabel>
                   <Input
@@ -399,74 +484,179 @@ function PatientInfo() {
                     variant="main"
                     placeholder="Enter phone number"
                     fontSize="xs"
-                    readOnly
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Email
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter email address"
                     fontSize="xs"
-                    readOnly
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
 
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Address
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter home address"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     City
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter city "
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     State
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter state"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Zip Code
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter zip code"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Country
                   </FormLabel>
                   <Input
                     variant="main"
                     placeholder="Enter country"
                     fontSize="xs"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
                   />
                 </FormControl>
               </Grid>
               <Flex justify="end" mt="18px">
-                <Button variant="dark" w="150px" h="35px" alignSelf="flex-end">
+                <Button
+                  display={isSuperAdmin ? "block" : "none"}
+                  variant="dark"
+                  w="150px"
+                  h="35px"
+                  alignSelf="flex-end"
+                >
                   UPDATE
                 </Button>
               </Flex>
@@ -486,23 +676,66 @@ function PatientInfo() {
             </CardHeader>
             <CardBody>
               <Stack direction="column" spacing="20px" w="100%">
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Name
                   </FormLabel>
                   <Input variant="main" placeholder="" fontSize="xs" />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Phone Number
                   </FormLabel>
-                  <Input variant="main" placeholder="" fontSize="xs" />
+                  <Input
+                    variant="main"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
+                    placeholder=""
+                    fontSize="xs"
+                  />
                 </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                <FormControl isReadOnly={!isSuperAdmin}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
                     Relationship
                   </FormLabel>
-                  <Input variant="main" placeholder="" fontSize="xs" />
+                  <Input
+                    variant="main"
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
+                    placeholder=""
+                    fontSize="xs"
+                  />
                 </FormControl>
                 <Flex justify="end" mt="18px">
                   <Button
@@ -510,6 +743,7 @@ function PatientInfo() {
                     w="150px"
                     h="35px"
                     alignSelf="flex-end"
+                    display={isSuperAdmin ? "block" : "none"}
                   >
                     UPDATE
                   </Button>
@@ -525,24 +759,56 @@ function PatientInfo() {
         >
           <Element id="medical" name="medical">
             <CardHeader mb="32px">
-              <Flex justify="space-between" w="100%">
-                <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                  Medical
-                </Text>
-              </Flex>
+              <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                Medical
+              </Text>
             </CardHeader>
             <CardBody>
-              <FormControl mb="16px">
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl mb="16px" isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Allergies
                 </FormLabel>
-                <Input variant="main" placeholder="" fontSize="xs" />
+                <Input
+                  variant="main"
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
+                  placeholder=""
+                  fontSize="xs"
+                />
               </FormControl>
-              <FormControl mb="16px">
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl mb="16px" isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Current Medications
                 </FormLabel>
                 <Textarea
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
                   _focus={{
                     borderColor: "gray.300",
                     boxShadow: "none",
@@ -552,11 +818,26 @@ function PatientInfo() {
                   fontSize="xs"
                 />
               </FormControl>
-              <FormControl>
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Medical History
                 </FormLabel>
                 <Textarea
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
                   _focus={{
                     borderColor: "gray.300",
                     boxShadow: "none",
@@ -567,7 +848,13 @@ function PatientInfo() {
                 />
               </FormControl>
               <Flex justify="end" mt="18px">
-                <Button variant="dark" w="150px" h="35px" alignSelf="flex-end">
+                <Button
+                  variant="dark"
+                  w="150px"
+                  h="35px"
+                  alignSelf="flex-end"
+                  display={isSuperAdmin ? "block" : "none"}
+                >
                   UPDATE
                 </Button>
               </Flex>
@@ -593,20 +880,64 @@ function PatientInfo() {
               </Flex>
             </CardHeader>
             <CardBody>
-              <FormControl mb="16px">
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl mb="16px" isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Insurance Provider
                 </FormLabel>
-                <Input variant="main" placeholder="" fontSize="xs" />
+                <Input
+                  variant="main"
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
+                  placeholder=""
+                  fontSize="xs"
+                />
               </FormControl>
-              <FormControl>
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Insurance Policy Number
                 </FormLabel>
-                <Input variant="main" placeholder="" fontSize="xs" />
+                <Input
+                  variant="main"
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
+                  placeholder=""
+                  fontSize="xs"
+                />
               </FormControl>
               <Flex justify="end" mt="18px">
-                <Button variant="dark" w="150px" h="35px" alignSelf="flex-end">
+                <Button
+                  variant="dark"
+                  w="150px"
+                  h="35px"
+                  alignSelf="flex-end"
+                  display={isSuperAdmin ? "block" : "none"}
+                >
                   UPDATE
                 </Button>
               </Flex>
@@ -632,23 +963,76 @@ function PatientInfo() {
               </Flex>
             </CardHeader>
             <CardBody>
-              <FormControl mb="16px">
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl mb="16px" isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Marita status
                 </FormLabel>
-                <Input variant="main" placeholder="" fontSize="xs" />
+                <Input
+                  variant="main"
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
+                  placeholder=""
+                  fontSize="xs"
+                />
               </FormControl>
-              <FormControl mb="16px">
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl mb="16px" isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Occupation
                 </FormLabel>
-                <Input variant="main" placeholder="" fontSize="xs" />
+                <Input
+                  variant="main"
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
+                  placeholder=""
+                  fontSize="xs"
+                />
               </FormControl>
-              <FormControl>
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+              <FormControl isReadOnly={!isSuperAdmin}>
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
                   Notes
                 </FormLabel>
                 <Textarea
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
                   _focus={{
                     borderColor: "gray.300", // Change to desired color
                     boxShadow: "none", // Remove the glow effect
@@ -659,7 +1043,13 @@ function PatientInfo() {
                 />
               </FormControl>
               <Flex justify="end" mt="18px">
-                <Button variant="dark" w="150px" h="35px" alignSelf="flex-end">
+                <Button
+                  variant="dark"
+                  w="150px"
+                  h="35px"
+                  alignSelf="flex-end"
+                  display={isSuperAdmin ? "block" : "none"}
+                >
                   UPDATE
                 </Button>
               </Flex>
@@ -669,7 +1059,7 @@ function PatientInfo() {
 
         {/* <Card
           w={{ sm: "100%", lg: "70%" }}
-          alignSelf="flex-end"
+          alignSelf="flex-end" display={isSuperAdmin ? "block" : "none"}
           justifySelf="flex-end"
         >
           <Element id="delete-account" name="delete-account">
