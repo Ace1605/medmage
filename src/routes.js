@@ -57,6 +57,8 @@ import { UsersGroupIcon } from "components/Icons/Icons";
 import { InstitutionIcon } from "components/Icons/Icons";
 import Events from "views/Pages/Management/Events";
 import { MdEvent } from "react-icons/md";
+import Todos from "views/Pages/Management/ToDo";
+import { RiTodoFill } from "react-icons/ri";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -118,6 +120,14 @@ const dashRoutes = [
         icon: <MdEvent color="inherit" />,
         path: "/management/events",
         component: <Events />,
+        layout: "/admin",
+      },
+      {
+        name: "Todos",
+        secondaryNavbar: false,
+        icon: <RiTodoFill color="inherit" />,
+        path: "/management/todos",
+        component: <Todos />,
         layout: "/admin",
       },
     ],
