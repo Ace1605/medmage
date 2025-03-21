@@ -3,7 +3,13 @@ import { Box, Button, Checkbox, Icon, Flex, Text } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 
-function MultiSelect({ label = "member", options, preselected = [] }) {
+function MultiSelect({
+  label = " Select Members",
+  selectedLabel = "member(s)",
+  options,
+  preselected = [],
+  disableOthersOnSelect = false,
+}) {
   const [selected, setSelected] = useState(preselected);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,17 +20,20 @@ function MultiSelect({ label = "member", options, preselected = [] }) {
   };
 
   const handleSelect = (option) => {
-    setSelected((prev) =>
-      prev.includes(option)
+    setSelected((prev) => {
+      if (disableOthersOnSelect) {
+        return prev.includes(option) ? [] : [option];
+      }
+      return prev.includes(option)
         ? prev.filter((item) => item !== option)
-        : [...prev, option]
-    );
+        : [...prev, option];
+    });
   };
 
   return (
     <Box position="relative" w="100%">
       <Text fontWeight="semibold" fontSize="xs" mb="10px">
-        Select Members
+        {label}
       </Text>
       <Button
         onClick={() => setIsOpen(!isOpen)}
@@ -43,7 +52,7 @@ function MultiSelect({ label = "member", options, preselected = [] }) {
         w="100%"
         fontSize="sm"
       >
-        {`${selected.length} ${label}(s)`}
+        {`${selected.length} ${selectedLabel}`}
 
         <Icon as={ChevronDownIcon} />
       </Button>
@@ -72,25 +81,27 @@ function MultiSelect({ label = "member", options, preselected = [] }) {
               msOverflowStyle: "none",
             }}
           >
-            {options.map((option) => (
-              <Flex
-                key={option}
-                onClick={() => handleSelect(option)}
-                align="center"
-                px="3"
-                py="2"
-                cursor="pointer"
-                fontSize="sm"
-                _hover={{ bg: "gray.100" }}
-              >
-                <Checkbox
-                  onChange={() => handleSelect(option)}
-                  isChecked={selected.includes(option)}
-                  mr={2}
-                />
-                {option}
-              </Flex>
-            ))}
+            {options.map((option) => {
+              return (
+                <Flex
+                  key={option}
+                  onClick={() => handleSelect(option)}
+                  align="center"
+                  px="3"
+                  py="2"
+                  cursor="pointer"
+                  fontSize="sm"
+                  _hover={{ bg: "gray.100" }}
+                >
+                  <Checkbox
+                    onChange={() => handleSelect(option)}
+                    isChecked={selected.includes(option)}
+                    mr={2}
+                  />
+                  {option}
+                </Flex>
+              );
+            })}
           </motion.div>
         )}
       </AnimatePresence>
