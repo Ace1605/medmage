@@ -15,7 +15,7 @@
 
 */
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 // NEW imports
 
@@ -31,6 +31,10 @@ import {
   Select,
   Button,
   FormControl,
+  ListItem,
+  UnorderedList,
+  OrderedList,
+  Box,
 } from "@chakra-ui/react";
 import bgCardReports from "assets/img/background-card-reports.png";
 // Custom components
@@ -44,7 +48,8 @@ import { Userscolumns } from "variables/columnsData";
 import usersData from "variables/usersData.json";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
-import { BiPlus } from "react-icons/bi";
+import { BiPlus, BiUpload } from "react-icons/bi";
+import { DownloadIcon } from "@chakra-ui/icons";
 
 function Users() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -54,6 +59,7 @@ function Users() {
   const { colorMode } = useColorMode();
 
   const [addUser, setAddUser] = useState(false);
+  const [importUsers, SetImportUsers] = useState(false);
 
   const userRoles = [
     { key: "Super Admin", value: "super admin" },
@@ -65,6 +71,26 @@ function Users() {
     { key: "Doctor", value: "doctor" },
     { key: "Nurse", value: "nurse" },
   ];
+  const requiredField = [
+    "Email",
+    "Role: Please select from, ADMIN, DOCTOR or  NURSE",
+  ];
+
+  const fileInputRef = useRef(null);
+  const [csvFile, setCsvFile] = useState(null);
+
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setCsvFile(file);
+    }
+  };
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
@@ -175,25 +201,40 @@ function Users() {
             <Text color={textColor} fontSize="lg" fontWeight="bold" mb="6px">
               Users
             </Text>{" "}
-            <Button
-              px="10px"
-              fontSize="14px"
-              colorScheme="blue"
-              fontWeight="bold"
-              w="90px"
-              h="40px"
-              onClick={() => setAddUser(true)}
-            >
-              Add
-              <Icon
-                as={BiPlus}
-                w="22px"
-                h="22px"
-                color={iconColor}
+            <Flex gap="12px" alignItems="center">
+              <Button
+                px="10px"
+                fontSize="14px"
+                colorScheme="blue"
+                fontWeight="bold"
+                w="90px"
+                h="40px"
+                onClick={() => setAddUser(true)}
+              >
+                Add
+                <Icon
+                  as={BiPlus}
+                  w="22px"
+                  h="22px"
+                  color={iconColor}
+                  cursor="pointer"
+                  ms="8px"
+                />
+              </Button>
+              <Button
+                onClick={() => SetImportUsers(true)}
+                leftIcon={<BiUpload size="16px" />}
+                fontSize="14px"
+                fontWeight="normal"
                 cursor="pointer"
-                ms="8px"
-              />
-            </Button>
+                variant="outlined"
+                minw="90px"
+                h="40px"
+                borderWidth="2px"
+              >
+                Import
+              </Button>
+            </Flex>
           </Flex>
         </CardHeader>
         <CardBody px="22px">
@@ -260,6 +301,86 @@ function Users() {
               Invite
             </Button>
           </FormControl>
+        </Modal>
+      )}
+      {importUsers && (
+        <Modal
+          maxWidth={"600px"}
+          label="Import Users"
+          handleCloseModal={() => SetImportUsers(false)}
+        >
+          <OrderedList pt="10px">
+            <Grid gap="15px">
+              <Box>
+                <ListItem>Download the template</ListItem>
+                <Button
+                  rightIcon={<DownloadIcon size="16px" />}
+                  fontSize="14px"
+                  fontWeight="normal"
+                  cursor="pointer"
+                  variant="outlined"
+                  minw="90px"
+                  h="40px"
+                  borderWidth="2px"
+                >
+                  CSV template
+                </Button>
+              </Box>
+              <Box>
+                <ListItem>Fill out the fields as follows</ListItem>
+                <UnorderedList>
+                  {requiredField.map((field) => {
+                    return <ListItem>{field}</ListItem>;
+                  })}
+                </UnorderedList>
+              </Box>
+              <Box>
+                <ListItem>Upload your file to send out the invites</ListItem>
+                <Box>
+                  <input
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    type="file"
+                    id="fileUpload"
+                    name="file"
+                    accept=".csv, .xlsx"
+                    style={{ display: "none" }}
+                  />
+                  <Button
+                    rightIcon={<BiUpload size="19px" />}
+                    fontSize="17px"
+                    fontWeight="normal"
+                    cursor="pointer"
+                    variant="outlined"
+                    w="100%"
+                    h="50px"
+                    mt="10px"
+                    borderWidth="2px"
+                    onClick={handleClick}
+                  >
+                    {csvFile ? csvFile.name : " Upload your CSV or XLSX file"}
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </OrderedList>
+
+          <Button
+            fontSize="18px"
+            colorScheme="blue"
+            fontWeight="bold"
+            w="100%"
+            h="50"
+            mb="10px"
+            mt="20px"
+            onClick={() => {
+              SetImportUsers(false);
+              setCsvFile(null);
+              toast.success("Users list uploaded successfully");
+            }}
+          >
+            Upload
+          </Button>
         </Modal>
       )}
     </Flex>

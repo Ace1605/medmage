@@ -8,12 +8,20 @@ export const RoleProvider = ({ children }) => {
     return role ? JSON.parse(role) : false;
   });
 
+  const [toggle, setToggle] = useState(() => {
+    const toggled = sessionStorage.getItem("toggled");
+    return toggled ? JSON.parse(toggled) : false;
+  });
+
   useEffect(() => {
     sessionStorage.setItem("isSuperAdmin", JSON.stringify(isSuperAdmin));
-  }, [isSuperAdmin]);
+    sessionStorage.setItem("toggled", JSON.stringify(toggle));
+  }, [isSuperAdmin, toggle]);
 
   return (
-    <RoleContext.Provider value={{ isSuperAdmin, setIsSuperAdmin }}>
+    <RoleContext.Provider
+      value={{ isSuperAdmin, setIsSuperAdmin, toggle, setToggle }}
+    >
       {children}
     </RoleContext.Provider>
   );
