@@ -41,7 +41,7 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { PersonIcon } from "components/Icons/Icons";
 import { RoleContext } from "contexts/RoleContext";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BiPlusMedical } from "react-icons/bi";
 import { IoDocumentText } from "react-icons/io5";
@@ -53,8 +53,16 @@ function PatientInfo() {
   const bgVerificationCard = useColorModeValue("gray.100", "navy.700");
   const textColor = useColorModeValue("gray.700", "white");
 
-  const [toggle, setToggle] = useState(false);
-  const { isSuperAdmin } = useContext(RoleContext);
+  const [isDisplayed, setisDisplayed] = useState(true);
+  const { isSuperAdmin, setIsSuperAdmin, toggle, setToggle } = useContext(
+    RoleContext
+  );
+
+  useEffect(() => {
+    if (isSuperAdmin && !toggle) {
+      setisDisplayed(false);
+    }
+  }, []);
 
   return (
     <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
@@ -232,18 +240,27 @@ function PatientInfo() {
                   mt={{ sm: "16px", lg: null }}
                   ms={{ sm: "6px", lg: null }}
                 >
-                  <Text
-                    color={textColor}
-                    fontWeight="normal"
-                    me="14px"
-                    fontSize="sm"
-                  >
-                    Switch to {toggle ? "invisible" : "visible"}
-                  </Text>
-                  <Switch
-                    colorScheme="blue"
-                    onChange={() => setToggle(!toggle)}
-                  />
+                  {" "}
+                  {isDisplayed && (
+                    <>
+                      <Text
+                        color={textColor}
+                        fontWeight="normal"
+                        me="14px"
+                        fontSize="sm"
+                      >
+                        Switch to {toggle ? "View mode" : "Edit mode"}
+                      </Text>
+                      <Switch
+                        isChecked={toggle}
+                        colorScheme="blue"
+                        onChange={() => {
+                          setToggle((prev) => !prev);
+                          setIsSuperAdmin((prev) => !prev);
+                        }}
+                      />
+                    </>
+                  )}
                 </Flex>
               </Flex>
             </CardBody>
