@@ -211,15 +211,15 @@ function Users() {
                 h="40px"
                 onClick={() => setAddUser(true)}
               >
-                Add
-                <Icon
+                Add user
+                {/* <Icon
                   as={BiPlus}
                   w="22px"
                   h="22px"
                   color={iconColor}
                   cursor="pointer"
                   ms="8px"
-                />
+                /> */}
               </Button>
               <Button
                 onClick={() => SetImportUsers(true)}

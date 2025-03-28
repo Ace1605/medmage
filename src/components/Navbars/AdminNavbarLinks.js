@@ -79,7 +79,7 @@ export default function HeaderLinks(props) {
   let navbarIcon =
     fixed && scrolled
       ? useColorModeValue("gray.700", "gray.200")
-      : useColorModeValue("white", "gray.200");
+      : useColorModeValue("gray.600", "gray.200");
   let menuBg = useColorModeValue("white", "navy.800");
   if (secondary) {
     navbarIcon = "white";
@@ -99,7 +99,7 @@ export default function HeaderLinks(props) {
         marginTop={{ sm: "15px", md: "0" }}
         height="100%"
       >
-        <Text fontWeight="semibold" fontSize="16px" me="10px" color="white">
+        <Text fontWeight="semibold" fontSize="16px" me="10px" color="gray.600">
           <ProfileIcon
             color={navbarIcon}
             w="22px"
@@ -114,6 +114,7 @@ export default function HeaderLinks(props) {
             as={Button}
             colorScheme="blue"
             me={{ sm: "0px", md: "10px" }}
+            zIndex={999}
           >
             {selected}
           </MenuButton>
@@ -173,15 +174,7 @@ export default function HeaderLinks(props) {
           routes={routes}
           {...rest}
         />
-        {/* <SettingsIcon
-          cursor="pointer"
-          ms={{ base: "16px", xl: "0px" }}
-          me="16px"
-          onClick={props.onOpen}
-          color={navbarIcon}
-          w="18px"
-          h="18px"
-        /> */}
+
         <Menu>
           <MenuButton>
             <BellIcon color={navbarIcon} w="18px" h="18px" />

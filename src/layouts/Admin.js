@@ -122,8 +122,7 @@ export default function Dashboard(props) {
       }
     });
   };
-  let bgBoxHeight = "40vh";
-  let bgBoxColor = useColorModeValue("blue.500", "navy.900");
+  const sideBarFullwidth = sidebarWidth + 16;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode } = useColorMode();
@@ -131,7 +130,7 @@ export default function Dashboard(props) {
   document.documentElement.layout = "admin";
   // Chakra Color Mode
   return (
-    <Box>
+    <Box h="100vh" bg="#f3f5f7">
       <SidebarContext.Provider
         value={{
           sidebarWidth,
@@ -140,14 +139,6 @@ export default function Dashboard(props) {
           setToggleSidebar,
         }}
       >
-        <Box
-          minH={bgBoxHeight}
-          h="100% !important"
-          w="100%"
-          position="absolute"
-          bg={bgBoxColor}
-          top="0"
-        />
         <Sidebar
           routes={routes}
           logo={
@@ -186,7 +177,7 @@ export default function Dashboard(props) {
         <MainPanel
           w={{
             base: "100%",
-            xl: `calc(100% - ${sidebarWidth}px)`,
+            xl: `calc(100% - ${sideBarFullwidth}px)`,
           }}
         >
           <Portal>
@@ -215,14 +206,6 @@ export default function Dashboard(props) {
               </PanelContainer>
             </PanelContent>
           ) : null}
-          {/* <Box>
-						<Footer />
-					</Box> */}
-          {/* <Portal>
-            <Box>
-              <FixedPlugin fixed={fixed} onOpen={onOpen} />
-            </Box>
-          </Portal> */}
           <Configurator
             secondary={getActiveNavbar(routes)}
             isOpen={isOpen}
