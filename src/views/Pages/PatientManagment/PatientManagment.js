@@ -191,7 +191,7 @@ function PatientManagment() {
               </Button>
               <Button
                 onClick={() => setImportPatients(true)}
-                //leftIcon={<BiUpload size="16px" />}
+                leftIcon={<BiUpload size="16px" />}
                 fontSize="14px"
                 fontWeight="normal"
                 cursor="pointer"

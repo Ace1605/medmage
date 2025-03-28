@@ -130,7 +130,7 @@ export default function Dashboard(props) {
   document.documentElement.layout = "admin";
   // Chakra Color Mode
   return (
-    <Box h="100vh" bg="#f3f5f7">
+    <Box H="100vh" bg="#f3f5f7">
       <SidebarContext.Provider
         value={{
           sidebarWidth,

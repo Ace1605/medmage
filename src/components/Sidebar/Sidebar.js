@@ -1091,7 +1091,7 @@ export function SidebarResponsive(props) {
   let links = <Box>{createLinks(routes)}</Box>;
   //  BRAND
   //  Chakra Color Mode
-  let hamburgerColor = "white";
+  let hamburgerColor = "blackAlpha";
 
   var brand = (
     <Box pt={"25px"} mb="12px">

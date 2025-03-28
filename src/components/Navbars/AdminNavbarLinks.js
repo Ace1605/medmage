@@ -16,7 +16,7 @@
 */
 
 // Chakra Icons
-import { BellIcon } from "@chakra-ui/icons";
+import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 // Chakra Imports
 import {
   Button,
@@ -36,10 +36,9 @@ import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
 import avatar3 from "assets/img/avatars/avatar3.png";
 // Custom Icons
-import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
+import { ProfileIcon } from "components/Icons/Icons";
 // Custom Components
 import { ItemContent } from "components/Menu/ItemContent";
-import { SearchBar } from "components/Navbars/SearchBar/SearchBar";
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
@@ -99,9 +98,14 @@ export default function HeaderLinks(props) {
         marginTop={{ sm: "15px", md: "0" }}
         height="100%"
       >
-        <Text fontWeight="semibold" fontSize="16px" me="10px" color="gray.600">
+        <Text
+          fontWeight="semibold"
+          fontSize="16px"
+          me="10px"
+          color="blackAlpha"
+        >
           <ProfileIcon
-            color={navbarIcon}
+            color="blackAlpha"
             w="22px"
             h="22px"
             me={{ sm: "0px" }}
@@ -112,9 +116,15 @@ export default function HeaderLinks(props) {
         <Menu>
           <MenuButton
             as={Button}
-            colorScheme="blue"
+            variant="outlined"
+            borderWidth="2px"
+            color="BlackAlpha"
+            bg="transparent"
+            _hover={{ bg: "transparent" }}
+            rightIcon={<ChevronDownIcon fontSize="20px" />}
             me={{ sm: "0px", md: "10px" }}
-            zIndex={999}
+            minW="80px"
+            fontSize="15px"
           >
             {selected}
           </MenuButton>
