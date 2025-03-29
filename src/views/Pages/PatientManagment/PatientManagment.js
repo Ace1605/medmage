@@ -175,19 +175,19 @@ function PatientManagment() {
                 fontSize="14px"
                 colorScheme="blue"
                 fontWeight="bold"
-                w="90px"
+                minw="90px"
                 h="40px"
                 onClick={() => setAddPatient(true)}
               >
-                Add
-                <Icon
+                Add patient
+                {/* <Icon
                   as={BiPlus}
                   w="22px"
                   h="22px"
                   color={iconColor}
                   cursor="pointer"
                   ms="8px"
-                />
+                /> */}
               </Button>
               <Button
                 onClick={() => setImportPatients(true)}
@@ -200,7 +200,7 @@ function PatientManagment() {
                 h="40px"
                 borderWidth="2px"
               >
-                Import
+                Bulk invite
               </Button>
             </Flex>
           </Flex>

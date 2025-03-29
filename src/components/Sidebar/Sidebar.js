@@ -54,6 +54,7 @@ import { FaCircle } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import logoFullColor from "assets/logos/logo_full colour.png";
 import logoWhite from "assets/logos/Logo_white.png";
+import { createChildLinks, createChildLinksResponsive } from "./ChildrenLinks";
 
 // FUNCTIONS
 
@@ -62,8 +63,6 @@ function Sidebar(props) {
   let location = useLocation();
 
   const { routes, landing, logo } = props;
-
-  console.log(props);
 
   // this is for the rest of the collapses
   const { sidebarWidth, setSidebarWidth, toggleSidebar } = React.useContext(
@@ -76,15 +75,16 @@ function Sidebar(props) {
     return location.pathname.includes(routeName);
   };
   // this function creates the links and collapses that appear in the sidebar (left menu)
+
   const createLinks = (routes) => {
     // Chakra Color Mode
-    let activeBg = "blue.500";
+    let activeBg = "white";
     let inactiveBg = useColorModeValue("transparent", "navy.700");
-    let activeColor = useColorModeValue("gray.700", "white");
+    let activeColor = useColorModeValue("white", "white");
     let inactiveColor = useColorModeValue("gray.400", "gray.400");
     let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
-    let activeAccordionBg = useColorModeValue("white", "navy.700");
-    let activeColorIcon = "white";
+    let activeAccordionBg = useColorModeValue("blue.500", "navy.700");
+    let activeColorIcon = "blue.500";
     let inactiveColorIcon = "blue.500";
 
     if (landing) {
@@ -93,7 +93,7 @@ function Sidebar(props) {
       activeColor = "white";
       inactiveColor = "white";
       sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
-      activeAccordionBg = "rgba(255, 255, 255, 0.11)";
+      activeAccordionBg = "#ffffff";
       activeColorIcon = "blue.500";
       inactiveColorIcon = "white";
     }
@@ -102,6 +102,7 @@ function Sidebar(props) {
       if (prop.category) {
         return <Box key={key}>{""}</Box>;
       }
+
       if (prop.collapse) {
         return (
           <Accordion key={key} allowToggle>
@@ -130,14 +131,14 @@ function Sidebar(props) {
                   xl: sidebarWidth === 275 ? "90%" : "70%",
                   "2xl": sidebarWidth === 275 ? "95%" : "77%",
                 }}
-                px={prop.icon ? null : "0px"}
+                px={prop.icon ? "12px" : null}
                 py={prop.icon ? "12px" : null}
                 bg={
                   activeRoute(prop.path) && prop.icon
                     ? activeAccordionBg
                     : "transparent"
                 }
-                ms={sidebarWidth !== 275 ? (prop.icon ? "12px" : "8px") : null}
+                ms={sidebarWidth !== 275 ? (prop.icon ? "0px" : "8px") : null}
               >
                 {activeRoute(prop.path) ? (
                   <Flex
@@ -237,7 +238,7 @@ function Sidebar(props) {
                       >
                         <IconBox
                           bg={inactiveBg}
-                          color={inactiveColorIcon}
+                          color={activeAccordionBg}
                           h="30px"
                           w="30px"
                           me={sidebarWidth === 275 ? "12px" : "0px"}
@@ -279,7 +280,13 @@ function Sidebar(props) {
                   </Flex>
                 )}
                 <AccordionIcon
-                  color={landing ? "white" : "gray.400"}
+                  color={
+                    landing
+                      ? "white"
+                      : activeRoute(prop.path)
+                      ? "white"
+                      : "gray.400"
+                  }
                   display={
                     prop.icon
                       ? sidebarWidth === 275
@@ -306,8 +313,9 @@ function Sidebar(props) {
                 <List>
                   {
                     prop.icon
-                      ? createLinks(prop.items) // for bullet accordion links
-                      : createAccordionLinks(prop.items) // for non-bullet accordion links
+                      ? createChildLinks(prop.items)
+                      : // for bullet accordion links
+                        createAccordionLinks(prop.items) // for non-bullet accordion links
                   }
                 </List>
               </AccordionPanel>
@@ -336,14 +344,14 @@ function Sidebar(props) {
                 xl: sidebarWidth === 275 ? "90%" : "70%",
                 "2xl": sidebarWidth === 275 ? "95%" : "77%",
               }}
-              px={prop.icon ? null : "0px"}
+              px={prop.icon ? "12px" : null}
               py={prop.icon ? "12px" : null}
               bg={
                 activeRoute(prop.path) && prop.icon
                   ? activeAccordionBg
                   : "transparent"
               }
-              ms={sidebarWidth !== 275 ? (prop.icon ? "12px" : "8px") : null}
+              ms={sidebarWidth !== 275 ? (prop.icon ? "0px" : "8px") : null}
             >
               {activeRoute(prop.path) ? (
                 <Flex
@@ -478,7 +486,9 @@ function Sidebar(props) {
                         {prop.icon}
                       </IconBox>
                       <Text
-                        color={prop.name === 'Logout' ? '#FF3B30': inactiveColor}
+                        color={
+                          prop.name === "Logout" ? "#FF3B30" : inactiveColor
+                        }
                         my="auto"
                         fontSize="sm"
                         display={sidebarWidth === 275 ? "block" : "none"}
@@ -567,7 +577,7 @@ function Sidebar(props) {
               }
               fontSize="sm"
             >
-              {sidebarWidth === 275 ? prop.name : prop.name[0]}
+              {sidebarWidth === 275 ? "" : prop.name[0]}
             </Text>
           </ListItem>
         </NavLink>
@@ -701,16 +711,13 @@ export function SidebarResponsive(props) {
   };
 
   // Chakra Color Mode
-  let activeBg = "blue.500";
+  let activeBg = "white";
   let inactiveBg = useColorModeValue("transparent", "navy.700");
-  let activeColor = useColorModeValue("gray.700", "white");
+  let activeColor = useColorModeValue("white", "white");
   let inactiveColor = useColorModeValue("gray.400", "gray.400");
-  let activeAccordionBg = useColorModeValue("white", "navy.700");
-  let sidebarActiveShadow = useColorModeValue(
-    "0px 7px 11px rgba(0, 0, 0, 0.04)",
-    "none"
-  );
-  let activeColorIcon = "white";
+  let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
+  let activeAccordionBg = useColorModeValue("blue.500", "navy.700");
+  let activeColorIcon = "blue.500";
   let inactiveColorIcon = "blue.500";
   let sidebarBackgroundColor = useColorModeValue("white", "navy.900");
 
@@ -731,13 +738,19 @@ export function SidebarResponsive(props) {
                 justify="center"
                 key={key}
                 borderRadius="8px"
-                px={prop.icon ? null : "0px"}
+                px={prop.icon ? "12px" : null}
                 py={prop.icon ? "12px" : null}
                 boxShadow={
                   activeRoute(prop.path) && prop.icon
                     ? sidebarActiveShadow
                     : "none"
                 }
+                _hover={{
+                  boxShadow:
+                    activeRoute(prop.path) && prop.icon
+                      ? sidebarActiveShadow
+                      : sidebarActiveShadow,
+                }}
                 bg={
                   activeRoute(prop.path) && prop.icon
                     ? activeAccordionBg
@@ -750,14 +763,13 @@ export function SidebarResponsive(props) {
                     boxSize="initial"
                     justifyContent="flex-start"
                     alignItems="center"
-                    bg="transparent"
                     transition={variantChange}
                     mx={{
                       xl: "auto",
                     }}
                     px="0px"
                     borderRadius="8px"
-                    _hover={{}}
+                    // _hover={{}}
                     w="100%"
                     _active={{
                       bg: "inherit",
@@ -855,13 +867,15 @@ export function SidebarResponsive(props) {
                     )}
                   </Text>
                 )}
-                <AccordionIcon color="gray.400" />
+                <AccordionIcon
+                  color={activeRoute(prop.path) ? "white" : "gray.400"}
+                />
               </AccordionButton>
               <AccordionPanel pe={prop.icon ? null : "0px"} pb="8px">
                 <List>
                   {
                     prop.icon
-                      ? createLinks(prop.items) // for bullet accordion links
+                      ? createChildLinksResponsive(prop.items) // for bullet accordion links
                       : createAccordionLinks(prop.items) // for non-bullet accordion links
                   }
                 </List>
@@ -874,13 +888,19 @@ export function SidebarResponsive(props) {
           <NavLink key={key} to={prop.layout + prop.path}>
             <Box
               borderRadius="8px"
-              px={prop.icon ? null : "0px"}
+              px={prop.icon ? "12px" : null}
               py={prop.icon ? "12px" : null}
               boxShadow={
                 activeRoute(prop.path) && prop.icon
                   ? sidebarActiveShadow
                   : "none"
               }
+              _hover={{
+                boxShadow:
+                  activeRoute(prop.path) && prop.icon
+                    ? sidebarActiveShadow
+                    : sidebarActiveShadow,
+              }}
               bg={
                 activeRoute(prop.path) && prop.icon
                   ? activeAccordionBg
@@ -900,7 +920,6 @@ export function SidebarResponsive(props) {
                   }}
                   px="0px"
                   borderRadius="8px"
-                  _hover={{}}
                   w="100%"
                   _active={{
                     bg: "inherit",
@@ -1004,7 +1023,6 @@ export function SidebarResponsive(props) {
                         }
                         my="auto"
                         fontSize="sm"
-                        fontWeight={activeRoute(prop.name) ? "bold" : "normal"}
                       >
                         {prop.name}
                       </Text>
@@ -1028,11 +1046,6 @@ export function SidebarResponsive(props) {
                               : inactiveColor
                           }
                           fontSize="sm"
-                          fontWeight={
-                            activeRoute(prop.path.toLowerCase())
-                              ? "bold"
-                              : "normal"
-                          }
                         >
                           {prop.name}
                         </Text>
@@ -1078,7 +1091,7 @@ export function SidebarResponsive(props) {
   let links = <Box>{createLinks(routes)}</Box>;
   //  BRAND
   //  Chakra Color Mode
-  let hamburgerColor = "white";
+  let hamburgerColor = "blackAlpha";
 
   var brand = (
     <Box pt={"25px"} mb="12px">
@@ -1135,13 +1148,20 @@ export function SidebarResponsive(props) {
               _focus={{ boxShadow: "none" }}
               _hover={{ boxShadow: "none" }}
             />
-            <DrawerBody maxW="250px" px="1rem">
+            <DrawerBody
+              maxW="250px"
+              px="1rem"
+              sx={{
+                "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                "scrollbar-width": "none", // Hide scrollbar in Firefox
+              }}
+            >
               <Box maxW="100%" h="100vh">
                 <Box mb="30px">{brand}</Box>
                 <Stack direction="column" mb="40px">
                   <Box>{links}</Box>
                 </Stack>
-                {/* <SidebarDocs /> */}
               </Box>
             </DrawerBody>
           </DrawerContent>

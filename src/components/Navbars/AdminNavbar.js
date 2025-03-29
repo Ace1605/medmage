@@ -148,7 +148,7 @@ export default function AdminNavbar(props) {
         <HamburgerIcon
           w="30px"
           h="20px"
-          color="#fff"
+          color="blackAlpha"
           cursor="pointer"
           display={{ sm: "none", xl: "block" }}
           onClick={() => {

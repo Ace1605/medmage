@@ -62,7 +62,7 @@ function Settings() {
   const secondaryColor = useColorModeValue("gray.500", "white");
   const bgVerificationCard = useColorModeValue("gray.100", "navy.700");
   const textColor = useColorModeValue("gray.700", "white");
-  const iconColor = useColorModeValue("white", "white");
+  const iconColor = useColorModeValue("black", "white");
   const bgSkillsInput = useColorModeValue("white", "navy.900");
   const bgSkill = useColorModeValue("gray.700", "blue.500");
   const borderColor = useColorModeValue("gray.200", "transparent");
@@ -182,11 +182,11 @@ function Settings() {
               me="8px"
               w="18px"
               h="18px"
-              color={activeButtons.Profile && !isDark ? "black" : iconColor}
+              color={activeButtons.Profile && !isDark ? "blue.500" : iconColor}
               display={{ sm: "none", lg: "block" }}
             />
             <Text
-              color={!activeButtons.Profile && "white"}
+              color={!activeButtons.Profile ? "black" : "blue.500"}
               fontWeight="bold"
               fontSize="xs"
             >
@@ -232,11 +232,13 @@ function Settings() {
               me="8px"
               w="18px"
               h="18px"
-              color={activeButtons.basicInfo && !isDark ? "black" : iconColor}
+              color={
+                activeButtons.basicInfo && !isDark ? "blue.500" : iconColor
+              }
               display={{ sm: "none", lg: "block" }}
             />
             <Text
-              color={!activeButtons.basicInfo && "white"}
+              color={!activeButtons.basicInfo ? "black" : "blue.500"}
               fontWeight="bold"
               fontSize="xs"
             >
@@ -283,12 +285,12 @@ function Settings() {
               w="18px"
               h="18px"
               color={
-                activeButtons.changePassword && !isDark ? "black" : iconColor
+                activeButtons.changePassword && !isDark ? "blue.500" : iconColor
               }
               display={{ sm: "none", lg: "block" }}
             />
             <Text
-              color={!activeButtons.changePassword && "white"}
+              color={!activeButtons.changePassword ? "black" : "blue.500"}
               fontWeight="bold"
               fontSize="xs"
             >
@@ -336,12 +338,12 @@ function Settings() {
               w="18px"
               h="18px"
               color={
-                activeButtons.twoFactorAuth && !isDark ? "black" : iconColor
+                activeButtons.twoFactorAuth && !isDark ? "blue.500" : iconColor
               }
               display={{ sm: "none", lg: "block" }}
             />
             <Text
-              color={!activeButtons.twoFactorAuth && "white"}
+              color={!activeButtons.twoFactorAuth ? "black" : "blue.500"}
               fontWeight="bold"
               fontSize="xs"
             >
@@ -388,12 +390,12 @@ function Settings() {
               w="18px"
               h="18px"
               color={
-                activeButtons.notifications && !isDark ? "black" : iconColor
+                activeButtons.notifications && !isDark ? "blue.500" : iconColor
               }
               display={{ sm: "none", lg: "block" }}
             />
             <Text
-              color={!activeButtons.notifications && "white"}
+              color={!activeButtons.notifications ? "black" : "blue.500"}
               fontWeight="bold"
               fontSize="xs"
             >
@@ -440,12 +442,12 @@ function Settings() {
               w="18px"
               h="18px"
               color={
-                activeButtons.deleteAccount && !isDark ? "black" : iconColor
+                activeButtons.deleteAccount && !isDark ? "blue.500" : iconColor
               }
               display={{ sm: "none", lg: "block" }}
             />
             <Text
-              color={!activeButtons.deleteAccount && "white"}
+              color={!activeButtons.deleteAccount ? "black" : "blue.500"}
               fontWeight="bold"
               fontSize="xs"
             >
