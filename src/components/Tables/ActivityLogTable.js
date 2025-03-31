@@ -34,8 +34,8 @@ function ActivityLogTable(props) {
       {
         Header: "TIME STAMP",
         accessor: "timeStamp",
-        minWidth: 120,
-        maxWidth: 120,
+        minWidth: 170,
+        width: 170,
       },
       {
         Header: "USER",
