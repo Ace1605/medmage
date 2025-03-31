@@ -4,9 +4,10 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Grid,
-  Icon,
-  Input,
+  Stat,
+  StatLabel,
+  SimpleGrid,
+  StatNumber,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";

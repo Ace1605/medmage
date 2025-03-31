@@ -60,6 +60,7 @@ import { MdEvent } from "react-icons/md";
 import Todos from "views/Pages/Management/ToDo";
 import { RiTodoFill } from "react-icons/ri";
 import ActivityLog from "views/Pages/Activity/ActivityLog";
+import Finance from "views/Pages/Finance/Finance";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -89,7 +90,7 @@ const dashRoutes = [
     name: "Finance",
     path: "/finance",
     icon: <CartIcon color="inherit" />,
-    component: "",
+    component: <Finance/>,
     layout: "/admin",
     collapse: false,
   },
