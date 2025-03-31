@@ -1,0 +1,74 @@
+[
+  {
+    "timeStamp": "14-06-2025 03:20 pm ",
+    "user": "Dammy Ayobami",
+    "role": "Super admin",
+    "activityType": "Login",
+    "description": "Super admin Dammy Ayobami has logged in",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "14-04-2025 03:30 pm ",
+    "user": "Dammy Ayobami",
+    "role": "Super admin",
+    "activityType": "Todo Management",
+    "description": " Super admin Dammy Ayobami assinged Todo task to Gilbert Emeka",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "13-04-2025 02:20 pm",
+    "user": "Kevin Akaluzia",
+    "role": "Doctor",
+    "activityType": "Patient management",
+    "description": "Doctor Kevin Akaluzia Edited patient with Id 1118hgsbu32hg profile ",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "01-04-2025 10:20 am",
+    "user": "Chris Ojeba",
+    "role": " Admin",
+    "activityType": "Login",
+    "description": "Admin Chris Ojeba has logged in",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "15-03-2025 11:15 am ",
+    "user": "Ebuka Achugo",
+    "role": "Admin staff",
+    "activityType": "login",
+    "description": "Admin staff Ebuka Achugo has logged in",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "22-03-2025 11:15 pm",
+    "user": "Gilbert Emeka",
+    "role": "Super admin",
+    "activityType": "Event Management",
+    "description": "Super admin Gilbert Emeka created an event",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "22-03-2025 11:15 pm",
+    "user": "John Ademola",
+    "role": "Super admin",
+    "activityType": "Login",
+    "description": "Super admin John Ademola has logged in",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "22-03-2025 11:15 pm",
+    "user": "John Ademola",
+    "role": "Super admin",
+    "activityType": "Login",
+    "description": "Super admin John Ademola has logged in",
+    "ipAddress": "104.28.120.82"
+  },
+  {
+    "timeStamp": "22-03-2025 11:15 pm",
+    "user": "Kevin Akaluzia",
+    "role": "Doctor",
+    "activityType": "Login",
+    "description": "Doctor Kevin Akaluzia has logged in",
+    "ipAddress": "104.28.120.82"
+  }
+]

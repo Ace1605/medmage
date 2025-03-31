@@ -59,6 +59,8 @@ import Events from "views/Pages/Management/Events";
 import { MdEvent } from "react-icons/md";
 import Todos from "views/Pages/Management/ToDo";
 import { RiTodoFill } from "react-icons/ri";
+import ActivityLog from "views/Pages/Activity/ActivityLog";
+import Finance from "views/Pages/Finance/Finance";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -81,14 +83,14 @@ const dashRoutes = [
     name: "Activity log",
     path: "/activity-log",
     icon: <StatsIcon color="inherit" />,
-    component: "",
+    component: <ActivityLog />,
     layout: "/admin",
   },
   {
     name: "Finance",
     path: "/finance",
     icon: <CartIcon color="inherit" />,
-    component: "",
+    component: <Finance/>,
     layout: "/admin",
     collapse: false,
   },
