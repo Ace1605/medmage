@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import { ChevronDownIcon, InfoIcon, PhoneIcon } from "@chakra-ui/icons";
 import {
@@ -40,11 +23,11 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { PersonIcon } from "components/Icons/Icons";
-import { RoleContext } from "contexts/RoleContext";
+import { AppContext } from "contexts/AppContext";
 import React, { useContext, useEffect, useState } from "react";
-import { AiFillDelete } from "react-icons/ai";
 import { BiPlusMedical } from "react-icons/bi";
 import { IoDocumentText } from "react-icons/io5";
+import { useLocation } from "react-router-dom";
 import { Element, Link } from "react-scroll";
 
 function PatientInfo() {
@@ -53,9 +36,11 @@ function PatientInfo() {
   const bgVerificationCard = useColorModeValue("gray.100", "navy.700");
   const textColor = useColorModeValue("gray.700", "white");
 
+  const { pathname } = useLocation();
+
   const [isDisplayed, setisDisplayed] = useState(true);
   const { isSuperAdmin, setIsSuperAdmin, toggle, setToggle } = useContext(
-    RoleContext
+    AppContext
   );
 
   useEffect(() => {
@@ -63,6 +48,10 @@ function PatientInfo() {
       setisDisplayed(false);
     }
   }, []);
+
+  useEffect(() => {
+    setToggle(false);
+  }, [pathname]);
 
   return (
     <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
