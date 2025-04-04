@@ -8,6 +8,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider } from "contexts/AppContext";
+import "./index.css";
 
 // Chakra imports
 

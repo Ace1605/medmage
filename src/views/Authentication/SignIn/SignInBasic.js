@@ -28,9 +28,11 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import BasicImage from "assets/img/BasicImage.png";
-import React from "react";
+import React, { useState } from "react";
 import AuthBasic from "layouts/AuthBasic";
 import { useNavigate } from "react-router-dom";
+import { useLogin } from "hooks/api/auth/useLogin";
+import { Spinner } from "components/svgs/Icons";
 
 function SignInCover() {
   // Chakra color mode
@@ -38,6 +40,10 @@ function SignInCover() {
   const forgotPasswordColor = useColorModeValue("blue.400", "blue");
   const bgForm = useColorModeValue("white", "navy.800");
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { handleLogin, isLoading } = useLogin();
 
   return (
     <AuthBasic
@@ -92,6 +98,8 @@ function SignInCover() {
               placeholder="Your email address"
               mb="24px"
               size="lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Password
@@ -104,9 +112,20 @@ function SignInCover() {
               placeholder="Your password"
               mb="24px"
               size="lg"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
-              onClick={() => navigate("/admin/dashboard")}
+              onClick={() =>
+                handleLogin({ email: email, password: password }, (res) => {
+                  if (res.status === 200) {
+                    localStorage.setItem("medmage_token", res?.data.data.token);
+                    navigate("/admin/dashboard");
+                  } else {
+                    console.log("throw a toast");
+                  }
+                })
+              }
               fontSize="10px"
               variant="dark"
               fontWeight="bold"
@@ -114,7 +133,7 @@ function SignInCover() {
               h="45"
               mb="14px"
             >
-              SIGN IN
+              {isLoading ? <Spinner /> : "SIGN IN"}
             </Button>
           </FormControl>
           <Text

@@ -10,11 +10,10 @@ export const useTQuery = ({ url, queryKey, token, params, enabled = true }) => {
         params,
         withCredentials: true,
         headers: {
-          "X-CHANNEL": "CUSTOMER_APP",
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data;
+      return response.data.data;
     },
     enabled,
   });

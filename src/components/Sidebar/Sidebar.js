@@ -55,6 +55,8 @@ import { NavLink, useLocation } from "react-router-dom";
 import logoFullColor from "assets/logos/logo_full colour.png";
 import logoWhite from "assets/logos/Logo_white.png";
 import { createChildLinks, createChildLinksResponsive } from "./ChildrenLinks";
+import { useGetProfile } from "hooks/api/auth/useGetProfile";
+import { ellipsizeText } from "hooks/formatter/useEllipsizeText";
 
 // FUNCTIONS
 
@@ -623,7 +625,7 @@ function Sidebar(props) {
           fontWeight="semibold"
           letterSpacing="1px"
         >
-          Medplus
+          {ellipsizeText(localStorage.getItem("provider"), 10)}
         </Text>
       </Stack>
       <HSeparator my="20px" />
@@ -1102,7 +1104,7 @@ export function SidebarResponsive(props) {
         </Text>
         <Box w="1px" h="20px" bg={"black"} />
         <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
-          Medplus
+          {ellipsizeText(localStorage.getItem("provider"), 10)}
         </Text>
       </Stack>
       <HSeparator my="26px" />
@@ -1144,10 +1146,10 @@ export function SidebarResponsive(props) {
             }}
             borderRadius="16px"
           >
-            <DrawerCloseButton
+            {/* <DrawerCloseButton
               _focus={{ boxShadow: "none" }}
               _hover={{ boxShadow: "none" }}
-            />
+            /> */}
             <DrawerBody
               maxW="250px"
               px="1rem"

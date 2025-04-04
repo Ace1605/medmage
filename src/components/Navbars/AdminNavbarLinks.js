@@ -49,6 +49,8 @@ import {
   ArgonLogoLight,
   ChakraLogoLight,
 } from "components/Icons/Icons";
+import { useGetProfile } from "hooks/api/auth/useGetProfile";
+import { ellipsizeText } from "hooks/formatter/useEllipsizeText";
 
 export default function HeaderLinks(props) {
   const {
@@ -64,15 +66,9 @@ export default function HeaderLinks(props) {
   const { colorMode } = useColorMode();
   const notificationColor = useColorModeValue("gray.700", "white");
 
-  const hospitals = [
-    { key: "Medplus", value: "medplus" },
-    { key: "Lagoon", value: "lagoon" },
-    { key: "Luth", value: "luth" },
-    { key: "St. Ives", value: "st. ives" },
-    { key: "EverCare", value: "evercare" },
-  ];
+  const { data, isLoading, error, isFetching } = useGetProfile();
 
-  const [selected, setSelected] = useState(hospitals[0].key);
+  const [selected, setSelected] = useState(data?.providers[0].name);
 
   // Chakra Color Mode
   let navbarIcon =
@@ -83,6 +79,9 @@ export default function HeaderLinks(props) {
   if (secondary) {
     navbarIcon = "white";
   }
+
+  localStorage.setItem("provider", selected ?? data?.providers[0].name);
+
   return (
     <Flex
       pe={{ sm: "0px", md: "16px" }}
@@ -110,7 +109,7 @@ export default function HeaderLinks(props) {
             h="22px"
             me={{ sm: "0px" }}
           />{" "}
-          Ebuka
+          {data?.user?.first_name}
         </Text>
 
         <Menu>
@@ -118,23 +117,26 @@ export default function HeaderLinks(props) {
             as={Button}
             variant="outlined"
             borderWidth="2px"
-            color="BlackAlpha"
+            color="#a0aec0"
             bg="transparent"
             _hover={{ bg: "transparent" }}
             rightIcon={<ChevronDownIcon fontSize="20px" />}
             me={{ sm: "0px", md: "10px" }}
             minW="80px"
+            maxW="140px"
             fontSize="15px"
           >
-            {selected}
+            {ellipsizeText(selected ?? data?.providers[0].name, 10)}
           </MenuButton>
 
           <MenuList p="16px 8px" bg={menuBg}>
             <Flex flexDirection="column">
-              {hospitals.map(({ key }, i) => {
+              {(data?.providers ?? []).map(({ name }, i) => {
                 return (
                   <MenuItem
-                    onClick={() => setSelected(key)}
+                    onClick={() => {
+                      setSelected(name);
+                    }}
                     key={i}
                     borderRadius="8px"
                     mb="10px"
@@ -145,7 +147,7 @@ export default function HeaderLinks(props) {
                       mb="5px"
                       color={notificationColor}
                     >
-                      {key}
+                      {name}
                     </Text>
                   </MenuItem>
                 );

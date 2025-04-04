@@ -49,6 +49,7 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { HSeparator } from "components/Separator/Separator";
+import { useGetProfile } from "hooks/api/auth/useGetProfile";
 import React, { useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BsCircleFill, BsToggleOn } from "react-icons/bs";
@@ -127,6 +128,8 @@ function Settings() {
       });
     }
   };
+
+  const { data, isLoading, error, isFetching } = useGetProfile();
 
   return (
     <Flex direction="column" pt={{ sm: "70px", lg: "75px" }}>
@@ -496,10 +499,10 @@ function Settings() {
                     <Avatar src={avatar4} w="80px" h="80px" me="22px" />
                     <Flex direction="column">
                       <Text color={textColor} fontWeight="bold" fontSize="lg">
-                        Esthera Jackson
+                        {data?.user?.first_name} {data?.user?.last_name}
                       </Text>
                       <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                        esthera@simmmple.com
+                        {data?.user.email}
                       </Text>
                     </Flex>
                   </Flex>
@@ -548,7 +551,8 @@ function Settings() {
                         variant="main"
                         placeholder="eg. Michael"
                         fontSize="xs"
-                        readOnly
+                        readOnly={false}
+                        value={data?.user?.first_name}
                       />
                     </FormControl>
                     <FormControl>
@@ -559,7 +563,8 @@ function Settings() {
                         variant="main"
                         placeholder="eg. Jackson"
                         fontSize="xs"
-                        readOnly
+                        readOnly={false}
+                        value={data?.user?.last_name}
                       />
                     </FormControl>
                   </Stack>
@@ -576,7 +581,7 @@ function Settings() {
                         placeholder="Male"
                         color="gray.400"
                         fontSize="xs"
-                        isReadOnly
+                        isReadOnly={false}
                       >
                         <option value="option1">Male</option>
                         <option value="option2">Female</option>
@@ -667,7 +672,7 @@ function Settings() {
                         variant="main"
                         placeholder="eg. esthera@address.com"
                         fontSize="xs"
-                        readOnly
+                        readOnly={false}
                       />
                     </FormControl>
                     <FormControl>
@@ -678,7 +683,7 @@ function Settings() {
                         variant="main"
                         placeholder="eg. esthera@address.com"
                         fontSize="xs"
-                        readOnly
+                        readOnly={false}
                       />
                     </FormControl>
                   </Stack>
@@ -691,7 +696,7 @@ function Settings() {
                         variant="main"
                         placeholder="eg. Bucharest"
                         fontSize="xs"
-                        readOnly
+                        readOnly={false}
                       />
                     </FormControl>
                     <FormControl>
@@ -702,7 +707,8 @@ function Settings() {
                         variant="main"
                         placeholder="eg. +40 941 353 292"
                         fontSize="xs"
-                        readOnly
+                        readOnly={false}
+                        value={data?.user?.phone_number}
                       />
                     </FormControl>
                   </Stack>
@@ -719,7 +725,7 @@ function Settings() {
                         placeholder="English"
                         color="gray.400"
                         fontSize="xs"
-                        isReadOnly
+                        isReadOnly={false}
                       >
                         <option value="option1">French</option>
                         <option value="option2">Spanish</option>
@@ -773,7 +779,7 @@ function Settings() {
                           p="0px"
                           onKeyDown={(e) => keyPress(e)}
                           fontSize="xs"
-                          readOnly
+                          readOnly={false}
                         />
                       </Flex>
                     </FormControl>
@@ -813,7 +819,7 @@ function Settings() {
                       variant="main"
                       placeholder="Current Password"
                       fontSize="xs"
-                      readOnly
+                      readOnly={false}
                     />
                   </FormControl>
                   <FormControl>
@@ -824,7 +830,7 @@ function Settings() {
                       variant="main"
                       placeholder="New Password"
                       fontSize="xs"
-                      readOnly
+                      readOnly={false}
                     />
                   </FormControl>
                   <FormControl>
@@ -835,7 +841,7 @@ function Settings() {
                       variant="main"
                       placeholder="Confirm New Password"
                       fontSize="xs"
-                      readOnly
+                      readOnly={false}
                     />
                   </FormControl>
                   <Flex direction="column">
