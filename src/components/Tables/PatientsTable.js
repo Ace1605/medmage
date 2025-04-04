@@ -35,7 +35,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Modal from "components/Modal/Modal";
-import { RoleContext } from "contexts/RoleContext";
+import { AppContext } from "contexts/AppContext";
 import React, { useContext, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
@@ -58,7 +58,7 @@ function PatientsTable(props) {
   const [deletePatient, setDeletePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const navigate = useNavigate();
-  const { setIsSuperAdmin } = useContext(RoleContext);
+  const { setIsSuperAdmin } = useContext(AppContext);
 
   const columns = useMemo(() => {
     return [

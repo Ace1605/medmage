@@ -1,7 +1,15 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Button, Checkbox, Icon, Flex, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Icon,
+  Flex,
+  Text,
+  useOutsideClick,
+} from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 function MultiSelect({
   label = " Select Members",
@@ -12,6 +20,7 @@ function MultiSelect({
 }) {
   const [selected, setSelected] = useState(preselected);
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef(null);
 
   const dropdownVariants = {
     hidden: { opacity: 0, y: -10, scale: 0.95 },
@@ -30,8 +39,13 @@ function MultiSelect({
     });
   };
 
+  useOutsideClick({
+    ref,
+    handler: () => setIsOpen(false),
+  });
+
   return (
-    <Box position="relative" w="100%">
+    <Box ref={ref} position="relative" w="100%">
       <Text fontWeight="semibold" fontSize="xs" mb="10px">
         {label}
       </Text>
@@ -85,7 +99,13 @@ function MultiSelect({
               return (
                 <Flex
                   key={option}
-                  onClick={() => handleSelect(option)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (disableOthersOnSelect) {
+                      setTimeout(() => setIsOpen(false), 200);
+                    }
+                    handleSelect(option);
+                  }}
                   align="center"
                   px="3"
                   py="2"
@@ -94,7 +114,13 @@ function MultiSelect({
                   _hover={{ bg: "gray.100" }}
                 >
                   <Checkbox
-                    onChange={() => handleSelect(option)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (disableOthersOnSelect) {
+                        setTimeout(() => setIsOpen(false), 200);
+                      }
+                      handleSelect(option);
+                    }}
                     isChecked={selected.includes(option)}
                     mr={2}
                   />
