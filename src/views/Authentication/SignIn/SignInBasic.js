@@ -38,6 +38,7 @@ function SignInCover() {
   const forgotPasswordColor = useColorModeValue("blue.400", "blue");
   const bgForm = useColorModeValue("white", "navy.800");
   const navigate = useNavigate();
+
   return (
     <AuthBasic
       title="Welcome!"
