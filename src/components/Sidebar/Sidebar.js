@@ -330,6 +330,7 @@ function Sidebar(props) {
       } else if (prop.name === "Logout") {
         return (
           <Box
+            key={key}
             onClick={() => {
               localStorage.removeItem("medmage_token");
               localStorage.removeItem("medmage_user");
@@ -954,6 +955,7 @@ export function SidebarResponsive(props) {
       } else if (prop.name === "Logout") {
         return (
           <Box
+            key={key}
             fontWeight="bold"
             cursor="pointer"
             onClick={() => {

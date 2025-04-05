@@ -34,6 +34,7 @@ import {
 import { AppContext } from "contexts/AppContext";
 import { useGetProfile } from "hooks/api/auth/useGetProfile";
 import { toast } from "sonner";
+import FullScreenLoader from "components/FullScreenLoader/FullScreenLoader";
 // Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -134,18 +135,7 @@ export default function Dashboard(props) {
     navigate("/auth/authentication/sign-in");
   }
 
-  if (isLoading)
-    return (
-      <div
-        style={{
-          height: "100vh",
-          color: "black",
-          fontSize: "40px",
-        }}
-      >
-        <p>loading....</p>
-      </div>
-    );
+  if (isLoading) return <FullScreenLoader />;
 
   return (
     <Box H="100vh" bg="#f3f5f7">
