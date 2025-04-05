@@ -41,7 +41,7 @@ import { ProfileIcon } from "components/Icons/Icons";
 import { ItemContent } from "components/Menu/ItemContent";
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import routes from "routes.js";
 import {
   ArgonLogoDark,
@@ -49,8 +49,8 @@ import {
   ArgonLogoLight,
   ChakraLogoLight,
 } from "components/Icons/Icons";
-import { useGetProfile } from "hooks/api/auth/useGetProfile";
 import { ellipsizeText } from "hooks/formatter/useEllipsizeText";
+import { AppContext } from "contexts/AppContext";
 
 export default function HeaderLinks(props) {
   const {
@@ -66,9 +66,8 @@ export default function HeaderLinks(props) {
   const { colorMode } = useColorMode();
   const notificationColor = useColorModeValue("gray.700", "white");
 
-  const { data, isLoading, error, isFetching } = useGetProfile();
-
-  const [selected, setSelected] = useState(data?.providers[0].name);
+  const { providers, user } = useContext(AppContext);
+  const [selected, setSelected] = useState(providers?.[0]?.name);
 
   // Chakra Color Mode
   let navbarIcon =
@@ -79,8 +78,6 @@ export default function HeaderLinks(props) {
   if (secondary) {
     navbarIcon = "white";
   }
-
-  localStorage.setItem("provider", selected ?? data?.providers[0].name);
 
   return (
     <Flex
@@ -109,7 +106,7 @@ export default function HeaderLinks(props) {
             h="22px"
             me={{ sm: "0px" }}
           />{" "}
-          {data?.user?.first_name}
+          {user?.first_name}
         </Text>
 
         <Menu>
@@ -126,12 +123,12 @@ export default function HeaderLinks(props) {
             maxW="140px"
             fontSize="15px"
           >
-            {ellipsizeText(selected ?? data?.providers[0].name, 10)}
+            {ellipsizeText(selected ?? providers?.[0]?.name, 10)}
           </MenuButton>
 
           <MenuList p="16px 8px" bg={menuBg}>
             <Flex flexDirection="column">
-              {(data?.providers ?? []).map(({ name }, i) => {
+              {(providers ?? []).map(({ name }, i) => {
                 return (
                   <MenuItem
                     onClick={() => {

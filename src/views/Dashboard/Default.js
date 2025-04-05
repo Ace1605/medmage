@@ -28,6 +28,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  color,
 } from "@chakra-ui/react";
 
 // Custom icons

@@ -9,6 +9,7 @@ import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider } from "contexts/AppContext";
 import "./index.css";
+import AppRoutes from "routes/AppRoutes";
 
 // Chakra imports
 
@@ -18,13 +19,14 @@ export default function Main() {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <ChakraProvider theme={theme}>
-          <Routes>
+          {/* <Routes>
             <Route path="auth/*" element={<AuthLayout />} />
             <Route path="admin/*" element={<AdminLayout />} />
             <Route path="landing/*" element={<LandingLayout />} />
             <Route path="rtl/*" element={<RTLLayout />} />
             <Route path="/" element={<Navigate to="/auth" replace />} />
-          </Routes>
+          </Routes> */}
+          <AppRoutes />
           <Toaster richColors duration={3000} position="top-right" />
         </ChakraProvider>
       </AppProvider>

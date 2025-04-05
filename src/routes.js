@@ -90,7 +90,7 @@ const dashRoutes = [
     name: "Finance",
     path: "/finance",
     icon: <CartIcon color="inherit" />,
-    component: <Finance/>,
+    component: <Finance />,
     layout: "/admin",
     collapse: false,
   },
@@ -145,9 +145,6 @@ const dashRoutes = [
   {
     name: "Logout",
     icon: <ExitIcon color="inherit" />,
-    component: <SignInBasic />,
-    path: "/authentication/sign-in",
-    layout: "/auth",
   },
   {
     name: "ROUTES",
