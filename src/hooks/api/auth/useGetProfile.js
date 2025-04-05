@@ -1,9 +1,9 @@
 import { useTQuery } from "../useQuery";
 
-export const useGetProfile = () => {
+export const useGetProfile = (token) => {
   const { data, isLoading, refetch, error, isFetching } = useTQuery({
     url: "profile",
-    token: localStorage.getItem("medmage_token"),
+    token: token,
     queryKey: "profile",
   });
 

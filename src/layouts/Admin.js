@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import {
   Portal,
@@ -26,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import "assets/css/plugin-styles.css";
 import Configurator from "components/Configurator/Configurator";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin";
 
 // Custom components
 import MainPanel from "components/Layout/MainPanel";
@@ -36,9 +18,9 @@ import PanelContent from "components/Layout/PanelContent";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import { SidebarContext } from "contexts/SidebarContext";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css"; // ES6
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import routes from "routes.js";
 
 import {
@@ -49,6 +31,10 @@ import {
   ArgonLogoMinifiedDark,
   ArgonLogoMinifiedLight,
 } from "components/Icons/Icons";
+import { AppContext } from "contexts/AppContext";
+import { useGetProfile } from "hooks/api/auth/useGetProfile";
+import { toast } from "sonner";
+import FullScreenLoader from "components/FullScreenLoader/FullScreenLoader";
 // Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -129,6 +115,28 @@ export default function Dashboard(props) {
   document.documentElement.dir = "ltr";
   document.documentElement.layout = "admin";
   // Chakra Color Mode
+  // Get profile
+  const navigate = useNavigate();
+
+  const { token, setUser, user, setProviders } = useContext(AppContext);
+
+  const { data, isLoading, error, isFetching } = useGetProfile(token);
+
+  useEffect(() => {
+    if (data) {
+      setProviders(data.providers);
+      setUser(data.user);
+    } else {
+    }
+  }, [data]);
+
+  if (error) {
+    toast.error("Unable to get user profie");
+    navigate("/auth/authentication/sign-in");
+  }
+
+  if (isLoading) return <FullScreenLoader />;
+
   return (
     <Box H="100vh" bg="#f3f5f7">
       <SidebarContext.Provider
