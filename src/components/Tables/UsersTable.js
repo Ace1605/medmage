@@ -26,6 +26,8 @@ import {
   Select,
   Stack,
   Table,
+  Checkbox,
+  CheckboxGroup,
   Tbody,
   Td,
   Text,
@@ -35,7 +37,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Modal from "components/Modal/Modal";
-import React, { useMemo, useState } from "react";
+import { Spinner } from "components/svgs/Icons";
+import { AppContext } from "contexts/AppContext";
+import dayjs from "dayjs";
+import { useGetUserRoles } from "hooks/api/management/users/useGetUserRoles";
+import { useUpdateUserRoles } from "hooks/api/management/users/useUpdateUserRoles";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
@@ -51,24 +58,87 @@ import {
 import { toast } from "sonner";
 
 function UsersTable(props) {
-  const { columnsData, tableData } = props;
+  const { tableData, refetchUsers } = props;
   const [editUser, setEditUser] = useState(false);
   const [deleteUser, setDeleteUser] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const { token } = useContext(AppContext);
+  const { data: roles, isLoading, isFetching, refetch } = useGetUserRoles(
+    token
+  );
 
-  const userRoles = [
-    { key: "Super Admin", value: "super admin" },
-    { key: "State Admin", value: "state admin" },
-    {
-      key: "Administrative Staff",
-      value: "institution administrative staff",
-    },
-    { key: "Doctor", value: "doctor" },
-    { key: "Nurse", value: "nurse" },
-  ];
+  const { handleRoleUpdate, isLoading: isUpdating } = useUpdateUserRoles(token);
+
   const columns = useMemo(() => {
     return [
-      ...columnsData,
+      {
+        Header: "Id",
+        accessor: "id",
+      },
+      {
+        Header: "NAME",
+        Cell: ({ row }) => {
+          return (
+            <div style={{ width: "150px" }}>
+              <span>
+                {row.original.first_name} {row.original.last_name}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        Header: "EMAIL",
+        accessor: "email",
+      },
+      {
+        Header: "ROLES",
+        accessor: "roles",
+        Cell: ({ row }) => {
+          return (
+            <div style={{ width: "150px" }}>
+              {row.original.roles.map((item, i) => {
+                const isLast = row.original.roles.length - 1 === i;
+                return (
+                  <span key={i}>
+                    {item}
+                    {!isLast && ", "}
+                  </span>
+                );
+              })}
+            </div>
+          );
+        },
+      },
+      {
+        Header: "CREATED",
+        accessor: "dateCreated",
+        Cell: ({ row }) => {
+          return (
+            <div>
+              <span>
+                {row.original.dateCreated
+                  ? dayjs(row.original.dateCreated).format("DD, MMM YYYY")
+                  : "---"}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        Header: "CREATED BY",
+        accessor: "createdBy",
+        Cell: ({ row }) => {
+          return (
+            <div>
+              <span>
+                {row.original.createdBy ? row.original.createdBy : "---"}
+              </span>
+            </div>
+          );
+        },
+      },
       {
         Header: "Action",
         accessor: "action",
@@ -86,6 +156,7 @@ function UsersTable(props) {
                 cursor="pointer"
                 onClick={() => {
                   setSelectedUser(row.original);
+                  setSelectedRoles(row.original.roles);
                   setEditUser(true);
                 }}
               />
@@ -348,7 +419,7 @@ function UsersTable(props) {
       </Flex>
       {deleteUser && (
         <Modal
-          maxWidth={'500px'}
+          maxWidth={"500px"}
           handleCloseModal={() => {
             setSelectedUser(null);
             setDeleteUser(false);
@@ -421,7 +492,7 @@ function UsersTable(props) {
       )}
       {editUser && (
         <Modal
-          maxWidth={'500px'}
+          maxWidth={"500px"}
           handleCloseModal={() => {
             setSelectedUser(null);
             setEditUser(false);
@@ -445,34 +516,27 @@ function UsersTable(props) {
             textAlign="center"
           >{`User: ${selectedUser.email}`}</Text>
           <FormControl>
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Role
-            </FormLabel>
-            <Select
-              variant="main"
-              color="gray.400"
-              isReadOnly
-              fontSize="sm"
+            <FormLabel
               ms="4px"
-              type="email"
-              mb="24px"
-              size="lg"
-              cursor="pointer"
+              fontSize="sm"
+              fontWeight="bold"
+              color={textColor}
             >
-              {userRoles.map(({ key, value }, i) => {
-                return (
-                  <option
-                    key={i}
-                    selected={selectedUser.role === key}
-                    value={value}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {key}
-                  </option>
-                );
-              })}
-            </Select>
-
+              Select Role(s)
+            </FormLabel>
+            <CheckboxGroup
+              colorScheme="blue"
+              value={selectedRoles}
+              onChange={(values) => setSelectedRoles(values)}
+            >
+              <Stack spacing={2}>
+                {roles.map(({ name, id }) => (
+                  <Checkbox key={id} value={name} textTransform="capitalize">
+                    {name}
+                  </Checkbox>
+                ))}
+              </Stack>
+            </CheckboxGroup>
             <Flex
               alignItems="center"
               justifyContent="space-evenly"
@@ -501,11 +565,24 @@ function UsersTable(props) {
                 h="45"
                 px="30px"
                 onClick={() => {
-                  setEditUser(false);
-                  toast.success(" User Role Edited successfully");
+                  handleRoleUpdate(
+                    selectedUser.id,
+                    {
+                      roles: selectedRoles,
+                    },
+                    (res) => {
+                      if (res.status === 200) {
+                        refetchUsers();
+                        setEditUser(false);
+                        toast.success("User Role Edited successfully");
+                      } else {
+                        toast.error(res?.message);
+                      }
+                    }
+                  );
                 }}
               >
-                Confirm
+                {isUpdating ? <Spinner /> : "Confirm"}
               </Button>
             </Flex>
           </FormControl>
