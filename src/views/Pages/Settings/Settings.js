@@ -49,8 +49,8 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { HSeparator } from "components/Separator/Separator";
-import { useGetProfile } from "hooks/api/auth/useGetProfile";
-import React, { useRef, useState } from "react";
+import { AppContext } from "contexts/AppContext";
+import React, { useContext, useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BsCircleFill, BsToggleOn } from "react-icons/bs";
 import { FaCube, FaUser } from "react-icons/fa";
@@ -70,6 +70,7 @@ function Settings() {
   const borderTableColor = useColorModeValue("gray.200", "gray.600");
 
   const { colorMode } = useColorMode();
+  const { user } = useContext(AppContext);
   const isDark = colorMode === "dark";
 
   const [activeButtons, setActiveButtons] = useState({
@@ -128,8 +129,6 @@ function Settings() {
       });
     }
   };
-
-  const { data, isLoading, error, isFetching } = useGetProfile();
 
   return (
     <Flex direction="column" pt={{ sm: "70px", lg: "75px" }}>
@@ -499,10 +498,10 @@ function Settings() {
                     <Avatar src={avatar4} w="80px" h="80px" me="22px" />
                     <Flex direction="column">
                       <Text color={textColor} fontWeight="bold" fontSize="lg">
-                        {data?.user?.first_name} {data?.user?.last_name}
+                        {user?.first_name} {user?.last_name}
                       </Text>
                       <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                        {data?.user.email}
+                        {user?.email}
                       </Text>
                     </Flex>
                   </Flex>
@@ -552,7 +551,7 @@ function Settings() {
                         placeholder="eg. Michael"
                         fontSize="xs"
                         readOnly={false}
-                        value={data?.user?.first_name}
+                        value={user?.first_name}
                       />
                     </FormControl>
                     <FormControl>
@@ -564,7 +563,7 @@ function Settings() {
                         placeholder="eg. Jackson"
                         fontSize="xs"
                         readOnly={false}
-                        value={data?.user?.last_name}
+                        value={user?.last_name}
                       />
                     </FormControl>
                   </Stack>
@@ -708,7 +707,7 @@ function Settings() {
                         placeholder="eg. +40 941 353 292"
                         fontSize="xs"
                         readOnly={false}
-                        value={data?.user?.phone_number}
+                        value={user?.phone_number}
                       />
                     </FormControl>
                   </Stack>

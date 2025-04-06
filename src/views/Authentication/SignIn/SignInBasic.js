@@ -28,11 +28,14 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import BasicImage from "assets/img/BasicImage.png";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AuthBasic from "layouts/AuthBasic";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "hooks/api/auth/useLogin";
 import { Spinner } from "components/svgs/Icons";
+import { emailRegex } from "utils/regex";
+import { toast } from "sonner";
+import { AppContext } from "contexts/AppContext";
 
 function SignInCover() {
   // Chakra color mode
@@ -43,7 +46,13 @@ function SignInCover() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { setToken, token } = useContext(AppContext);
   const { handleLogin, isLoading } = useLogin();
+
+  const isValid =
+    email.trim() !== "" &&
+    emailRegex.test(email.trim()) &&
+    password.trim() !== "";
 
   return (
     <AuthBasic
@@ -116,15 +125,24 @@ function SignInCover() {
               onChange={(e) => setPassword(e.target.value)}
             />
             <Button
+              disabled={!isValid}
+              _disabled={{
+                opacity: 0.5,
+                cursor: "not-allowed",
+                _hover: { bg: "gray.700" },
+              }}
               onClick={() =>
-                handleLogin({ email: email, password: password }, (res) => {
-                  if (res.status === 200) {
-                    localStorage.setItem("medmage_token", res?.data.data.token);
-                    navigate("/admin/dashboard");
-                  } else {
-                    console.log("throw a toast");
+                handleLogin(
+                  { email: email.trim(), password: password.trim() },
+                  (res) => {
+                    if (res.status === 200) {
+                      setToken(res?.data.data.token);
+                      navigate("/admin/dashboard");
+                    } else {
+                      toast.error(res?.message);
+                    }
                   }
-                })
+                )
               }
               fontSize="10px"
               variant="dark"

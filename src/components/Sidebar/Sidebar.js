@@ -48,21 +48,23 @@ import {
 } from "components/Scrollbar/Scrollbar";
 import { HSeparator } from "components/Separator/Separator";
 import { SidebarContext } from "contexts/SidebarContext";
-import React from "react";
+import React, { useContext } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { FaCircle } from "react-icons/fa";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logoFullColor from "assets/logos/logo_full colour.png";
 import logoWhite from "assets/logos/Logo_white.png";
 import { createChildLinks, createChildLinksResponsive } from "./ChildrenLinks";
-import { useGetProfile } from "hooks/api/auth/useGetProfile";
 import { ellipsizeText } from "hooks/formatter/useEllipsizeText";
+import { AppContext } from "contexts/AppContext";
+import { token } from "stylis";
 
 // FUNCTIONS
 
 function Sidebar(props) {
   // to check for active links and opened collapses
   let location = useLocation();
+  const navigate = useNavigate();
 
   const { routes, landing, logo } = props;
 
@@ -70,6 +72,7 @@ function Sidebar(props) {
   const { sidebarWidth, setSidebarWidth, toggleSidebar } = React.useContext(
     SidebarContext
   );
+  const { providers, setToken, setUser } = useContext(AppContext);
 
   let variantChange = "0.2s linear";
   // verifies if routeName is the one active (in browser input)
@@ -324,6 +327,70 @@ function Sidebar(props) {
             </AccordionItem>
           </Accordion>
         );
+      } else if (prop.name === "Logout") {
+        return (
+          <Box
+            key={key}
+            onClick={() => {
+              localStorage.removeItem("medmage_token");
+              localStorage.removeItem("medmage_user");
+              localStorage.removeItem("user_providers");
+              localStorage.removeItem("isSuperAdmin");
+              setToken(null);
+              setUser(null);
+              navigate("/auth/authentication/sign-in");
+            }}
+            boxShadow={
+              activeRoute(prop.path) && prop.icon ? sidebarActiveShadow : null
+            }
+            _hover={{
+              boxShadow:
+                activeRoute(prop.path) && prop.icon
+                  ? sidebarActiveShadow
+                  : sidebarActiveShadow,
+            }}
+            cursor="pointer"
+            _focus={{
+              boxShadow: "none",
+            }}
+            borderRadius="8px"
+            w={{
+              sm: sidebarWidth === 275 ? "100%" : "77%",
+              xl: sidebarWidth === 275 ? "90%" : "70%",
+              "2xl": sidebarWidth === 275 ? "95%" : "77%",
+            }}
+            fontWeight="bold"
+            px={prop.icon ? "12px" : null}
+            py={prop.icon ? "12px" : null}
+            bg={
+              activeRoute(prop.path) && prop.icon
+                ? activeAccordionBg
+                : "transparent"
+            }
+            ms={sidebarWidth !== 275 ? (prop.icon ? "0px" : "8px") : null}
+          >
+            <Flex justify={sidebarWidth === 275 ? "flex-start" : "center"}>
+              <IconBox
+                bg={inactiveBg}
+                color={inactiveColorIcon}
+                h="30px"
+                w="30px"
+                me={sidebarWidth === 275 ? "12px" : "0px"}
+                transition={variantChange}
+              >
+                {prop.icon}
+              </IconBox>
+              <Text
+                color={"#FF3B30"}
+                my="auto"
+                fontSize="sm"
+                display={sidebarWidth === 275 ? "block" : "none"}
+              >
+                {prop.name}
+              </Text>
+            </Flex>
+          </Box>
+        );
       } else {
         return (
           <NavLink key={key} to={prop.layout + prop.path}>
@@ -488,9 +555,7 @@ function Sidebar(props) {
                         {prop.icon}
                       </IconBox>
                       <Text
-                        color={
-                          prop.name === "Logout" ? "#FF3B30" : inactiveColor
-                        }
+                        color={inactiveColor}
                         my="auto"
                         fontSize="sm"
                         display={sidebarWidth === 275 ? "block" : "none"}
@@ -625,7 +690,7 @@ function Sidebar(props) {
           fontWeight="semibold"
           letterSpacing="1px"
         >
-          {ellipsizeText(localStorage.getItem("provider"), 10)}
+          {ellipsizeText(providers?.[0]?.name, 10)}
         </Text>
       </Stack>
       <HSeparator my="20px" />
@@ -705,7 +770,9 @@ function Sidebar(props) {
 export function SidebarResponsive(props) {
   // to check for active links and opened collapses
   let location = useLocation();
+  const navigate = useNavigate();
 
+  const { providers, setToken, setUser } = useContext(AppContext);
   let variantChange = "0.2s linear";
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -884,6 +951,57 @@ export function SidebarResponsive(props) {
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
+        );
+      } else if (prop.name === "Logout") {
+        return (
+          <Box
+            key={key}
+            fontWeight="bold"
+            cursor="pointer"
+            onClick={() => {
+              localStorage.removeItem("medmage_token");
+              localStorage.removeItem("medmage_user");
+              localStorage.removeItem("user_providers");
+              localStorage.removeItem("isSuperAdmin");
+              setToken(null);
+              setUser(null);
+
+              navigate("/auth/authentication/sign-in");
+            }}
+            borderRadius="8px"
+            px={prop.icon ? "12px" : null}
+            py={prop.icon ? "12px" : null}
+            boxShadow={
+              activeRoute(prop.path) && prop.icon ? sidebarActiveShadow : "none"
+            }
+            _hover={{
+              boxShadow:
+                activeRoute(prop.path) && prop.icon
+                  ? sidebarActiveShadow
+                  : sidebarActiveShadow,
+            }}
+            bg={
+              activeRoute(prop.path) && prop.icon
+                ? activeAccordionBg
+                : "transparent"
+            }
+          >
+            <Flex>
+              <IconBox
+                bg={inactiveBg}
+                color={inactiveColorIcon}
+                h="30px"
+                w="30px"
+                me="12px"
+                transition={variantChange}
+              >
+                {prop.icon}
+              </IconBox>
+              <Text color={"#FF3B30"} my="auto" fontSize="sm">
+                {prop.name}
+              </Text>
+            </Flex>
+          </Box>
         );
       } else {
         return (
@@ -1104,7 +1222,7 @@ export function SidebarResponsive(props) {
         </Text>
         <Box w="1px" h="20px" bg={"black"} />
         <Text fontSize="sm" mt="3px" fontWeight="semibold" letterSpacing="1px">
-          {ellipsizeText(localStorage.getItem("provider"), 10)}
+          {ellipsizeText(providers?.[0]?.name, 10)}
         </Text>
       </Stack>
       <HSeparator my="26px" />
