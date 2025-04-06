@@ -15,7 +15,7 @@
 
 */
 
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 // NEW imports
 
@@ -50,6 +50,8 @@ import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
 import { BiPlus, BiUpload } from "react-icons/bi";
 import { DownloadIcon } from "@chakra-ui/icons";
+import { useGetUsers } from "hooks/api/management/users/useGetUsers";
+import { AppContext } from "contexts/AppContext";
 
 function Users() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -60,7 +62,7 @@ function Users() {
 
   const [addUser, setAddUser] = useState(false);
   const [importUsers, SetImportUsers] = useState(false);
-
+  const { token } = useContext(AppContext);
   const userRoles = [
     { key: "Super Admin", value: "super admin" },
     { key: "State Admin", value: "state admin" },
@@ -91,6 +93,10 @@ function Users() {
       setCsvFile(file);
     }
   };
+
+  const { data, isLoading, isFetching, refetch: refetchUsers } = useGetUsers(
+    token
+  );
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
@@ -238,7 +244,7 @@ function Users() {
           </Flex>
         </CardHeader>
         <CardBody px="22px">
-          <UsersTable tableData={usersData} columnsData={Userscolumns} />
+          {data && <UsersTable tableData={data} refetchUsers={refetchUsers} />}
         </CardBody>
       </Card>
 
