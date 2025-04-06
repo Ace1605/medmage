@@ -1,5 +1,6 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import { Spinner } from "components/svgs/Icons";
+import logoFullColor from "assets/logos/logo_full colour.png";
 
 export default function FullScreenLoader() {
   return (
@@ -14,7 +15,18 @@ export default function FullScreenLoader() {
       justifyContent="center"
       bg="#ffff"
     >
-      <Spinner width="40px" height="40px" fill="#3182ce" stroke="#3182ce" />
+      <div style={{ position: "relative" }}>
+        <Image className="animate-bounce" src={logoFullColor} w="100px" />
+        <div
+          style={{
+            position: "absolute",
+            background: "#EBEEF1",
+            width: "100px",
+            height: "1px",
+            bottom: "-5px",
+          }}
+        />
+      </div>
     </Box>
   );
 }
