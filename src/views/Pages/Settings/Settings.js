@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// Chakra imports
 import {
   Avatar,
   Badge,
@@ -42,6 +24,7 @@ import {
   Tr,
   useColorMode,
   useColorModeValue,
+  Spinner,
 } from "@chakra-ui/react";
 import avatar4 from "assets/img/avatars/avatar4.png";
 // Custom components
@@ -50,6 +33,8 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { HSeparator } from "components/Separator/Separator";
 import { AppContext } from "contexts/AppContext";
+import { useGetProfile } from "hooks/api/auth/useGetProfile";
+import { useUpdateProfile } from "hooks/api/settings/useUpdateProfile";
 import React, { useContext, useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BsCircleFill, BsToggleOn } from "react-icons/bs";
@@ -57,11 +42,12 @@ import { FaCube, FaUser } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { IoDocumentText } from "react-icons/io5";
 import { Element, Link } from "react-scroll";
+import { toast } from "sonner";
+import { months } from "utils/constants";
+import { getDaysInMonth } from "utils/generators";
+import { getAllYears } from "utils/generators";
 
 function Settings() {
-  const bgHoverLinks = useColorModeValue("gray.100", "navy.900");
-  const secondaryColor = useColorModeValue("gray.500", "white");
-  const bgVerificationCard = useColorModeValue("gray.100", "navy.700");
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("black", "white");
   const bgSkillsInput = useColorModeValue("white", "navy.900");
@@ -70,31 +56,47 @@ function Settings() {
   const borderTableColor = useColorModeValue("gray.200", "gray.600");
 
   const { colorMode } = useColorMode();
-  const { user } = useContext(AppContext);
+  const { user, token } = useContext(AppContext);
   const isDark = colorMode === "dark";
-
-  const [activeButtons, setActiveButtons] = useState({
-    Profile: true,
-    basicInfo: false,
-    changePassword: false,
-    twoFactorAuth: false,
-    notifications: false,
-    deleteAccount: false,
+  // PROFILE
+  const { refetch } = useGetProfile(token);
+  const [name, setName] = useState({
+    firstName: user?.first_name,
+    lastName: user?.last_name,
   });
-  const [skills, setSkills] = useState([
-    {
-      name: "chakra-ui",
-      id: 1,
-    },
-    {
-      name: "react",
-      id: 2,
-    },
-    {
-      name: "javascript",
-      id: 3,
-    },
-  ]);
+  const [gender, setGender] = useState(user?.gender || "");
+  const [dob, setDob] = useState({
+    day: user?.birth_date.slice(-2) ?? "1",
+    month: user?.birth_date.slice(-5, -3) ?? "01",
+    year: user?.birth_date.slice(0, 4) ?? "1900",
+  });
+
+  const years = getAllYears();
+  const daysInSelectedMonth = getDaysInMonth(dob.month);
+  const daysArray = Array.from(
+    { length: daysInSelectedMonth },
+    (_, i) => i + 1
+  );
+
+  const [email, setEmail] = useState({
+    email: user?.email ?? "",
+    confirmationEmail: user?.confirmation_email ?? "",
+  });
+
+  const [location, setLocation] = useState({
+    address: user?.address ?? "",
+    city: user?.city ?? "",
+    state: user?.state ?? "",
+  });
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone_number ?? "");
+  const [language, setLangage] = useState(user?.language ?? "English");
+
+  const [skills, setSkills] = useState(() => {
+    return (user?.skills || []).map((skill, index) => ({
+      name: skill,
+      id: index + 1,
+    }));
+  });
 
   const [toggle, setToggle] = useState(false);
 
@@ -110,6 +112,42 @@ function Settings() {
       e.target.value = "";
     }
   };
+
+  const { handleUpdateProfile, isLoading } = useUpdateProfile();
+  const updateProfile = () => {
+    handleUpdateProfile(
+      {
+        first_name: name.firstName,
+        last_name: name.lastName,
+        birth_date: `${dob.year}-${dob.month}-${dob.day}`,
+        email: email.email,
+        confirmation_email: email.confirmationEmail,
+        gender: gender,
+        phone_number: phoneNumber,
+        address: location.address,
+        city: location.city,
+        state: location.state,
+        language: language,
+        skills: skills.map((skill) => skill.name),
+      },
+      (res) => {
+        if (res.status === 200) {
+          toast.success(res.data.message);
+          refetch();
+        } else {
+          toast.error(res?.message);
+        }
+      }
+    );
+  };
+  const [activeButtons, setActiveButtons] = useState({
+    Profile: true,
+    basicInfo: false,
+    changePassword: false,
+    twoFactorAuth: false,
+    notifications: false,
+    deleteAccount: false,
+  });
 
   const scrollContainerRef = useRef(null);
 
@@ -551,7 +589,13 @@ function Settings() {
                         placeholder="eg. Michael"
                         fontSize="xs"
                         readOnly={false}
-                        value={user?.first_name}
+                        value={name.firstName}
+                        onChange={(e) =>
+                          setName((prev) => ({
+                            ...prev,
+                            firstName: e.target.value,
+                          }))
+                        }
                       />
                     </FormControl>
                     <FormControl>
@@ -563,7 +607,13 @@ function Settings() {
                         placeholder="eg. Jackson"
                         fontSize="xs"
                         readOnly={false}
-                        value={user?.last_name}
+                        value={name.lastName}
+                        onChange={(e) =>
+                          setName((prev) => ({
+                            ...prev,
+                            lastName: e.target.value,
+                          }))
+                        }
                       />
                     </FormControl>
                   </Stack>
@@ -573,17 +623,19 @@ function Settings() {
                   >
                     <FormControl w="40%">
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        I'm
+                        Gender
                       </FormLabel>
                       <Select
+                        cursor="pointer"
                         variant="main"
-                        placeholder="Male"
                         color="gray.400"
                         fontSize="xs"
+                        value={gender}
                         isReadOnly={false}
+                        onChange={(e) => setGender(e.target.value)}
                       >
-                        <option value="option1">Male</option>
-                        <option value="option2">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                       </Select>
                     </FormControl>
                     <Stack
@@ -601,63 +653,61 @@ function Settings() {
                           Birth Date
                         </FormLabel>
                         <Select
+                          cursor="pointer"
                           variant="main"
                           color="gray.400"
                           fontSize="sm"
-                          defaultValue="option1"
-                          onChange={() => {}}
+                          value={dob.month}
+                          onChange={(e) =>
+                            setDob((prev) => ({
+                              ...prev,
+                              month: e.target.value,
+                            }))
+                          }
                         >
-                          <option value="option1">January</option>
-                          <option value="option2">February</option>
-                          <option value="option3">March</option>
-                          <option value="option4">April</option>
-                          <option value="option5">May</option>
-                          <option value="option6">June</option>
-                          <option value="option7">July</option>
-                          <option value="option8">August</option>
-                          <option value="option9">September</option>
-                          <option value="option10">October</option>
-                          <option value="option11">November</option>
-                          <option value="option12">December</option>
+                          {months.map((month) => {
+                            // console.log("val", month.value);
+                            return (
+                              <option value={month.value}>{month.key}</option>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                      <FormControl>
+                        <Select
+                          cursor="pointer"
+                          variant="main"
+                          color="gray.400"
+                          value={dob.day}
+                          fontSize="xs"
+                          onChange={(e) =>
+                            setDob((prev) => ({
+                              ...prev,
+                              day: e.target.value,
+                            }))
+                          }
+                        >
+                          {daysArray.map((day) => {
+                            return <option value={day}>{day}</option>;
+                          })}
                         </Select>
                       </FormControl>
                       <FormControl>
                         <Select
                           variant="main"
                           color="gray.400"
-                          placeholder="1"
                           fontSize="xs"
-                          defaultValue="option1"
-                          onChange={() => {}}
+                          value={dob.year}
+                          onChange={(e) =>
+                            setDob((prev) => ({
+                              ...prev,
+                              year: e.target.value,
+                            }))
+                          }
                         >
-                          <option value="option2">2</option>
-                          <option value="option3">3</option>
-                          <option value="option4">4</option>
-                          <option value="option5">5</option>
-                          <option value="option6">6</option>
-                          <option value="option7">7</option>
-                          <option value="option8">-</option>
-                        </Select>
-                      </FormControl>
-                      <FormControl>
-                        <Select
-                          variant="main"
-                          color="gray.400"
-                          placeholder="2010"
-                          fontSize="xs"
-                          defaultValue="option1"
-                          onChange={() => {}}
-                        >
-                          <option value="option2">2011</option>
-                          <option value="option3">2012</option>
-                          <option value="option4">2013</option>
-                          <option value="option5">2014</option>
-                          <option value="option6">2015</option>
-                          <option value="option7">2016</option>
-                          <option value="option8">2018</option>
-                          <option value="option8">2019</option>
-                          <option value="option8">2020</option>
-                          <option value="option8">2022</option>
+                          {years.map((year) => {
+                            return <option value={year}>{year}</option>;
+                          })}
                         </Select>
                       </FormControl>
                     </Stack>
@@ -669,9 +719,13 @@ function Settings() {
                       </FormLabel>
                       <Input
                         variant="main"
-                        placeholder="eg. esthera@address.com"
+                        placeholder="Enter email"
                         fontSize="xs"
                         readOnly={false}
+                        value={email.email}
+                        onChange={(e) =>
+                          setEmail({ ...prev, email: e.target.value })
+                        }
                       />
                     </FormControl>
                     <FormControl>
@@ -680,34 +734,82 @@ function Settings() {
                       </FormLabel>
                       <Input
                         variant="main"
-                        placeholder="eg. esthera@address.com"
+                        placeholder="Enter confirmation email "
                         fontSize="xs"
                         readOnly={false}
+                        value={email.confirmationEmail}
+                        onChange={(e) =>
+                          setEmail({
+                            ...prev,
+                            confirmationEmail: e.target.value,
+                          })
+                        }
                       />
                     </FormControl>
                   </Stack>
-                  <Stack direction="row" spacing={{ sm: "24px", lg: "30px" }}>
-                    <FormControl>
-                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Your Location
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="eg. Bucharest"
-                        fontSize="xs"
-                        readOnly={false}
-                      />
-                    </FormControl>
+                  <Stack direction="row" spacing={{ sm: "24px", lg: "24px" }}>
                     <FormControl>
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                         Phone Number
                       </FormLabel>
                       <Input
                         variant="main"
-                        placeholder="eg. +40 941 353 292"
+                        placeholder="Enter Phone number"
                         fontSize="xs"
                         readOnly={false}
-                        value={user?.phone_number}
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Address
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter Address"
+                        fontSize="xs"
+                        value={location.address}
+                        onChange={(e) =>
+                          setLocation((prev) => ({
+                            ...prev,
+                            address: e.target.value,
+                          }))
+                        }
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        City
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter city"
+                        fontSize="xs"
+                        value={location.city}
+                        onChange={(e) =>
+                          setLocation((prev) => ({
+                            ...prev,
+                            city: e.target.value,
+                          }))
+                        }
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        State
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter state"
+                        fontSize="xs"
+                        value={location.state}
+                        onChange={(e) =>
+                          setLocation((prev) => ({
+                            ...prev,
+                            state: e.target.value,
+                          }))
+                        }
                       />
                     </FormControl>
                   </Stack>
@@ -720,15 +822,18 @@ function Settings() {
                         Language
                       </FormLabel>
                       <Select
+                        cursor="pointer"
                         variant="main"
-                        placeholder="English"
                         color="gray.400"
                         fontSize="xs"
                         isReadOnly={false}
+                        value={language}
+                        onChange={(e) => setLangage(e.target.value)}
                       >
-                        <option value="option1">French</option>
-                        <option value="option2">Spanish</option>
-                        <option value="option3">Romanian</option>
+                        <option value="English">English</option>
+                        <option value="French">French</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Romanian">Romanian</option>
                       </Select>
                     </FormControl>
                     <FormControl>
@@ -786,12 +891,13 @@ function Settings() {
                 </Stack>
                 <Flex justify="end" mt="18px">
                   <Button
+                    onClick={updateProfile}
                     variant="dark"
                     w="150px"
                     h="35px"
                     alignSelf="flex-end"
                   >
-                    UPDATE
+                    {isLoading ? <Spinner w="18px" h="18px" /> : "UPDATE"}
                   </Button>
                 </Flex>
               </CardBody>

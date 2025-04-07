@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useContext, useRef, useState } from "react";
 
 // NEW imports
@@ -35,6 +18,7 @@ import {
   UnorderedList,
   OrderedList,
   Box,
+  Spinner,
 } from "@chakra-ui/react";
 import bgCardReports from "assets/img/background-card-reports.png";
 // Custom components
@@ -44,11 +28,9 @@ import CardHeader from "components/Card/CardHeader";
 import IconBox from "components/Icons/IconBox";
 import { FaUser } from "react-icons/fa";
 import UsersTable from "components/Tables/UsersTable";
-import { Userscolumns } from "variables/columnsData";
-import usersData from "variables/usersData.json";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
-import { BiPlus, BiUpload } from "react-icons/bi";
+import { BiUpload } from "react-icons/bi";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { useGetUsers } from "hooks/api/management/users/useGetUsers";
 import { AppContext } from "contexts/AppContext";
@@ -218,14 +200,6 @@ function Users() {
                 onClick={() => setAddUser(true)}
               >
                 Add user
-                {/* <Icon
-                  as={BiPlus}
-                  w="22px"
-                  h="22px"
-                  color={iconColor}
-                  cursor="pointer"
-                  ms="8px"
-                /> */}
               </Button>
               <Button
                 onClick={() => SetImportUsers(true)}
@@ -244,7 +218,13 @@ function Users() {
           </Flex>
         </CardHeader>
         <CardBody px="22px">
-          {data && <UsersTable tableData={data} refetchUsers={refetchUsers} />}
+          {isLoading ? (
+            <Flex width="100% " height="30vh" align="center" justify="center">
+              <Spinner w="40px" h="40px" color="#3182ce" />
+            </Flex>
+          ) : (
+            <UsersTable tableData={data} refetchUsers={refetchUsers} />
+          )}
         </CardBody>
       </Card>
 

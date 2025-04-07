@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -42,7 +25,7 @@ import { AppContext } from "contexts/AppContext";
 import dayjs from "dayjs";
 import { useGetUserRoles } from "hooks/api/management/users/useGetUserRoles";
 import { useUpdateUserRoles } from "hooks/api/management/users/useUpdateUserRoles";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
