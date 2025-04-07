@@ -24,6 +24,7 @@ import {
   Tr,
   useColorMode,
   useColorModeValue,
+  Spinner,
 } from "@chakra-ui/react";
 import avatar4 from "assets/img/avatars/avatar4.png";
 // Custom components
@@ -32,6 +33,8 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { HSeparator } from "components/Separator/Separator";
 import { AppContext } from "contexts/AppContext";
+import { useGetProfile } from "hooks/api/auth/useGetProfile";
+import { useUpdateProfile } from "hooks/api/settings/useUpdateProfile";
 import React, { useContext, useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BsCircleFill, BsToggleOn } from "react-icons/bs";
@@ -39,6 +42,7 @@ import { FaCube, FaUser } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { IoDocumentText } from "react-icons/io5";
 import { Element, Link } from "react-scroll";
+import { toast } from "sonner";
 import { months } from "utils/constants";
 import { getDaysInMonth } from "utils/generators";
 import { getAllYears } from "utils/generators";
@@ -52,13 +56,19 @@ function Settings() {
   const borderTableColor = useColorModeValue("gray.200", "gray.600");
 
   const { colorMode } = useColorMode();
-  const { user } = useContext(AppContext);
+  const { user, token } = useContext(AppContext);
   const isDark = colorMode === "dark";
+  // PROFILE
+  const { refetch } = useGetProfile(token);
+  const [name, setName] = useState({
+    firstName: user?.first_name,
+    lastName: user?.last_name,
+  });
   const [gender, setGender] = useState(user?.gender || "");
   const [dob, setDob] = useState({
-    day: user?.birth_date.slice(-2),
-    month: user?.birth_date.slice(-5, -3),
-    year: user?.birth_date.slice(0, 4),
+    day: user?.birth_date.slice(-2) ?? "1",
+    month: user?.birth_date.slice(-5, -3) ?? "01",
+    year: user?.birth_date.slice(0, 4) ?? "1900",
   });
 
   const years = getAllYears();
@@ -69,28 +79,17 @@ function Settings() {
   );
 
   const [email, setEmail] = useState({
-    email: user?.email,
-    confirmationEmail: user?.confirmation_email,
+    email: user?.email ?? "",
+    confirmationEmail: user?.confirmation_email ?? "",
   });
 
   const [location, setLocation] = useState({
-    address: user?.address,
-    city: user?.city,
-    state: user?.state,
+    address: user?.address ?? "",
+    city: user?.city ?? "",
+    state: user?.state ?? "",
   });
-
-  const [phoneNumber, setPhoneNumber] = useState(user?.phone_number);
-
-  const [language, setLangage] = useState(user?.language);
-
-  const [activeButtons, setActiveButtons] = useState({
-    Profile: true,
-    basicInfo: false,
-    changePassword: false,
-    twoFactorAuth: false,
-    notifications: false,
-    deleteAccount: false,
-  });
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone_number ?? "");
+  const [language, setLangage] = useState(user?.language ?? "English");
 
   const [skills, setSkills] = useState(() => {
     return (user?.skills || []).map((skill, index) => ({
@@ -113,6 +112,42 @@ function Settings() {
       e.target.value = "";
     }
   };
+
+  const { handleUpdateProfile, isLoading } = useUpdateProfile();
+  const updateProfile = () => {
+    handleUpdateProfile(
+      {
+        first_name: name.firstName,
+        last_name: name.lastName,
+        birth_date: `${dob.year}-${dob.month}-${dob.day}`,
+        email: email.email,
+        confirmation_email: email.confirmationEmail,
+        gender: gender,
+        phone_number: phoneNumber,
+        address: location.address,
+        city: location.city,
+        state: location.state,
+        language: language,
+        skills: skills.map((skill) => skill.name),
+      },
+      (res) => {
+        if (res.status === 200) {
+          toast.success(res.data.message);
+          refetch();
+        } else {
+          toast.error(res?.message);
+        }
+      }
+    );
+  };
+  const [activeButtons, setActiveButtons] = useState({
+    Profile: true,
+    basicInfo: false,
+    changePassword: false,
+    twoFactorAuth: false,
+    notifications: false,
+    deleteAccount: false,
+  });
 
   const scrollContainerRef = useRef(null);
 
@@ -554,7 +589,13 @@ function Settings() {
                         placeholder="eg. Michael"
                         fontSize="xs"
                         readOnly={false}
-                        value={user?.first_name}
+                        value={name.firstName}
+                        onChange={(e) =>
+                          setName((prev) => ({
+                            ...prev,
+                            firstName: e.target.value,
+                          }))
+                        }
                       />
                     </FormControl>
                     <FormControl>
@@ -566,7 +607,13 @@ function Settings() {
                         placeholder="eg. Jackson"
                         fontSize="xs"
                         readOnly={false}
-                        value={user?.last_name}
+                        value={name.lastName}
+                        onChange={(e) =>
+                          setName((prev) => ({
+                            ...prev,
+                            lastName: e.target.value,
+                          }))
+                        }
                       />
                     </FormControl>
                   </Stack>
@@ -633,7 +680,7 @@ function Settings() {
                           color="gray.400"
                           value={dob.day}
                           fontSize="xs"
-                          onChange={() =>
+                          onChange={(e) =>
                             setDob((prev) => ({
                               ...prev,
                               day: e.target.value,
@@ -676,7 +723,7 @@ function Settings() {
                         fontSize="xs"
                         readOnly={false}
                         value={email.email}
-                        onChange={() =>
+                        onChange={(e) =>
                           setEmail({ ...prev, email: e.target.value })
                         }
                       />
@@ -691,7 +738,7 @@ function Settings() {
                         fontSize="xs"
                         readOnly={false}
                         value={email.confirmationEmail}
-                        onChange={() =>
+                        onChange={(e) =>
                           setEmail({
                             ...prev,
                             confirmationEmail: e.target.value,
@@ -700,18 +747,7 @@ function Settings() {
                       />
                     </FormControl>
                   </Stack>
-                  <Stack direction="row" spacing={{ sm: "24px", lg: "30px" }}>
-                    <FormControl>
-                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Your Location
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="Enter Address"
-                        fontSize="xs"
-                        value={`${location.address}, ${location.city} ${location.state}`}
-                      />
-                    </FormControl>
+                  <Stack direction="row" spacing={{ sm: "24px", lg: "24px" }}>
                     <FormControl>
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                         Phone Number
@@ -723,6 +759,57 @@ function Settings() {
                         readOnly={false}
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Address
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter Address"
+                        fontSize="xs"
+                        value={location.address}
+                        onChange={(e) =>
+                          setLocation((prev) => ({
+                            ...prev,
+                            address: e.target.value,
+                          }))
+                        }
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        City
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter city"
+                        fontSize="xs"
+                        value={location.city}
+                        onChange={(e) =>
+                          setLocation((prev) => ({
+                            ...prev,
+                            city: e.target.value,
+                          }))
+                        }
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        State
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter state"
+                        fontSize="xs"
+                        value={location.state}
+                        onChange={(e) =>
+                          setLocation((prev) => ({
+                            ...prev,
+                            state: e.target.value,
+                          }))
+                        }
                       />
                     </FormControl>
                   </Stack>
@@ -804,12 +891,13 @@ function Settings() {
                 </Stack>
                 <Flex justify="end" mt="18px">
                   <Button
+                    onClick={updateProfile}
                     variant="dark"
                     w="150px"
                     h="35px"
                     alignSelf="flex-end"
                   >
-                    UPDATE
+                    {isLoading ? <Spinner w="18px" h="18px" /> : "UPDATE"}
                   </Button>
                 </Flex>
               </CardBody>
