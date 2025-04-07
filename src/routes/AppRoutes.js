@@ -5,6 +5,7 @@ import PublicRoutes from "./PublicRoutes";
 import { useContext, useEffect } from "react";
 import { AppContext } from "contexts/AppContext";
 import PrivateRoutes from "./PrivateRoutes";
+import { Navigate } from "react-router-dom";
 
 export default function AppRoutes() {
   const { token } = useContext(AppContext);
@@ -12,6 +13,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<PublicRoutes isAuthenticated={token ? true : false} />}>
+        <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="auth/*" element={<AuthLayout />} />
       </Route>
       <Route element={<PrivateRoutes isAuthenticated={token ? true : false} />}>
@@ -20,7 +22,6 @@ export default function AppRoutes() {
 
       {/* <Route path="landing/*" element={<LandingLayout />} />
       <Route path="rtl/*" element={<RTLLayout />} /> */}
-      {/* <Route path="/" element={<Navigate to="/auth" replace />} /> */}
     </Routes>
   );
 }
