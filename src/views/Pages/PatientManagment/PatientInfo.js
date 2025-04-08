@@ -1516,27 +1516,6 @@ function PatientInfo() {
                   >
                     <FormControl>
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Date
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="Enter visitation date"
-                        fontSize="xs"
-                      />
-                    </FormControl>
-
-                    <FormControl>
-                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Time
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="Enter visitation Time"
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                         Visitor's Name
                       </FormLabel>
                       <Input
@@ -1553,6 +1532,27 @@ function PatientInfo() {
                       <Input
                         variant="main"
                         placeholder="Enter relationship"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Date
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter visitation date"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Time
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter visitation Time"
                         fontSize="xs"
                       />
                     </FormControl>
