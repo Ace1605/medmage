@@ -502,16 +502,16 @@ function Settings() {
         height={{
           sm: "calc(100svh - 255px)",
           md: "calc(100vh - 216px)",
-          lg: "calc(100vh - 188px)",
+          lg: "calc(100vh - 145px)",
         }}
         overflowY={{ sm: "scroll", xl: "scroll" }}
-        sx={{
-          "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-          "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-          "scrollbar-width": "none", // Hide scrollbar in Firefox
-        }}
       >
         <Stack
+          sx={{
+            "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+            "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+            "scrollbar-width": "none", // Hide scrollbar in Firefox
+          }}
           direction="column"
           spacing="24px"
           mt="20px"
@@ -1392,6 +1392,7 @@ function Settings() {
             w={{ sm: "100%", lg: "100%" }}
             alignSelf="flex-end"
             justifySelf="flex-end"
+            mb="10px"
           >
             <Element id="delete-account" name="delete-account">
               <CardHeader mb="40px">
