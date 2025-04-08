@@ -10,7 +10,6 @@ import {
   Grid,
   Icon,
   Input,
-  Modal,
   Select,
   Stack,
   Switch,
@@ -25,6 +24,7 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { PersonIcon } from "components/Icons/Icons";
+import Modal from "components/Modal/Modal";
 import MedicationTable from "components/Tables/MedicationTable";
 import VisitationTable from "components/Tables/visitationTable";
 import { AppContext } from "contexts/AppContext";
@@ -35,6 +35,7 @@ import { IoDocumentText } from "react-icons/io5";
 import { MdMedication } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { Element, Link } from "react-scroll";
+import { toast } from "sonner";
 import medicationData from "variables/medicationData.json";
 import visitationData from "variables/visitationData.json";
 
@@ -45,6 +46,7 @@ function PatientInfo() {
   const scrollContainerRef = useRef(null);
   const [isDisplayed, setisDisplayed] = useState(true);
   const [addMedication, setAddMedication] = useState(false);
+  const [addVisitor, setAddVisitor] = useState(false);
   const { isSuperAdmin, setIsSuperAdmin, toggle, setToggle } = useContext(
     AppContext
   );
@@ -77,15 +79,25 @@ function PatientInfo() {
   };
 
   return (
-    <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
+    <Flex direction="column" pt={{ sm: "70px", lg: "75px" }}>
       <Card
         w={{ sm: "100%", lg: "262px", xl: "21%", "2xl": "23.4%" }}
-        mt={{ sm: "30px", lg: "0px" }}
         position={{ lg: "fixed" }}
         top={{ lg: "105px" }}
+        mb="20px"
       >
         <CardBody>
-          <Stack direction="column" spacing="8px" w="100%" color="gray.500">
+          <Grid
+            templateColumns={{
+              base: "1fr",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
+              lg: " 1fr",
+            }}
+            spacing={{ sm: "8px", lg: "30px" }}
+            w={{ sm: "100%", lg: null }}
+            color="gray.500"
+          >
             <Link
               to="profile"
               spy={true}
@@ -294,14 +306,14 @@ function PatientInfo() {
                 </Flex>
               </Button>
             </Link>
-          </Stack>
+          </Grid>
         </CardBody>
       </Card>
       <Box
         ref={scrollContainerRef}
         height={{
-          sm: "calc(100svh - 255px)",
-          md: "calc(100vh - 216px)",
+          sm: "calc(100svh - 348px)",
+          md: "calc(100vh - 310px)",
           lg: "calc(100vh - 145px)",
         }}
         overflowY={{ sm: "scroll", xl: "scroll" }}
@@ -1143,7 +1155,7 @@ function PatientInfo() {
                         fontWeight="bold"
                         minw="90px"
                         h="40px"
-                        onClick={() => setAddMedication(true)}
+                        onClick={() => setAddVisitor(true)}
                       >
                         Add
                       </Button>
@@ -1346,12 +1358,12 @@ function PatientInfo() {
             <Modal
               maxWidth={"500px"}
               label="Add Medication"
-              // handleCloseModal={() => setAddMedication(false)}
+              handleCloseModal={() => setAddMedication(false)}
             >
               <FormControl>
                 <Box
                   h={{ sm: "40vh", md: "100%" }}
-                  overflowY={{ sm: "scroll", md: "" }}
+                  overflowY={{ sm: "scroll", md: "hidden" }}
                 >
                   <Grid
                     templateColumns={{
@@ -1416,37 +1428,19 @@ function PatientInfo() {
                         fontSize="xs"
                       />
                     </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Date
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        type="text"
+                        placeholder="Enter Date "
+                        fontSize="xs"
+                      />
+                    </FormControl>
                   </Grid>
                 </Box>
-                <Flex
-                  alignItems="center"
-                  justifyContent="space-between"
-                  gap="10px"
-                >
-                  <FormControl>
-                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      Date
-                    </FormLabel>
-                    <Input
-                      variant="main"
-                      type="text"
-                      placeholder="Enter Date "
-                      fontSize="xs"
-                    />
-                  </FormControl>
-                  {/* <FormControl>
-                                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                                    End date
-                                  </FormLabel>
-                                  <Input
-                                    variant="main"
-                                    type="text"
-                                    placeholder="End time"
-                                    fontSize="xs"
-                                    value={selectedEvent.endTime}
-                                  />
-                 </FormControl> */}
-                </Flex>
 
                 <FormControl>
                   <FormLabel
@@ -1484,10 +1478,136 @@ function PatientInfo() {
                   fontWeight="bold"
                   w="100%"
                   h="50"
-                  mb="10px"
+                  my="10px"
                   onClick={() => {
                     setAddMedication(false);
                     toast.success("New medication added ");
+                  }}
+                >
+                  Confirm
+                </Button>
+              </FormControl>
+            </Modal>
+          )}
+
+          {addVisitor && (
+            <Modal
+              maxWidth={"500px"}
+              label="Add a vistor"
+              handleCloseModal={() => {
+                setAddVisitor(false);
+              }}
+            >
+              <FormControl>
+                <Box
+                  h={{ sm: "40vh", md: "100%" }}
+                  overflowY={{ sm: "scroll", md: "hidden" }}
+                >
+                  <Grid
+                    templateColumns={{
+                      base: "1fr",
+                      sm: "1fr",
+                      md: "repeat(2, 1fr)",
+                    }}
+                    gap="15px"
+                    spacing={{ sm: "8px", lg: "30px" }}
+                    w={{ sm: "100%", lg: null }}
+                    my="18px"
+                  >
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Date
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter visitation date"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Time
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter visitation Time"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Visitor's Name
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter visitor's name"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Relationship
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder="Enter relationship"
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                  </Grid>
+                </Box>
+                <FormControl>
+                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                    Purpose of Visit
+                  </FormLabel>
+                  <Input
+                    variant="main"
+                    placeholder="Enter purpose of visit"
+                    fontSize="xs"
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
+                    Notes
+                  </FormLabel>
+                  <Textarea
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
+                    _focus={{
+                      borderColor: "gray.300", // Change to desired color
+                      boxShadow: "none", // Remove the glow effect
+                    }}
+                    border="1px solid #e2e8f0"
+                    placeholder="notes"
+                    fontSize="xs"
+                  />
+                </FormControl>
+
+                <Button
+                  fontSize="16px"
+                  colorScheme="blue"
+                  fontWeight="bold"
+                  w="100%"
+                  h="50"
+                  my="10px"
+                  onClick={() => {
+                    setAddVisitor(false);
+                    toast.success("Successfully added ");
                   }}
                 >
                   Confirm
