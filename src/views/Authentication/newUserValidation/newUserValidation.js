@@ -24,15 +24,18 @@ import {
   FormLabel,
   Grid,
   Input,
+  Spinner,
   Switch,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
 import BasicImage from "assets/img/BasicImage.png";
-import React from "react";
+import React, { useState } from "react";
 import AuthBasic from "layouts/AuthBasic";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useCompleteAccount } from "hooks/api/auth/useCompleteAccount";
+import { toast } from "sonner";
 
 function NewUserValidation() {
   // Chakra color mode
@@ -40,6 +43,15 @@ function NewUserValidation() {
   const forgotPasswordColor = useColorModeValue("blue.400", "blue");
   const bgForm = useColorModeValue("white", "navy.800");
   const navigate = useNavigate();
+  const param = useParams();
+  const location = useLocation();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
+  const [cPassword, setCPassword] = useState("");
+
+  const { handleCompleteAccount, isLoading } = useCompleteAccount();
+
   return (
     <AuthBasic
       title="Welcome!"
@@ -96,6 +108,8 @@ function NewUserValidation() {
                   placeholder="Enter first name"
                   mb="24px"
                   size="lg"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
               </Box>
               <Box>
@@ -110,6 +124,8 @@ function NewUserValidation() {
                   placeholder="Enter last Name"
                   mb="24px"
                   size="lg"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </Box>
             </Grid>
@@ -124,6 +140,8 @@ function NewUserValidation() {
               placeholder="Your email address"
               mb="24px"
               size="lg"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Confirm Password
@@ -136,9 +154,34 @@ function NewUserValidation() {
               placeholder="Your password"
               mb="24px"
               size="lg"
+              value={cPassword}
+              onChange={(e) => setCPassword(e.target.value)}
             />
             <Button
-              onClick={() => navigate("/admin/dashboard")}
+              onClick={() => {
+                handleCompleteAccount(
+                  `${param.id}${location.search}`,
+                  {
+                    first_name: firstName,
+                    last_name: lastName,
+                    password: password,
+                    password_confirmation: cPassword,
+                  },
+                  (res) => {
+                    if (res.status === 200) {
+                      toast.success("Account creation complete successfully");
+                      navigate("/auth/authentication/sign-in");
+                    } else {
+                      toast.error(res?.message);
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
+              }}
               fontSize="10px"
               variant="dark"
               fontWeight="bold"
@@ -146,7 +189,7 @@ function NewUserValidation() {
               h="45"
               mb="14px"
             >
-              SIGN IN
+              {isLoading ? <Spinner w="18px" h="18px" /> : "CONTINUE"}
             </Button>
           </FormControl>
         </Flex>

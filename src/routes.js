@@ -292,14 +292,28 @@ const dashRoutes = [
           },
           {
             name: "Confirm Account",
-            path: "/authentication/confirm-account",
+            path: "/authentication/confirm-account/:id",
             collapse: true,
             authIcon: <DocumentIcon color="inherit" />,
             items: [
               {
                 name: "Basic",
                 component: <ConfirmAccount />,
-                path: "/authentication/confirm-account",
+                path: "/authentication/confirm-account/:id",
+                layout: "/auth",
+              },
+            ],
+          },
+          {
+            name: "Confirm Account",
+            path: "/authentication/complete-account/:id",
+            collapse: true,
+            authIcon: <DocumentIcon color="inherit" />,
+            items: [
+              {
+                name: "Basic",
+                component: <NewUserValidation />,
+                path: "/authentication/complete-account/:id",
                 layout: "/auth",
               },
             ],
@@ -320,14 +334,14 @@ const dashRoutes = [
           },
           {
             name: "Reset password",
-            path: "/authentication/reset",
+            path: "/authentication/reset-password/:id",
             collapse: true,
             authIcon: <DocumentIcon color="inherit" />,
             items: [
               {
                 name: "Basic",
                 component: <ResetBasic />,
-                path: "/authentication/reset-password",
+                path: "/authentication/reset-password/:id",
                 layout: "/auth",
               },
             ],

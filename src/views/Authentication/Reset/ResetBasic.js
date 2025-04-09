@@ -22,20 +22,30 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Spinner,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
 import BasicImage from "assets/img/BasicImage.png";
-import React from "react";
+import React, { useState } from "react";
 import AuthBasic from "layouts/AuthBasic";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useResetPassword } from "hooks/api/auth/useResetPassword";
+import { toast } from "sonner";
 
 function ResetCover() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgForm = useColorModeValue("white", "navy.800");
   const navigate = useNavigate();
+  const param = useParams();
+  const location = useLocation();
+  const [password, setPassword] = useState("");
+  const [confirm_password, setConfirmPassword] = useState("");
+
+  const { handleResetPassword, isLoading } = useResetPassword();
+
   return (
     <AuthBasic image={BasicImage}>
       <Flex
@@ -90,6 +100,8 @@ function ResetCover() {
               placeholder="new password"
               mb="24px"
               size="lg"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Confirm Password
@@ -102,9 +114,32 @@ function ResetCover() {
               placeholder="Your password"
               mb="24px"
               size="lg"
+              value={confirm_password}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <Button
-              onClick={() => navigate("/auth/authentication/sign-in")}
+              onClick={() => {
+                handleResetPassword(
+                  `${param.id}${location.search}`,
+                  {
+                    password,
+                    confirm_password,
+                  },
+                  (res) => {
+                    if (res.status === 200) {
+                      toast.success("Password reset successfully");
+                      navigate("/auth/authentication/sign-in");
+                    } else {
+                      toast.error(res?.message);
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
+              }}
               fontSize="10px"
               variant="dark"
               fontWeight="bold"
@@ -112,7 +147,7 @@ function ResetCover() {
               h="45"
               mb="24px"
             >
-              SEND
+              {isLoading ? <Spinner w="18px" h="18px" /> : "RESET"}
             </Button>
           </FormControl>
         </Flex>
