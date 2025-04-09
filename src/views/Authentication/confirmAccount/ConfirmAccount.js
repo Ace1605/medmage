@@ -47,7 +47,7 @@ function ConfirmAccount() {
             mb="10px"
             fontSize={{ base: "3xl" }}
           >
-            Confrim Account
+            Confirm Account
           </Text>
           <Text
             fontWeight="regular"
@@ -55,7 +55,7 @@ function ConfirmAccount() {
             color="gray.400"
             mb="15px"
           >
-            Please click on the button to confrim you account
+            Please click on the button to confirm you account
           </Text>
           <FormControl>
             <Button

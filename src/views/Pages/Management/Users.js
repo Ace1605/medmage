@@ -309,13 +309,16 @@ function Users() {
                   mb="10px"
                   onClick={() => {
                     handleInviteUser(
-                      {
-                        email: email,
-                        roles: selectedRoles.map((role) => role),
-                      },
+                      [
+                        {
+                          email: email,
+                          roles: selectedRoles.map((role) => role),
+                        },
+                      ],
                       (res) => {
                         if (res.status === 200) {
                           setAddUser(false);
+                          refetchUsers();
                           toast.success("New user invited successfully");
                         } else {
                           toast.error(res?.response.data.message);
