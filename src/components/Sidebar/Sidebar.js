@@ -1,16 +1,3 @@
-/* eslint-disable */
-
-/*!
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-* Designed and Coded by Simmmple & Creative Tim
-=========================================================
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { HamburgerIcon } from "@chakra-ui/icons";
 // chakra imports
 import {
@@ -72,7 +59,7 @@ function Sidebar(props) {
   const { sidebarWidth, setSidebarWidth, toggleSidebar } = React.useContext(
     SidebarContext
   );
-  const { providers, setToken, setUser } = useContext(AppContext);
+  const { providers, setToken, setUser, setProviders } = useContext(AppContext);
 
   let variantChange = "0.2s linear";
   // verifies if routeName is the one active (in browser input)
@@ -338,6 +325,7 @@ function Sidebar(props) {
               localStorage.removeItem("isSuperAdmin");
               setToken(null);
               setUser(null);
+              setProviders([]);
               navigate("/auth/authentication/sign-in");
             }}
             boxShadow={
@@ -772,7 +760,7 @@ export function SidebarResponsive(props) {
   let location = useLocation();
   const navigate = useNavigate();
 
-  const { providers, setToken, setUser } = useContext(AppContext);
+  const { providers, setToken, setUser, setProviders } = useContext(AppContext);
   let variantChange = "0.2s linear";
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -965,6 +953,7 @@ export function SidebarResponsive(props) {
               localStorage.removeItem("isSuperAdmin");
               setToken(null);
               setUser(null);
+              setProviders([]);
 
               navigate("/auth/authentication/sign-in");
             }}

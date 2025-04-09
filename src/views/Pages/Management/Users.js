@@ -1,7 +1,4 @@
 import React, { useContext, useRef, useState } from "react";
-
-// NEW imports
-
 import {
   Flex,
   Grid,
@@ -19,6 +16,9 @@ import {
   OrderedList,
   Box,
   Spinner,
+  Checkbox,
+  CheckboxGroup,
+  Stack,
 } from "@chakra-ui/react";
 import bgCardReports from "assets/img/background-card-reports.png";
 // Custom components
@@ -34,27 +34,26 @@ import { BiUpload } from "react-icons/bi";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { useGetUsers } from "hooks/api/management/users/useGetUsers";
 import { AppContext } from "contexts/AppContext";
+import { useGetUserRoles } from "hooks/api/management/users/useGetUserRoles";
+import { useInviteUser } from "hooks/api/management/users/useInviteUser";
 
 function Users() {
   const textColor = useColorModeValue("gray.700", "white");
   const secondaryColor = useColorModeValue("gray.400", "white");
   const iconColor = useColorModeValue("white", "black");
-
   const { colorMode } = useColorMode();
 
   const [addUser, setAddUser] = useState(false);
   const [importUsers, SetImportUsers] = useState(false);
+  const [email, setEmail] = useState("");
+  const [selectedRoles, setSelectedRoles] = useState([]);
   const { token } = useContext(AppContext);
-  const userRoles = [
-    { key: "Super Admin", value: "super admin" },
-    { key: "State Admin", value: "state admin" },
-    {
-      key: "Institution Administrative Staff",
-      value: "institution administrative staff",
-    },
-    { key: "Doctor", value: "doctor" },
-    { key: "Nurse", value: "nurse" },
-  ];
+  const { data: roles, isLoading: gettingRoles, refetch } = useGetUserRoles(
+    token
+  );
+
+  const { handleInviteUser, isLoading: isInviting } = useInviteUser(token);
+
   const requiredField = [
     "Email",
     "Role: Please select from, ADMIN, DOCTOR or  NURSE",
@@ -76,9 +75,7 @@ function Users() {
     }
   };
 
-  const { data, isLoading, isFetching, refetch: refetchUsers } = useGetUsers(
-    token
-  );
+  const { data, isLoading, refetch: refetchUsers } = useGetUsers(token);
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
@@ -191,6 +188,12 @@ function Users() {
             </Text>{" "}
             <Flex gap="12px" alignItems="center">
               <Button
+                disabled={gettingRoles}
+                _disabled={{
+                  opacity: 0.5,
+                  cursor: "not-allowed",
+                  _hover: { bg: "#3182ce" },
+                }}
                 px="10px"
                 fontSize="14px"
                 colorScheme="blue"
@@ -232,13 +235,18 @@ function Users() {
         <Modal
           maxWidth={"500px"}
           label="Invite New User"
-          handleCloseModal={() => setAddUser(false)}
+          handleCloseModal={() => {
+            setAddUser(false);
+            setSelectedRoles([]);
+            setEmail("");
+          }}
         >
           <FormControl>
             <FormLabel ms="4px" mt="8px" fontSize="sm" fontWeight="normal">
               Email
             </FormLabel>
             <Input
+              value={email}
               variant="auth"
               fontSize="sm"
               ms="4px"
@@ -246,46 +254,85 @@ function Users() {
               placeholder="Enter user's email address"
               mb="24px"
               size="lg"
+              onChange={(e) => setEmail(e.target.value)}
             />
 
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Role
-            </FormLabel>
-            <Select
-              variant="main"
-              _selected={userRoles[0].key}
-              color="gray.400"
-              isReadOnly
-              fontSize="sm"
-              ms="4px"
-              type="email"
-              mb="24px"
-              size="lg"
-              cursor="pointer"
-            >
-              {userRoles.map(({ key, value }, i) => {
-                return (
-                  <option key={i} value={value} style={{ cursor: "pointer" }}>
-                    {key}
-                  </option>
-                );
-              })}
-            </Select>
-
-            <Button
-              fontSize="16px"
-              colorScheme="blue"
-              fontWeight="bold"
-              w="100%"
-              h="50"
-              mb="10px"
-              onClick={() => {
-                setAddUser(false);
-                toast.success("New user invited successfully");
-              }}
-            >
-              Invite
-            </Button>
+            <FormControl>
+              <FormLabel
+                ms="4px"
+                fontSize="sm"
+                fontWeight="bold"
+                color={textColor}
+              >
+                Select Role(s)
+              </FormLabel>
+              <CheckboxGroup
+                colorScheme="blue"
+                value={selectedRoles}
+                onChange={(values) => setSelectedRoles(values)}
+              >
+                <Stack spacing={2}>
+                  {roles.map(({ name, id }) => (
+                    <Checkbox key={id} value={name} textTransform="capitalize">
+                      {name}
+                    </Checkbox>
+                  ))}
+                </Stack>
+              </CheckboxGroup>
+              <Flex
+                alignItems="center"
+                justifyContent="space-evenly"
+                gap="15px"
+                mt="30px"
+              >
+                <Button
+                  fontSize="16px"
+                  variant="dark"
+                  fontWeight="bold"
+                  w="100%"
+                  h="45"
+                  px="30px"
+                  onClick={() => {
+                    setAddUser(false);
+                    setSelectedRoles([]);
+                    setEmail("");
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  fontSize="16px"
+                  colorScheme="blue"
+                  fontWeight="bold"
+                  w="100%"
+                  h="50"
+                  mb="10px"
+                  onClick={() => {
+                    handleInviteUser(
+                      {
+                        email: email,
+                        roles: selectedRoles.map((role) => role),
+                      },
+                      (res) => {
+                        if (res.status === 200) {
+                          setAddUser(false);
+                          toast.success("New user invited successfully");
+                        } else {
+                          toast.error(res?.response.data.message);
+                        }
+                      },
+                      (err) => {
+                        toast.error(
+                          err?.response?.data?.message || "Something went wrong"
+                        );
+                      }
+                    );
+                  }}
+                >
+                  {isInviting ? <Spinner w="18px" h="18px" /> : "Invite"}
+                </Button>
+              </Flex>
+            </FormControl>
           </FormControl>
         </Modal>
       )}
