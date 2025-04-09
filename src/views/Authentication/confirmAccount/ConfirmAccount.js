@@ -1,4 +1,3 @@
-// Chakra imports
 import {
   Button,
   Flex,
@@ -8,13 +7,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Assets
 import BasicImage from "assets/img/BasicImage.png";
-import React from "react";
 import AuthBasic from "layouts/AuthBasic";
 import { useNavigate } from "react-router-dom";
-
-function ForgotPassword() {
+function ConfirmAccount() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgForm = useColorModeValue("white", "navy.800");
@@ -51,39 +47,27 @@ function ForgotPassword() {
             mb="10px"
             fontSize={{ base: "3xl" }}
           >
-            Forgot password
+            Confrim Account
           </Text>
           <Text
             fontWeight="regular"
             textAlign="center"
             color="gray.400"
-            mb="35px"
+            mb="15px"
           >
-            You will receive an e-mail in maximum 60 seconds.
+            Please click on the button to confrim you account
           </Text>
           <FormControl>
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Email
-            </FormLabel>
-            <Input
-              variant="auth"
-              fontSize="sm"
-              ms="4px"
-              type="text"
-              placeholder="Your email address"
-              mb="24px"
-              size="lg"
-            />
             <Button
-              onClick={() => navigate("/auth/authentication/reset-password")}
-              fontSize="10px"
+              onClick={() => navigate("/auth/authentication/sign-in")}
+              fontSize="14px"
               variant="dark"
               fontWeight="bold"
               w="100%"
               h="45"
-              mb="24px"
+              my="24px"
             >
-              SEND
+              Confirm
             </Button>
           </FormControl>
         </Flex>
@@ -92,4 +76,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default ConfirmAccount;

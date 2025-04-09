@@ -31,6 +31,7 @@ import avatar4 from "assets/img/avatars/avatar4.png";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
+import UpdatePassword from "components/modules/settings/UpdatePassword";
 import { HSeparator } from "components/Separator/Separator";
 import { AppContext } from "contexts/AppContext";
 import { useGetProfile } from "hooks/api/auth/useGetProfile";
@@ -66,9 +67,9 @@ function Settings() {
   });
   const [gender, setGender] = useState(user?.gender || "");
   const [dob, setDob] = useState({
-    day: user?.birth_date.slice(-2) ?? "1",
-    month: user?.birth_date.slice(-5, -3) ?? "01",
-    year: user?.birth_date.slice(0, 4) ?? "1900",
+    day: user?.birth_date?.slice(-2) ?? "1",
+    month: user?.birth_date?.slice(-5, -3) ?? "01",
+    year: user?.birth_date?.slice(0, 4) ?? "1900",
   });
 
   const years = getAllYears();
@@ -909,146 +910,7 @@ function Settings() {
             justifySelf="flex-end"
           >
             <Element id="change-password" name="change-password">
-              <CardHeader mb="40px">
-                <Text color={textColor} fontSize="lg" fontWeight="semibold">
-                  Change Password
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <Stack direction="column" spacing="20px" w="100%">
-                  <FormControl>
-                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      Current Password
-                    </FormLabel>
-                    <Input
-                      variant="main"
-                      placeholder="Current Password"
-                      fontSize="xs"
-                      readOnly={false}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      New Password
-                    </FormLabel>
-                    <Input
-                      variant="main"
-                      placeholder="New Password"
-                      fontSize="xs"
-                      readOnly={false}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      Confirm New Password
-                    </FormLabel>
-                    <Input
-                      variant="main"
-                      placeholder="Confirm New Password"
-                      fontSize="xs"
-                      readOnly={false}
-                    />
-                  </FormControl>
-                  <Flex direction="column">
-                    <Text
-                      color={textColor}
-                      fontWeight="bold"
-                      fontSize="lg"
-                      mb="4px"
-                      mt="40px"
-                    >
-                      Password Requirements
-                    </Text>
-                    <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                      Please follow this guide for a strong password.
-                    </Text>
-                  </Flex>
-                  <Flex
-                    direction={{ sm: "column", lg: "row" }}
-                    justify="space-between"
-                    w="100%"
-                  >
-                    <Stack
-                      direction="column"
-                      spacing="6px"
-                      mb={{ sm: "12px", lg: "0px" }}
-                    >
-                      <Flex align="center">
-                        <Icon
-                          as={BsCircleFill}
-                          w="6px"
-                          h="6px"
-                          color="gray.500"
-                          me="6px"
-                        />
-                        <Text
-                          color="gray.500"
-                          fontWeight="normal"
-                          fontSize="xs"
-                        >
-                          One special characters
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <Icon
-                          as={BsCircleFill}
-                          w="6px"
-                          h="6px"
-                          color="gray.500"
-                          me="6px"
-                        />
-                        <Text
-                          color="gray.500"
-                          fontWeight="normal"
-                          fontSize="xs"
-                        >
-                          Min 6 characters
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <Icon
-                          as={BsCircleFill}
-                          w="6px"
-                          h="6px"
-                          color="gray.500"
-                          me="6px"
-                        />
-                        <Text
-                          color="gray.500"
-                          fontWeight="normal"
-                          fontSize="xs"
-                        >
-                          One number (2 are recommended)
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <Icon
-                          as={BsCircleFill}
-                          w="6px"
-                          h="6px"
-                          color="gray.500"
-                          me="6px"
-                        />
-                        <Text
-                          color="gray.500"
-                          fontWeight="normal"
-                          fontSize="xs"
-                        >
-                          Change it often
-                        </Text>
-                      </Flex>
-                    </Stack>
-                    <Button
-                      variant="dark"
-                      w="150px"
-                      h="35px"
-                      alignSelf="flex-end"
-                    >
-                      UPDATE PASSWORD
-                    </Button>
-                  </Flex>
-                </Stack>
-              </CardBody>
+              <UpdatePassword />
             </Element>
           </Card>
           <Card
