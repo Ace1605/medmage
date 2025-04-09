@@ -299,7 +299,7 @@ const dashRoutes = [
               {
                 name: "Basic",
                 component: <ConfirmAccount />,
-                path: "/authentication/confirm-account",
+                path: "/authentication/confirm-account/:id",
                 layout: "/auth",
               },
             ],
