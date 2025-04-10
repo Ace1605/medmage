@@ -94,7 +94,7 @@ function ForgotPassword() {
                       toast.success(
                         "Reset instructions sent, please check your email"
                       );
-                      navigate("/auth/authentication/reset-password");
+                      setEmail("");
                     } else {
                       toast.error(res?.response.data.message);
                     }
