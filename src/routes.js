@@ -1,23 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// import
-// To be changed
-// import Tables from "views/Dashboard/Tables.js";
 import {
   CartIcon,
   DocumentIcon,
@@ -61,6 +41,7 @@ import Todos from "views/Pages/Management/ToDo";
 import { RiTodoFill } from "react-icons/ri";
 import ActivityLog from "views/Pages/Activity/ActivityLog";
 import Finance from "views/Pages/Finance/Finance";
+import ConfirmAccount from "views/Authentication/confirmAccount/ConfirmAccount";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -310,15 +291,29 @@ const dashRoutes = [
             ],
           },
           {
-            name: "New User Validation",
-            path: "/authentication/new-user-validation",
+            name: "Confirm Account",
+            path: "/authentication/confirm-account/:id",
+            collapse: true,
+            authIcon: <DocumentIcon color="inherit" />,
+            items: [
+              {
+                name: "Basic",
+                component: <ConfirmAccount />,
+                path: "/authentication/confirm-account/:id",
+                layout: "/auth",
+              },
+            ],
+          },
+          {
+            name: "Confirm Account",
+            path: "/authentication/complete-account/:id",
             collapse: true,
             authIcon: <DocumentIcon color="inherit" />,
             items: [
               {
                 name: "Basic",
                 component: <NewUserValidation />,
-                path: "/authentication/new-user-validation",
+                path: "/authentication/complete-account/:id",
                 layout: "/auth",
               },
             ],
@@ -339,14 +334,14 @@ const dashRoutes = [
           },
           {
             name: "Reset password",
-            path: "/authentication/reset",
+            path: "/authentication/reset-password/:id",
             collapse: true,
             authIcon: <DocumentIcon color="inherit" />,
             items: [
               {
                 name: "Basic",
                 component: <ResetBasic />,
-                path: "/authentication/reset-password",
+                path: "/authentication/reset-password/:id",
                 layout: "/auth",
               },
             ],

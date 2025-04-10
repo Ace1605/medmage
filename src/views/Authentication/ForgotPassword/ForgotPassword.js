@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import {
   Button,
@@ -22,20 +5,29 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Spinner,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
 import BasicImage from "assets/img/BasicImage.png";
-import React from "react";
+import React, { useState } from "react";
 import AuthBasic from "layouts/AuthBasic";
 import { useNavigate } from "react-router-dom";
+import { isValid } from "date-fns";
+import { emailRegex } from "utils/regex";
+import { useforgetPassword } from "hooks/api/auth/useforgetPassword";
+import { toast } from "sonner";
 
 function ForgotPassword() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgForm = useColorModeValue("white", "navy.800");
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const isValid = emailRegex.test(email);
+
+  const { handleForgetPassword, isLoading } = useforgetPassword();
   return (
     <AuthBasic image={BasicImage}>
       <Flex
@@ -90,17 +82,44 @@ function ForgotPassword() {
               placeholder="Your email address"
               mb="24px"
               size="lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Button
-              onClick={() => navigate("/auth/authentication/reset-password")}
+              onClick={() => {
+                handleForgetPassword(
+                  { email: email },
+                  (res) => {
+                    if (res.status === 200) {
+                      toast.success(
+                        "Reset instructions sent, please check your email"
+                      );
+                      setEmail("");
+                    } else {
+                      toast.error(res?.response.data.message);
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
+              }}
               fontSize="10px"
               variant="dark"
               fontWeight="bold"
               w="100%"
               h="45"
               mb="24px"
+              disabled={!isValid}
+              _disabled={{
+                opacity: 0.5,
+                cursor: "not-allowed",
+                _hover: { bg: "#1f2733" },
+              }}
             >
-              SEND
+              {isLoading ? <Spinner w="18px" h="18px" /> : "SEND"}
             </Button>
           </FormControl>
         </Flex>

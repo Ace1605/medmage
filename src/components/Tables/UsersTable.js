@@ -65,7 +65,8 @@ function UsersTable(props) {
           return (
             <div style={{ width: "150px" }}>
               <span>
-                {row.original.first_name} {row.original.last_name}
+                {row.original.first_name ?? "---"}{" "}
+                {row.original.last_name ?? "---"}
               </span>
             </div>
           );
@@ -244,7 +245,14 @@ function UsersTable(props) {
           />
         </Flex>
 
-        <Flex overflowX={{ sm: "scroll", lg: "hidden" }}>
+        <Flex
+          overflowX={{ sm: "scroll", lg: "scroll" }}
+          sx={{
+            "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+            "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+            "scrollbar-width": "none", // Hide scrollbar in Firefox
+          }}
+        >
           <Table
             {...getTableProps()}
             variant="simple"
@@ -561,6 +569,11 @@ function UsersTable(props) {
                       } else {
                         toast.error(res?.message);
                       }
+                    },
+                    (err) => {
+                      toast.error(
+                        err?.response?.data?.message || "Something went wrong"
+                      );
                     }
                   );
                 }}

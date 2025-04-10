@@ -138,9 +138,15 @@ function SignInCover() {
                     if (res.status === 200) {
                       setToken(res?.data.data.token);
                       navigate("/admin/dashboard");
+                      toast.success("User login successful");
                     } else {
                       toast.error(res?.message);
                     }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
                   }
                 )
               }
