@@ -32,6 +32,7 @@ import {
   OrderedList,
   Select,
   SimpleGrid,
+  Stack,
   Stat,
   StatLabel,
   StatNumber,
@@ -50,6 +51,10 @@ import { BiPlus, BiUpload } from "react-icons/bi";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
 import { DownloadIcon } from "@chakra-ui/icons";
+import { getAllYears } from "utils/generators";
+import { getDaysInMonth } from "utils/generators";
+import { months } from "utils/constants";
+import { AddPatientForm } from "./addPatientForm";
 
 function PatientManagment() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -57,6 +62,7 @@ function PatientManagment() {
   const iconColor = useColorModeValue("white", "black");
   const [addPatient, setAddPatient] = useState(false);
   const [importPatients, setImportPatients] = useState(false);
+
   const overViewPatientsInfo = [
     {
       label: "Total Patients",
@@ -214,194 +220,11 @@ function PatientManagment() {
       </Card>
       {addPatient && (
         <Modal
-          maxWidth={"500px"}
+          maxWidth={"700px"}
           label="Add New Patient"
           handleCloseModal={() => setAddPatient(false)}
         >
-          <FormControl>
-            <Box
-              h={{ sm: "40vh", md: "100%" }}
-              overflowY={{ sm: "scroll", md: "" }}
-              sx={{
-                "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                "scrollbar-width": "none", // Hide scrollbar in Firefox
-              }}
-            >
-              <Grid
-                templateColumns={{
-                  base: "1fr",
-                  sm: "1fr",
-                  md: "repeat(2, 1fr)",
-                }}
-                gap="15px"
-                spacing={{ sm: "8px", lg: "30px" }}
-                w={{ sm: "100%", lg: null }}
-                my="18px"
-              >
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    First Name
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter first name"
-                    fontSize="xs"
-                  />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Last Name
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter last name"
-                    fontSize="xs"
-                  />
-                </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Age
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="DD-MM-YYYY"
-                    fontSize="xs"
-                  />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Sex
-                  </FormLabel>
-                  <Select
-                    cursor="pointer"
-                    variant="main"
-                    color="gray.400"
-                    fontSize="xs"
-                    isReadOnly
-                  >
-                    <option value="male" selected>
-                      Male
-                    </option>
-                    <option value="female">Female</option>
-                  </Select>
-                </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Religion
-                  </FormLabel>
-                  <Select
-                    cursor="pointer"
-                    variant="main"
-                    color="gray.400"
-                    fontSize="xs"
-                    isReadOnly
-                  >
-                    <option value="christain" selected>
-                      Christian
-                    </option>
-                    <option value="muslim">Muslim</option>
-                    <option value="muslim">Other</option>
-                  </Select>
-                </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Occupation
-                  </FormLabel>
-                  <Select
-                    cursor="pointer"
-                    variant="main"
-                    color="gray.400"
-                    fontSize="xs"
-                    isReadOnly
-                  >
-                    <option value="civil servant" selected>
-                      Civil servant
-                    </option>
-                    <option value="enterprenure">Enterprenure</option>
-                    <option value="retired">Retired</option>
-                  </Select>
-                </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Marital status
-                  </FormLabel>
-                  <Select
-                    cursor="pointer"
-                    variant="main"
-                    color="gray.400"
-                    fontSize="xs"
-                    isReadOnly
-                  >
-                    <option value="single" selected>
-                      Single
-                    </option>
-                    <option value="married">Married</option>
-                    <option value="engaged">Engaged</option>
-                    <option value="divored">Divorced</option>
-                    <option value="separated">Separated</option>
-                  </Select>
-                </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Blood Pressure rate
-                  </FormLabel>
-                  <Flex alignItems="center " gap="10px">
-                    <Input
-                      variant="main"
-                      type="number"
-                      placeholder="SDP"
-                      fontSize="xs"
-                    />
-                    <Box w="22px" h="2px" bg="black" />
-                    <Input
-                      variant="main"
-                      type="number"
-                      placeholder="DBP"
-                      fontSize="xs"
-                    />
-                  </Flex>
-                </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Pluse Rate
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter Pluse"
-                    fontSize="xs"
-                  />
-                </FormControl>
-                <FormControl minW={{ sm: "35%", lg: null }}>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Temperature
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter temperature"
-                    fontSize="xs"
-                  />
-                </FormControl>
-              </Grid>
-            </Box>
-
-            <Button
-              fontSize="16px"
-              colorScheme="blue"
-              fontWeight="bold"
-              w="100%"
-              h="50"
-              mb="10px"
-              onClick={() => {
-                setAddPatient(false);
-                toast.success("Patient added successfully");
-              }}
-            >
-              Confirm
-            </Button>
-          </FormControl>
+          <AddPatientForm setAddPatient={setAddPatient} />
         </Modal>
       )}
 

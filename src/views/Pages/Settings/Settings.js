@@ -725,7 +725,10 @@ function Settings() {
                         readOnly={false}
                         value={email.email}
                         onChange={(e) =>
-                          setEmail({ ...prev, email: e.target.value })
+                          setEmail((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
                         }
                       />
                     </FormControl>
@@ -740,10 +743,10 @@ function Settings() {
                         readOnly={false}
                         value={email.confirmationEmail}
                         onChange={(e) =>
-                          setEmail({
+                          setEmail((prev) => ({
                             ...prev,
                             confirmationEmail: e.target.value,
-                          })
+                          }))
                         }
                       />
                     </FormControl>
