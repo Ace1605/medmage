@@ -1,12 +1,11 @@
 import { useTQuery } from "hooks/api/useQuery";
 
-export const useGetUsers = (token) => {
+export const useGetPatients = (token, page, size) => {
   const { data, isLoading, refetch, error, isFetching } = useTQuery({
-    url: "users",
+    url: `patients`,
     token: token,
-    queryKey: "users",
-    params: {},
-    enabled: !!token,
+    queryKey: "patients",
+    params: { page, per_page: size },
   });
 
   return {

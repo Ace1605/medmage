@@ -169,7 +169,7 @@ function NewUserValidation() {
                   },
                   (res) => {
                     if (res.status === 200) {
-                      toast.success("Account creation complete successfully");
+                      toast.success("Account creation completed");
                       navigate("/auth/authentication/sign-in");
                     } else {
                       toast.error(res?.message);

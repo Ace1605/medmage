@@ -36,6 +36,7 @@ import {
 } from "@chakra-ui/react";
 import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
+import dayjs from "dayjs";
 import React, { useContext, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
@@ -53,7 +54,7 @@ import {
 import { toast } from "sonner";
 
 function PatientsTable(props) {
-  const { columnsData, tableData } = props;
+  const { columnsData, tableData, pageNo, size, setPageNo, setSize } = props;
   //   const [editPatient, setEditPatient] = useState(false);
   const [deletePatient, setDeletePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -62,7 +63,50 @@ function PatientsTable(props) {
 
   const columns = useMemo(() => {
     return [
-      ...columnsData,
+      {
+        Header: "Id",
+        accessor: "patient_id",
+      },
+      {
+        Header: "NAME",
+        Cell: ({ row }) => {
+          return (
+            <div style={{ width: "150px" }}>
+              <span>
+                {row.original.first_name ?? "---"}{" "}
+                {row.original.last_name ?? "---"}
+              </span>
+            </div>
+          );
+        },
+      },
+
+      {
+        Header: "EMAIL",
+        accessor: "email",
+      },
+      {
+        Header: "MOBILE NUMBER",
+        accessor: "phone",
+      },
+
+      {
+        Header: "GENDER",
+        accessor: "gender",
+      },
+      {
+        Header: "DATE CREATED",
+        accessor: "created_at",
+        Cell: ({ row }) => {
+          return (
+            <div>
+              <span>
+                {dayjs(row.original.created_at).format("DD, MMM YYYY")}
+              </span>
+            </div>
+          );
+        },
+      },
       {
         Header: "Action",
         accessor: "action",
@@ -103,7 +147,9 @@ function PatientsTable(props) {
     ];
   }, []);
 
-  const data = useMemo(() => tableData, []);
+  const data = useMemo(() => tableData?.data, []);
+
+  const { meta } = tableData;
 
   const tableInstance = useTable(
     {
@@ -142,6 +188,15 @@ function PatientsTable(props) {
 
   const { pageIndex, pageSize, globalFilter } = state;
   const textColor = useColorModeValue("gray.600", "white");
+
+  const goToPrev = () => {
+    setPageNo(pageNo - 1);
+  };
+
+  const goToNext = () => {
+    setPageNo(pageNo + 1);
+  };
+
   return (
     <>
       <Flex direction="column" w="100%">
@@ -277,23 +332,21 @@ function PatientsTable(props) {
             fontWeight="normal"
             mb={{ sm: "14px", md: "0px" }}
           >
-            Showing {pageSize * pageIndex + 1} to{" "}
-            {pageSize * (pageIndex + 1) <= tableData.length
-              ? pageSize * (pageIndex + 1)
-              : tableData.length}{" "}
-            of {tableData.length} entries
+            Showing {meta.pagination.current_page} to{" "}
+            {meta.pagination.current_page * tableData?.data.length} of{" "}
+            {meta.pagination.total} entries
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
             <Button
               variant="no-effects"
-              onClick={() => previousPage()}
+              onClick={() => goToPrev()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex === 0}
+              isDisabled={meta.pagination.current_page === 1}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",
@@ -307,7 +360,6 @@ function PatientsTable(props) {
                 <Button
                   variant="no-effects"
                   transition="all .5s ease"
-                  onClick={() => gotoPage(pageNumber - 1)}
                   w="40px"
                   h="40px"
                   borderRadius="8px"
@@ -317,31 +369,27 @@ function PatientsTable(props) {
                       ? "none"
                       : "1px solid lightgray"
                   }
-                  _hover={{
-                    opacity: "0.7",
-                    borderColor: "gray.500",
-                  }}
                   key={index}
                 >
                   <Text
                     fontSize="sm"
                     color={pageNumber === pageIndex + 1 ? "#fff" : "gray.600"}
                   >
-                    {pageNumber}
+                    {meta.pagination.current_page}
                   </Text>
                 </Button>
               );
             })}
             <Button
               variant="no-effects"
-              onClick={() => nextPage()}
+              onClick={() => goToNext()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex + 1 === pageCount}
+              isDisabled={meta.pagination.last_page === pageNo}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",

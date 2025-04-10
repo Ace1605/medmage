@@ -1,5 +1,5 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-export default function PublicRoutes({ isAuthenticated }) {
-  return isAuthenticated ? <Navigate to="/admin/dashboard" /> : <Outlet />;
+export default function PublicRoutes() {
+  return <Outlet />;
 }
