@@ -64,7 +64,7 @@ function PatientManagment() {
   const [importPatients, setImportPatients] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(2);
+  const [size, setSize] = useState(10);
   const { token } = useContext(AppContext);
   const overViewPatientsInfo = [
     {
