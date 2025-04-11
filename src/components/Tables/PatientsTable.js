@@ -19,8 +19,6 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Icon,
   Input,
   Select,
@@ -60,7 +58,6 @@ function PatientsTable(props) {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const navigate = useNavigate();
   const { setIsSuperAdmin } = useContext(AppContext);
-
   const columns = useMemo(() => {
     return [
       {
@@ -126,7 +123,9 @@ function PatientsTable(props) {
                 onClick={() => {
                   setIsSuperAdmin(true);
                   setSelectedPatient(row.original);
-                  navigate("/admin/personnel-management/patient-information");
+                  navigate(
+                    `/admin/personnel-management/patient-information/${row.original.id}`
+                  );
                 }}
               />
               <Icon
@@ -241,7 +240,14 @@ function PatientsTable(props) {
           />
         </Flex>
 
-        <Flex overflowX={{ sm: "scroll", lg: "hidden" }}>
+        <Flex
+          overflowX={{ sm: "scroll", lg: "hidden" }}
+          sx={{
+            "::-webkit-scrollbar": { display: "none" },
+            "-ms-overflow-style": "none",
+            "scrollbar-width": "none",
+          }}
+        >
           <Table
             {...getTableProps()}
             variant="simple"
@@ -297,9 +303,9 @@ function PatientsTable(props) {
                           onClick={() => {
                             if (cell.column.id !== "action") {
                               setIsSuperAdmin(false);
-                              setSelectedPatient(row.original);
+                              setSelectedPatient("id", row.original.id);
                               navigate(
-                                "/admin/personnel-management/patient-information"
+                                `/admin/personnel-management/patient-information/${row.original.id}`
                               );
                             }
                             return;

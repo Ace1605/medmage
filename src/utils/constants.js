@@ -12,3 +12,5 @@ export const months = [
   { key: "November", value: "11" },
   { key: "December", value: "12" },
 ];
+
+export const bloodTypes = ["A+", "A−", "B+", "B−", "AB+", "AB−", "O+", "O−"];
