@@ -123,7 +123,8 @@ export const AddPatientForm = ({ setAddPatient }) => {
     );
 
   const isValid =
-    hasAllValues(name) &&
+    name.firstName.trim() !== "" &&
+    name.lastName.trim() !== "" &&
     hasAllValues(dob) &&
     gender &&
     bloodType &&
@@ -640,9 +641,10 @@ export const AddPatientForm = ({ setAddPatient }) => {
                   <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                     Addtional info
                   </FormLabel>
-                  <Input
+                  <Select
+                    cursor="pointer"
                     variant="main"
-                    placeholder="Enter marital status"
+                    color="gray.400"
                     fontSize="xs"
                     value={additionalInfo.maritalStatus}
                     onChange={(e) =>
@@ -651,7 +653,13 @@ export const AddPatientForm = ({ setAddPatient }) => {
                         maritalStatus: e.target.value,
                       }))
                     }
-                  />
+                  >
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Engaged">Engaged</option>
+                    <option value="Divored">Divorced</option>
+                    <option value="Separated">Separated</option>
+                  </Select>
                 </FormControl>
                 <FormControl>
                   <Input
@@ -701,19 +709,22 @@ export const AddPatientForm = ({ setAddPatient }) => {
           mb="10px"
           pt="10px"
           onClick={() => {
-            handleCreatePatient(Payload, (res) => {
-              if (res.status === 200) {
-                toast.success("Patient added successfully");
-                setAddPatient(false);
-              } else {
-                toast.error(res?.message);
-              }
+            handleCreatePatient(
+              Payload,
+              (res) => {
+                if (res.status === 201) {
+                  toast.success("Patient added successfully");
+                  setAddPatient(false);
+                } else {
+                  toast.error(res?.message);
+                }
+              },
               (err) => {
                 toast.error(
                   err?.response?.data?.message || "Something went wrong"
                 );
-              };
-            });
+              }
+            );
           }}
         >
           {isLoading ? <Spinner w="20px" h="20px" /> : "Confirm"}
