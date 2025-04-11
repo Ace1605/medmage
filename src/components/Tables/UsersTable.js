@@ -56,7 +56,7 @@ function UsersTable(props) {
   const columns = useMemo(() => {
     return [
       {
-        Header: "Id",
+        Header: "Emp Id",
         accessor: "id",
       },
       {
@@ -96,28 +96,31 @@ function UsersTable(props) {
         },
       },
       {
-        Header: "CREATED",
-        accessor: "dateCreated",
+        Header: "CREATED AT",
+        accessor: "created_at",
         Cell: ({ row }) => {
           return (
             <div>
               <span>
-                {row.original.dateCreated
-                  ? dayjs(row.original.dateCreated).format("DD, MMM YYYY")
-                  : "---"}
+                {dayjs(row.original.created_at).format("DD, MMM YYYY")}
               </span>
             </div>
           );
         },
       },
       {
-        Header: "CREATED BY",
-        accessor: "createdBy",
+        Header: "STATUS",
+        accessor: "status",
         Cell: ({ row }) => {
+          const { status } = row.original;
           return (
             <div>
-              <span>
-                {row.original.createdBy ? row.original.createdBy : "---"}
+              <span
+                style={{ color: status === "Active" ? "#48bb78" : "#FF3B30" }}
+              >
+                {row.original.status === "Unconfirmed"
+                  ? "Inactive"
+                  : row.original.status}
               </span>
             </div>
           );
@@ -161,6 +164,8 @@ function UsersTable(props) {
       },
     ];
   }, []);
+
+  console.log("tabe", tableData);
 
   const data = useMemo(() => tableData, []);
 
@@ -333,10 +338,10 @@ function UsersTable(props) {
             mb={{ sm: "14px", md: "0px" }}
           >
             Showing {pageSize * pageIndex + 1} to{" "}
-            {pageSize * (pageIndex + 1) <= tableData.length
+            {pageSize * (pageIndex + 1) <= tableData?.length
               ? pageSize * (pageIndex + 1)
-              : tableData.length}{" "}
-            of {tableData.length} entries
+              : tableData?.length}{" "}
+            of {tableData?.length} entries
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
             <Button

@@ -4,17 +4,25 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Spinner,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import BasicImage from "assets/img/BasicImage.png";
+import { useConfirmAccount } from "hooks/api/auth/useConfirmAccount";
 import AuthBasic from "layouts/AuthBasic";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 function ConfirmAccount() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgForm = useColorModeValue("white", "navy.800");
+  const param = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const { handleConfirmAccount, isLoading } = useConfirmAccount();
+
   return (
     <AuthBasic image={BasicImage}>
       <Flex
@@ -59,7 +67,25 @@ function ConfirmAccount() {
           </Text>
           <FormControl>
             <Button
-              onClick={() => navigate("/auth/authentication/sign-in")}
+              onClick={() => {
+                handleConfirmAccount(
+                  `${param.id}${location.search}`,
+                  {},
+                  (res) => {
+                    if (res.status === 200) {
+                      toast.success("Account confirmed");
+                      navigate("/admin/dashboard");
+                    } else {
+                      toast.error(res?.message);
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
+              }}
               fontSize="14px"
               variant="dark"
               fontWeight="bold"
@@ -67,7 +93,7 @@ function ConfirmAccount() {
               h="45"
               my="24px"
             >
-              Confirm
+              {isLoading ? <Spinner w="18px" h="18px" /> : "Confirm"}
             </Button>
           </FormControl>
         </Flex>

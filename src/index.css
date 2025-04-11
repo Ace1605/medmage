@@ -26,3 +26,40 @@
 .animate-bounce {
   animation: bounce 1s infinite;
 }
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 2.5rem; /* top-16 */
+  z-index: 10;
+  min-height: 5rem; /* min-h-20 */
+  min-width: 200px;
+  transform: translateY(0);
+  border: 1px solid rgba(115, 115, 115, 0.3); /* border-neutral-100 with opacity */
+  background-color: white;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem; /* rounded-lg */
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  transition: all 0.2s ease-in-out 0.3s; /* duration-300 ease-in-out delay-400 */
+}
+
+.dropdown-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-hide {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-1.25rem); /* -translate-y-5 */
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem; /* gap-1.5 */
+  padding: 0.3rem 0.75rem; /* py-2.5 px-3 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 600; /* font-semibold */
+}

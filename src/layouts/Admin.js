@@ -6,6 +6,9 @@ import {
   Stack,
   useDisclosure,
   useColorModeValue,
+  Text,
+  Button,
+  Spinner,
 } from "@chakra-ui/react";
 import "assets/css/plugin-styles.css";
 import Configurator from "components/Configurator/Configurator";
@@ -35,6 +38,8 @@ import { AppContext } from "contexts/AppContext";
 import { useGetProfile } from "hooks/api/auth/useGetProfile";
 import { toast } from "sonner";
 import FullScreenLoader from "components/FullScreenLoader/FullScreenLoader";
+import Modal from "components/Modal/Modal";
+import { useResendConfirmationEmail } from "hooks/api/auth/useResendConfirmationEmail";
 // Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -43,6 +48,7 @@ export default function Dashboard(props) {
   const [fixed, setFixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(275);
+
   // functions for changing the states from components
   const getRoute = () => {
     return window.location.pathname !== "/admin/full-screen-maps";
@@ -118,9 +124,26 @@ export default function Dashboard(props) {
   // Get profile
   const navigate = useNavigate();
 
+  const {
+    handleResendConfirmation,
+    isLoading: isResending,
+  } = useResendConfirmationEmail();
+
   const { token, setUser, user, setProviders } = useContext(AppContext);
 
   const { data, isLoading, error, isFetching } = useGetProfile(token);
+
+  const goToInbox = (email) => {
+    if (email.includes("gmail.com")) {
+      window.open("https://mail.google.com/", "_blank");
+    } else if (email.includes("yahoo.com")) {
+      window.open("https://mail.yahoo.com/", "_blank");
+    } else if (email.includes("outlook.com")) {
+      window.open("https://outlook.live.com/mail/", "_blank");
+    } else {
+      alert("Email provider not supported");
+    }
+  };
 
   useEffect(() => {
     if (data) {
@@ -147,6 +170,94 @@ export default function Dashboard(props) {
           setToggleSidebar,
         }}
       >
+        {user?.status.toLowerCase() === "unconfirmed" && (
+          <Modal
+            maxWidth={"530px"}
+            handleCloseModal={() => {}}
+            bg={"#000000de"}
+            height="330px"
+          >
+            <Text
+              color={"#000"}
+              fontWeight="bold"
+              fontSize={{ sm: "20px", lg: "22px" }}
+              textAlign="center"
+              mt="10px"
+              mb="10px"
+            >
+              Your account has not been confirmed
+            </Text>
+            <div style={{ margin: "auto" }}>
+              <Text
+                color={"#000"}
+                fontWeight="normal"
+                fontSize={{ sm: "16px", lg: "17px" }}
+                textAlign="center"
+                maxW={"350px"}
+                mx={"auto"}
+                my={"20px"}
+              >
+                Kindly click on the button below to confirm your account or
+                resend confirmation email if the confirmation period has expired
+              </Text>
+
+              <Text
+                color={"#000"}
+                fontWeight="normal"
+                fontSize={{ sm: "16px", lg: "17px" }}
+                textAlign="center"
+                maxW={"350px"}
+                mx={"auto"}
+                my={"30px"}
+              >
+                Has your confirmation expired?{" "}
+                <button
+                  onClick={() => {
+                    handleResendConfirmation(
+                      user?.id,
+                      {},
+                      (res) => {
+                        if (res.status === 200) {
+                          toast.success("Email resent successfully");
+                        } else {
+                          toast.error(res?.message);
+                        }
+                      },
+                      (err) => {
+                        toast.error(
+                          err?.response?.data?.message || "Something went wrong"
+                        );
+                      }
+                    );
+                  }}
+                  style={{ color: "#3182ce", width: "65px" }}
+                >
+                  {isResending ? (
+                    <Spinner color="#3182ce" w="18px" h="18px" />
+                  ) : (
+                    "Resend"
+                  )}
+                </button>
+              </Text>
+              <Button
+                onClick={() => goToInbox(user?.email)}
+                _disabled={{
+                  opacity: 0.5,
+                  cursor: "not-allowed",
+                  _hover: { bg: "gray.700" },
+                }}
+                fontSize="14px"
+                variant="dark"
+                fontWeight="bold"
+                w="100%"
+                h="45"
+                mb="14px"
+              >
+                Go to email
+              </Button>
+            </div>
+          </Modal>
+        )}
         <Sidebar
           routes={routes}
           logo={
