@@ -1191,7 +1191,7 @@ function PatientInfo() {
                     fontWeight="semibold"
                     mb="4px"
                   >
-                    Additional Indormation
+                    Additional Information
                   </Text>
                 </Flex>
               </CardHeader>
