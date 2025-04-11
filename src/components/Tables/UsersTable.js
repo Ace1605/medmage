@@ -165,8 +165,6 @@ function UsersTable(props) {
     ];
   }, []);
 
-  console.log("tabe", tableData);
-
   const data = useMemo(() => tableData, []);
 
   const tableInstance = useTable(

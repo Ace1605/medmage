@@ -1,26 +1,11 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
+  Icon,
   Input,
   Spinner,
   Text,
@@ -33,6 +18,7 @@ import AuthBasic from "layouts/AuthBasic";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useResetPassword } from "hooks/api/auth/useResetPassword";
 import { toast } from "sonner";
+import { BsEyeFill, BsEyeSlash } from "react-icons/bs";
 
 function ResetCover() {
   // Chakra color mode
@@ -43,7 +29,8 @@ function ResetCover() {
   const location = useLocation();
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirmPassword] = useState("");
-
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { handleResetPassword, isLoading } = useResetPassword();
 
   return (
@@ -80,43 +67,66 @@ function ResetCover() {
           >
             Reset password
           </Text>
-          {/* <Text
-            fontWeight="regular"
-            textAlign="center"
-            color="gray.400"
-            mb="35px"
-          >
-            You will receive an e-mail in maximum 60 seconds.
-          </Text> */}
+
           <FormControl>
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              New Password
-            </FormLabel>
-            <Input
-              variant="auth"
-              fontSize="sm"
-              ms="4px"
-              type="password"
-              placeholder="new password"
-              mb="24px"
-              size="lg"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Confirm Password
-            </FormLabel>
-            <Input
-              variant="auth"
-              fontSize="sm"
-              ms="4px"
-              type="password"
-              placeholder="Your password"
-              mb="24px"
-              size="lg"
-              value={confirm_password}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <FormControl position="relative">
+              <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                New Password
+              </FormLabel>
+              <Input
+                variant="auth"
+                fontSize="sm"
+                ms="4px"
+                type={showNewPassword ? "text" : "password"}
+                placeholder="new password"
+                mb="24px"
+                pr="35px"
+                size="lg"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Box
+                position="absolute"
+                top="43px"
+                right="11px"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? (
+                  <Icon as={BsEyeFill} color="#b0b4ba" cursor="pointer" />
+                ) : (
+                  <Icon as={BsEyeSlash} color="#b0b4ba" cursor="pointer" />
+                )}
+              </Box>
+            </FormControl>
+            <FormControl position="relative">
+              <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                Confirm Password
+              </FormLabel>
+              <Input
+                variant="auth"
+                fontSize="sm"
+                ms="4px"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Your password"
+                mb="24px"
+                size="lg"
+                pr="35px"
+                value={confirm_password}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <Box
+                position="absolute"
+                top="43px"
+                right="11px"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <Icon as={BsEyeFill} color="#b0b4ba" cursor="pointer" />
+                ) : (
+                  <Icon as={BsEyeSlash} color="#b0b4ba" cursor="pointer" />
+                )}
+              </Box>
+            </FormControl>
             <Button
               onClick={() => {
                 handleResetPassword(

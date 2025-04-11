@@ -14,11 +14,12 @@ import { AppContext } from "contexts/AppContext";
 import { useCreatePatient } from "hooks/api/patientManagement/useCreatePatient";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { bloodTypes } from "utils/constants";
 import { months } from "utils/constants";
 import { getDaysInMonth } from "utils/generators";
 import { getAllYears } from "utils/generators";
 
-export const AddPatientForm = ({ setAddPatient }) => {
+export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
   const [name, setName] = useState({
     firstName: "",
     middleName: "",
@@ -312,13 +313,18 @@ export const AddPatientForm = ({ setAddPatient }) => {
               <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                 Blood type
               </FormLabel>
-              <Input
+              <Select
+                cursor="pointer"
                 variant="main"
-                placeholder="Enter blood type"
+                color="gray.400"
                 fontSize="xs"
                 value={bloodType}
                 onChange={(e) => setBloodType(e.target.value)}
-              />
+              >
+                {bloodTypes.map((bloodType) => {
+                  return <option value={bloodType}>{bloodType}</option>;
+                })}
+              </Select>
             </FormControl>
 
             <FormControl minW={{ sm: "35%", lg: null }}>
@@ -713,6 +719,7 @@ export const AddPatientForm = ({ setAddPatient }) => {
               Payload,
               (res) => {
                 if (res.status === 201) {
+                  refetchPatients();
                   toast.success("Patient added successfully");
                   setAddPatient(false);
                 } else {

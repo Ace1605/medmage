@@ -229,14 +229,6 @@ function PatientManagment() {
                 onClick={() => setAddPatient(true)}
               >
                 Add patient
-                {/* <Icon
-                  as={BiPlus}
-                  w="22px"
-                  h="22px"
-                  color={iconColor}
-                  cursor="pointer"
-                  ms="8px"
-                /> */}
               </Button>
               <Button
                 onClick={() => setImportPatients(true)}
@@ -277,7 +269,10 @@ function PatientManagment() {
           label="Add New Patient"
           handleCloseModal={() => setAddPatient(false)}
         >
-          <AddPatientForm setAddPatient={setAddPatient} />
+          <AddPatientForm
+            setAddPatient={setAddPatient}
+            refetchPatients={refetchPatients}
+          />
         </Modal>
       )}
 

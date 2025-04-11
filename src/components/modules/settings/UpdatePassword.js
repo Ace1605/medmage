@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   FormControl,
@@ -15,14 +16,15 @@ import CardHeader from "components/Card/CardHeader";
 import { AppContext } from "contexts/AppContext";
 import { useUpdatePassword } from "hooks/api/settings/useUpdatePassword";
 import { useContext, useState } from "react";
-import { BsCircleFill } from "react-icons/bs";
+import { BsCircleFill, BsEyeFill, BsEyeSlash } from "react-icons/bs";
 import { toast } from "sonner";
 
 function UpdatePassword() {
   const textColor = useColorModeValue("gray.700", "white");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const isValid = password.trim() !== "" && passwordConfirm.trim() !== "";
   const { token } = useContext(AppContext);
   const { handlePasswordUpdate, isLoading } = useUpdatePassword(token);
@@ -67,33 +69,59 @@ function UpdatePassword() {
               readOnly={false}
             />
           </FormControl> */}
-          <FormControl>
+          <FormControl position="relative">
             <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
               New Password
             </FormLabel>
             <Input
-              type="password"
+              type={showNewPassword ? "text" : "password"}
               variant="main"
               placeholder="New Password"
               fontSize="xs"
+              pr="35px"
               readOnly={false}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <Box
+              position="absolute"
+              top="38px"
+              right="11px"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              {showNewPassword ? (
+                <Icon as={BsEyeFill} color="#b0b4ba" cursor="pointer" />
+              ) : (
+                <Icon as={BsEyeSlash} color="#b0b4ba" cursor="pointer" />
+              )}
+            </Box>
           </FormControl>
-          <FormControl>
+          <FormControl position="relative">
             <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
               Confirm New Password
             </FormLabel>
             <Input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               variant="main"
               placeholder="Confirm New Password"
               fontSize="xs"
+              pr="35px"
               readOnly={false}
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
             />
+            <Box
+              position="absolute"
+              top="38px"
+              right="11px"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? (
+                <Icon as={BsEyeFill} color="#b0b4ba" cursor="pointer" />
+              ) : (
+                <Icon as={BsEyeSlash} color="#b0b4ba" cursor="pointer" />
+              )}
+            </Box>
           </FormControl>
           <Flex direction="column">
             <Text
