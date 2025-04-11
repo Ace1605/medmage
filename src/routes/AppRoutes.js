@@ -12,7 +12,7 @@ export default function AppRoutes() {
 
   return (
     <Routes>
-      <Route element={<PublicRoutes isAuthenticated={token ? true : false} />}>
+      <Route element={<PublicRoutes />}>
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="auth/*" element={<AuthLayout />} />
       </Route>

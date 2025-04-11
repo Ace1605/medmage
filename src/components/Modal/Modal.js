@@ -4,7 +4,7 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import React from "react";
 
-const Modal = ({ label, children, handleCloseModal, maxWidth }) => {
+const Modal = ({ label, children, handleCloseModal, maxWidth, height, bg }) => {
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <Box
@@ -17,7 +17,7 @@ const Modal = ({ label, children, handleCloseModal, maxWidth }) => {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      bg={"#00000033"}
+      bg={bg ?? "#00000033"}
     >
       <Card
         onClick={(e) => e.stopPropagation()}
@@ -25,6 +25,7 @@ const Modal = ({ label, children, handleCloseModal, maxWidth }) => {
         w={{ base: "5/6", sm: "75%", lg: "full" }}
         maxW={maxWidth ?? "717px"}
         p={{ base: "5", sm: "7" }}
+        h={height ?? ""}
       >
         <CardHeader>
           {label && (

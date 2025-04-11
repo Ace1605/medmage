@@ -41,7 +41,7 @@ import { ProfileIcon } from "components/Icons/Icons";
 import { ItemContent } from "components/Menu/ItemContent";
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import PropTypes from "prop-types";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import routes from "routes.js";
 import {
   ArgonLogoDark,
@@ -65,9 +65,10 @@ export default function HeaderLinks(props) {
 
   const { colorMode } = useColorMode();
   const notificationColor = useColorModeValue("gray.700", "white");
-
+  const [isOn, setIsOn] = useState(false);
   const { providers, user } = useContext(AppContext);
   const [selected, setSelected] = useState(providers?.[0]?.name);
+  const dropdownRef = useRef(null);
 
   // Chakra Color Mode
   let navbarIcon =
@@ -78,6 +79,19 @@ export default function HeaderLinks(props) {
   if (secondary) {
     navbarIcon = "white";
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOn(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <Flex
@@ -94,20 +108,36 @@ export default function HeaderLinks(props) {
         marginTop={{ sm: "15px", md: "0" }}
         height="100%"
       >
-        <Text
-          fontWeight="semibold"
-          fontSize="16px"
-          me="10px"
-          color="blackAlpha"
+        <div
+          onClick={() => setIsOn(!isOn)}
+          style={{ cursor: "pointer", position: "relative" }}
         >
-          <ProfileIcon
+          <Text
+            fontWeight="semibold"
+            fontSize="16px"
+            me="10px"
             color="blackAlpha"
-            w="22px"
-            h="22px"
-            me={{ sm: "0px" }}
-          />{" "}
-          {user?.first_name}
-        </Text>
+          >
+            <ProfileIcon
+              color="blackAlpha"
+              w="22px"
+              h="22px"
+              me={{ sm: "0px" }}
+            />{" "}
+            {user?.first_name}
+          </Text>
+          <div
+            ref={dropdownRef}
+            className={`dropdown-menu ${
+              isOn ? "dropdown-show" : "dropdown-hide"
+            }`}
+          >
+            <div className="dropdown-item">
+              {user?.first_name} {user?.last_name}
+            </div>
+            <div className="dropdown-item">{user?.email}</div>
+          </div>
+        </div>
 
         <Menu>
           <MenuButton

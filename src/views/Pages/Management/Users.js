@@ -36,6 +36,8 @@ import { useGetUsers } from "hooks/api/management/users/useGetUsers";
 import { AppContext } from "contexts/AppContext";
 import { useGetUserRoles } from "hooks/api/management/users/useGetUserRoles";
 import { useInviteUser } from "hooks/api/management/users/useInviteUser";
+import { baseUrl } from "baseUrl/baseUrl";
+import axios from "axios";
 
 function Users() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -51,6 +53,7 @@ function Users() {
   const { data: roles, isLoading: gettingRoles, refetch } = useGetUserRoles(
     token
   );
+  const [isUploading, setIsUploading] = useState(false);
 
   const { handleInviteUser, isLoading: isInviting } = useInviteUser(token);
 
@@ -61,6 +64,10 @@ function Users() {
 
   const fileInputRef = useRef(null);
   const [csvFile, setCsvFile] = useState(null);
+
+  const { data, isLoading, refetch: refetchUsers, isFetching } = useGetUsers(
+    token
+  );
 
   const handleClick = () => {
     if (fileInputRef.current) {
@@ -75,7 +82,39 @@ function Users() {
     }
   };
 
-  const { data, isLoading, refetch: refetchUsers } = useGetUsers(token);
+  const handleBulkUpload = async (file) => {
+    setIsUploading(true);
+
+    if (!file) {
+      alert("Please select a CSV file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(
+        `${baseUrl}/users/upload/csv`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      refetchUsers();
+      toast.success("Users list uploaded successfully");
+      setIsUploading(false);
+      SetImportUsers(false);
+      setCsvFile(null);
+      console.log(response);
+    } catch (error) {
+      setIsUploading(false);
+      console.error("Upload failed:", error);
+    }
+  };
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
@@ -221,7 +260,7 @@ function Users() {
           </Flex>
         </CardHeader>
         <CardBody px="22px">
-          {isLoading ? (
+          {isLoading || isFetching ? (
             <Flex width="100% " height="30vh" align="center" justify="center">
               <Spinner w="40px" h="40px" color="#3182ce" />
             </Flex>
@@ -317,9 +356,9 @@ function Users() {
                       ],
                       (res) => {
                         if (res.status === 200) {
-                          setAddUser(false);
-                          refetchUsers();
                           toast.success("New user invited successfully");
+                          refetchUsers();
+                          setAddUser(false);
                         } else {
                           toast.error(res?.response.data.message);
                         }
@@ -410,12 +449,10 @@ function Users() {
             mb="10px"
             mt="20px"
             onClick={() => {
-              SetImportUsers(false);
-              setCsvFile(null);
-              toast.success("Users list uploaded successfully");
+              handleBulkUpload(csvFile);
             }}
           >
-            Upload
+            {isUploading ? <Spinner w="18px" h="18px" /> : "Upload"}
           </Button>
         </Modal>
       )}

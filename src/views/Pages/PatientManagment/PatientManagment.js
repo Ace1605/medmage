@@ -15,7 +15,7 @@
 
 */
 
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 // NEW imports
 
@@ -23,16 +23,11 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Grid,
-  Icon,
-  Input,
   ListItem,
   OrderedList,
-  Select,
   SimpleGrid,
-  Stack,
+  Spinner,
   Stat,
   StatLabel,
   StatNumber,
@@ -51,10 +46,11 @@ import { BiPlus, BiUpload } from "react-icons/bi";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
 import { DownloadIcon } from "@chakra-ui/icons";
-import { getAllYears } from "utils/generators";
-import { getDaysInMonth } from "utils/generators";
-import { months } from "utils/constants";
 import { AddPatientForm } from "./addPatientForm";
+import axios from "axios";
+import { AppContext } from "contexts/AppContext";
+import { baseUrl } from "baseUrl/baseUrl";
+import { useGetPatients } from "hooks/api/management/patient/useGetPatient";
 
 function PatientManagment() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -62,7 +58,10 @@ function PatientManagment() {
   const iconColor = useColorModeValue("white", "black");
   const [addPatient, setAddPatient] = useState(false);
   const [importPatients, setImportPatients] = useState(false);
-
+  const [isUploading, setIsUploading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
+  const { token } = useContext(AppContext);
   const overViewPatientsInfo = [
     {
       label: "Total Patients",
@@ -113,6 +112,50 @@ function PatientManagment() {
       setCsvFile(file);
     }
   };
+
+  const handleBulkUpload = async (file) => {
+    setIsUploading(true);
+
+    if (!file) {
+      alert("Please select a CSV file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(
+        `${baseUrl}/patients/upload/csv`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Patients list uploaded successfully");
+      setIsUploading(false);
+      setImportPatients(false);
+      setCsvFile(null);
+      console.log(response);
+    } catch (error) {
+      setIsUploading(false);
+      console.error("Upload failed:", error);
+      toast.error("Patients list upload failed");
+    }
+  };
+
+  const {
+    data,
+    isLoading,
+    refetch: refetchPatients,
+    isFetching,
+  } = useGetPatients(token, page, size);
+
+  console.log("pages", page);
+
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 4 }} spacing="24px" mb="30px">
@@ -212,10 +255,20 @@ function PatientManagment() {
           </Flex>
         </CardHeader>
         <CardBody px="22px">
-          <PatientsTable
-            tableData={patientsData}
-            columnsData={PatientsColumns}
-          />
+          {isLoading || isFetching ? (
+            <Flex width="100% " height="30vh" align="center" justify="center">
+              <Spinner w="40px" h="40px" color="#3182ce" />
+            </Flex>
+          ) : (
+            <PatientsTable
+              tableData={data}
+              columnsData={PatientsColumns}
+              pageNo={page}
+              size={size}
+              setPageNo={(val) => setPage(val)}
+              setSize={(val) => setSize(val)}
+            />
+          )}
         </CardBody>
       </Card>
       {addPatient && (
@@ -245,6 +298,7 @@ function PatientManagment() {
                   cursor="pointer"
                   variant="outlined"
                   minw="90px"
+                  mt="10px"
                   h="40px"
                   borderWidth="2px"
                 >
@@ -299,12 +353,10 @@ function PatientManagment() {
             mb="10px"
             mt="20px"
             onClick={() => {
-              setImportPatients(false);
-              setCsvFile(null);
-              toast.success("Patients list uploaded successfully");
+              handleBulkUpload(csvFile);
             }}
           >
-            Upload
+            {isUploading ? <Spinner w="18px" h="18px" /> : "Upload"}
           </Button>
         </Modal>
       )}

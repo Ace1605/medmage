@@ -5,6 +5,7 @@ export const useGetUserRoles = (token) => {
     url: "users/roles",
     token: token,
     queryKey: "user_roles",
+    params: {},
   });
 
   return {
