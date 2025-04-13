@@ -7,6 +7,7 @@ import {
   Grid,
   Icon,
   Input,
+  Spinner,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -14,30 +15,34 @@ import {
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import eventsData from "variables/eventsData.json";
 import EventsTable from "components/Tables/EventsTable";
-import { EventsColumns } from "variables/columnsData";
 import { BiPlus } from "react-icons/bi";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
-import { useState } from "react";
-import {} from "components/MultiSelect/MultiSelect";
-import MultiSelect from "components/MultiSelect/MultiSelect";
+import { useContext, useState } from "react";
+import { useCreateEvent } from "hooks/api/management/events/useCreateEvent";
+import { AppContext } from "contexts/AppContext";
+import { DateTimeRangePicker } from "components/CustomDateTimePicker/CustomDateTimeRangePicker";
+import { useGetAllEvents } from "hooks/api/management/events/useGetAllEvents";
 
 function Events() {
   const textColor = useColorModeValue("gray.700", "white");
-  const secondaryColor = useColorModeValue("gray.400", "white");
   const iconColor = useColorModeValue("white", "black");
   const [createEvent, setCreateEvent] = useState(false);
+  const [eventName, setEventName] = useState("");
+  const [description, setDescription] = useState("");
 
-  const options = [
-    "Dammy Ayobami",
-    "Jay Ademola",
-    "Achugo Ebuka",
-    "Kevin Akaluzia",
-    "Gilbert Emeka",
-    "Samuel Davis",
-  ];
+  const { user, providers, token } = useContext(AppContext);
+
+  const { handleCreateEvent, isLoading } = useCreateEvent();
+
+  const {
+    data,
+    isFetching,
+    refetch,
+    error,
+    isLoading: isGetting,
+  } = useGetAllEvents(token);
 
   const preselected = ["Achugo Ebuka", "Kevin Akaluzia"];
   return (
@@ -76,7 +81,13 @@ function Events() {
           </Flex>
         </CardHeader>
         <CardBody px="22px">
-          <EventsTable tableData={eventsData} options={options} />
+          {isGetting || isFetching ? (
+            <Flex width="100% " height="30vh" align="center" justify="center">
+              <Spinner w="40px" h="40px" color="#3182ce" />
+            </Flex>
+          ) : (
+            <EventsTable tableData={data} refetchEvents={refetch} />
+          )}
         </CardBody>
       </Card>
       {createEvent && (
@@ -87,87 +98,44 @@ function Events() {
         >
           <FormControl>
             <Box pb="15px">
-              <Box>
-                <Grid
-                  templateColumns={{
-                    base: "1fr",
-                    sm: "1fr",
-                  }}
-                  gap="15px"
-                  spacing={{ sm: "8px", lg: "30px" }}
-                  w={{ sm: "100%", lg: null }}
-                  my="18px"
-                >
-                  <FormControl>
-                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      Name
-                    </FormLabel>
-                    <Input
-                      variant="main"
-                      placeholder="Enter event name"
-                      fontSize="xs"
-                    />
-                  </FormControl>
-                  <Grid
-                    templateColumns={{
-                      base: "1fr",
-                      sm: "1fr",
-                      md: "repeat(2, 1fr)",
-                    }}
-                    gap="15px"
-                  >
-                    <FormControl width="100%">
-                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Date
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        placeholder="Enter date"
-                        fontSize="xs"
-                      />
-                    </FormControl>
-
-                    <Flex
-                      alignItems="center"
-                      justifyContent="space-between"
-                      gap="10px"
-                    >
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Start Time
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          type="number"
-                          placeholder="Start time "
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          End Time
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          type="text"
-                          placeholder="End time"
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                    </Flex>
-                  </Grid>
-                </Grid>
-              </Box>
-              <MultiSelect options={options} />
+              <Grid
+                templateColumns={{
+                  base: "1fr",
+                  sm: "1fr",
+                }}
+                gap="15px"
+                spacing={{ sm: "8px", lg: "30px" }}
+                w={{ sm: "100%", lg: null }}
+                my="18px"
+              >
+                <FormControl>
+                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                    Event Name
+                  </FormLabel>
+                  <Input
+                    variant="main"
+                    placeholder="Enter event name"
+                    fontSize="xs"
+                    value={eventName}
+                    onChange={(e) => setEventName(e.target.value)}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                    Description
+                  </FormLabel>
+                  <Input
+                    variant="main"
+                    placeholder="Enter description"
+                    fontSize="xs"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </FormControl>
+                <DateTimeRangePicker />
+              </Grid>
             </Box>
+
             <Flex alignItems="center" gap="18px">
               {" "}
               <Button
@@ -189,6 +157,15 @@ function Events() {
                 h="45"
                 mb="10px"
                 onClick={() => {
+                  handleCreateEvent({
+                    title: eventName,
+                    description: description,
+                    is_completed: false,
+                    user_id: user?.id,
+                    provider_id: providers?.[0]?.id,
+                    start_datetime: "",
+                    end_datetime: "",
+                  });
                   setCreateEvent(false);
                   toast.success("Event Created successfully");
                 }}

@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -26,6 +9,7 @@ import {
   Icon,
   Input,
   Select,
+  Spinner,
   Stack,
   Table,
   Tbody,
@@ -36,9 +20,14 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { DateTimeRangePicker } from "components/CustomDateTimePicker/CustomDateTimeRangePicker";
 import Modal from "components/Modal/Modal";
-import MultiSelect from "components/MultiSelect/MultiSelect";
-import React, { useMemo, useState } from "react";
+import { AppContext } from "contexts/AppContext";
+import dayjs from "dayjs";
+import { useDeleteEventById } from "hooks/api/management/events/useDeleteEventById";
+import { useGetEventById } from "hooks/api/management/events/useGetEventById";
+import { useUpdateEventById } from "hooks/api/management/events/useUpdateEventId";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
@@ -54,39 +43,101 @@ import {
 import { toast } from "sonner";
 
 function EventsTable(props) {
-  const { options, tableData } = props;
+  const { tableData, refetchEvents } = props;
   const [editEvent, setEditEvent] = useState(false);
   const [deleteEvent, setDeleteEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const { token, user, providers } = useContext(AppContext);
+  const { data: eventData, error, isLoading } = useGetEventById(
+    token,
+    selectedEvent?.id
+  );
+
+  useEffect(() => {
+    if (error) {
+      setEditEvent(false);
+      toast.error("Unable to get event");
+    }
+  }, [error]);
+
+  const { handleUpdateEventById, isLoading: isEditing } = useUpdateEventById(
+    token
+  );
+  const { handleDeleteEventById, isLoading: isDeleting } = useDeleteEventById(
+    token
+  );
+
+  const [event, setEvent] = useState({
+    title: "",
+    description: "",
+    isCompleted: false,
+  });
+
+  useEffect(() => {
+    if (eventData?.data) {
+      setEvent({
+        title: eventData?.data?.title,
+        description: eventData?.data?.description,
+        isCompleted: eventData?.data?.is_completed,
+      });
+    }
+  }, [eventData]);
+
+  useEffect(() => {
+    console.log(event.isCompleted);
+    console.log("event", selectedEvent);
+  }, [editEvent]);
 
   const columns = useMemo(() => {
     return [
       {
-        Header: "NAME",
-        accessor: "name",
+        Header: "TITLE",
+        accessor: "title",
       },
       {
         Header: "DATE",
-        accessor: "dateCreated",
+        Cell: ({ row }) => {
+          const date = row.original.start_datetime;
+          return (
+            <div style={{ width: "80px" }}>
+              <span>{dayjs(date).format("YYYY-MM-DD")}</span>
+            </div>
+          );
+        },
       },
       {
         Header: "TIME",
-        accessor: "startTime",
+
         Cell: ({ row }) => {
+          const startTime = row.original.start_datetime;
+          const endTime = row.original.end_datetime;
           return (
             <Text color={textColor}>
-              {`${row.original.startTime}-${row.original.endTime}`}
+              {`${dayjs(startTime).format("hh:mm A")} - ${dayjs(endTime).format(
+                "hh:mm A"
+              )}`}
             </Text>
           );
         },
       },
       {
         Header: "ORGANIZER",
-        accessor: "createdBy",
+        Cell: ({ row }) => {
+          const firstName = row.original.user.first_name;
+          const LastName = row.original.user.last_name;
+          return <Text color={textColor}>{`${firstName} ${LastName}`}</Text>;
+        },
       },
       {
         Header: "STATUS",
-        accessor: "status",
+        Cell: ({ row }) => {
+          const { is_completed } = row.original;
+          return (
+            <div style={{ color: is_completed ? "#48bb78" : "#FF3B30" }}>
+              {is_completed ? "Completed" : "Incomplete"}
+            </div>
+          );
+        },
       },
 
       {
@@ -374,7 +425,7 @@ function EventsTable(props) {
             mb="16px"
             fontSize={{ sm: "16px" }}
           >
-            {`Event: ${selectedEvent.name}`}
+            {`Event title: ${selectedEvent?.title}`}
           </Text>
 
           <Flex
@@ -406,11 +457,25 @@ function EventsTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setDeleteEvent(false);
-                toast.success("Event deleted successfully");
+                handleDeleteEventById(
+                  selectedEvent?.id,
+                  (res) => {
+                    if (res.status === 200) {
+                      setDeleteEvent(false);
+                      refetchEvents();
+                      toast.success("Event deleted successfully");
+                      setSelectedEvent(null);
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
               }}
             >
-              Confirm
+              {isDeleting ? <Spinner w="20px" h="20px" /> : "    Confirm"}
             </Button>
           </Flex>
         </Modal>
@@ -418,122 +483,145 @@ function EventsTable(props) {
       {editEvent && (
         <Modal
           maxWidth={{ sm: "400px", md: "500px" }}
-          label={`Edit: ${selectedEvent.name}`}
+          label={eventData?.data ? `Edit: ${eventData?.data?.title}` : ""}
           handleCloseModal={() => {
             setSelectedEvent(null);
             setEditEvent(false);
           }}
         >
-          <FormControl>
-            <Box pb="15px">
-              <Grid
-                templateColumns={{
-                  base: "1fr",
-                  sm: "1fr",
-                }}
-                gap="15px"
-                spacing={{ sm: "8px", lg: "30px" }}
-                w={{ sm: "100%", lg: null }}
-                my="18px"
-              >
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Name
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter event name"
-                    fontSize="xs"
-                    value={selectedEvent.name}
-                  />
-                </FormControl>
+          {isLoading && (
+            <Flex width="100% " height="30vh" align="center" justify="center">
+              <Spinner w="35px" h="35px" color="#3182ce" />
+            </Flex>
+          )}
+          {eventData?.data && (
+            <FormControl>
+              <Box pb="15px">
                 <Grid
                   templateColumns={{
                     base: "1fr",
                     sm: "1fr",
-                    md: "repeat(2, 1fr)",
                   }}
                   gap="15px"
+                  spacing={{ sm: "8px", lg: "30px" }}
+                  w={{ sm: "100%", lg: null }}
+                  my="18px"
                 >
-                  <FormControl width="100%">
+                  <FormControl>
                     <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      Date
+                      Event Title
                     </FormLabel>
                     <Input
                       variant="main"
-                      placeholder="Enter date"
+                      placeholder="Enter event title"
                       fontSize="xs"
-                      value={selectedEvent.dateCreated}
+                      value={event.title}
+                      onChange={(e) =>
+                        setEvent((prev) => ({
+                          ...prev,
+                          title: e.target.value,
+                        }))
+                      }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Description
+                    </FormLabel>
+                    <Input
+                      variant="main"
+                      placeholder="Enter description"
+                      fontSize="xs"
+                      value={event.description}
+                      onChange={(e) => {
+                        setEvent((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }));
+                      }}
                     />
                   </FormControl>
 
-                  <Flex
-                    alignItems="center"
-                    justifyContent="space-between"
-                    gap="10px"
-                  >
-                    <FormControl>
-                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Start Time
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        type="text"
-                        placeholder="Start time "
-                        fontSize="xs"
-                        value={selectedEvent.startTime}
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        End Time
-                      </FormLabel>
-                      <Input
-                        variant="main"
-                        type="text"
-                        placeholder="End time"
-                        fontSize="xs"
-                        value={selectedEvent.endTime}
-                      />
-                    </FormControl>
-                  </Flex>
+                  <DateTimeRangePicker />
+                  <FormControl>
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Status
+                    </FormLabel>
+                    <Select
+                      cursor="pointer"
+                      variant="main"
+                      color="gray.400"
+                      fontSize="xs"
+                      value={event.isCompleted} // Convert boolean to string for Select value
+                      onChange={(e) => {
+                        setEvent((prev) => ({
+                          ...prev,
+                          isCompleted: e.target.value,
+                        }));
+                      }}
+                    >
+                      <option value="true">Completed</option>
+                      <option value="false">Not Completed</option>
+                    </Select>
+                  </FormControl>
                 </Grid>
-              </Grid>
+              </Box>
 
-              <MultiSelect
-                options={options}
-                preselected={selectedEvent.members}
-              />
-            </Box>
-            <Flex alignItems="center" gap="18px">
-              {" "}
-              <Button
-                fontSize="16px"
-                variant="dark"
-                fontWeight="bold"
-                w="100%"
-                h="45"
-                mb="10px"
-                onClick={() => setEditEvent(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                fontSize="16px"
-                colorScheme="blue"
-                fontWeight="bold"
-                w="100%"
-                h="45"
-                mb="10px"
-                onClick={() => {
-                  setEditEvent(false);
-                  toast.success("Event saved successfully");
-                }}
-              >
-                Save Changes
-              </Button>
-            </Flex>
-          </FormControl>
+              <Flex alignItems="center" gap="18px">
+                {" "}
+                <Button
+                  fontSize="16px"
+                  variant="dark"
+                  fontWeight="bold"
+                  w="100%"
+                  h="45"
+                  mb="10px"
+                  onClick={() => {
+                    setEditEvent(false);
+                    setSelectedEvent(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  fontSize="16px"
+                  colorScheme="blue"
+                  fontWeight="bold"
+                  w="100%"
+                  h="45"
+                  mb="10px"
+                  onClick={() => {
+                    handleUpdateEventById(
+                      selectedEvent?.id,
+                      {
+                        title: event.title,
+                        description: event.description,
+                        is_completed: event.isCompleted,
+                        user_id: user?.id,
+                        provider_id: providers?.[0]?.id,
+                        start_datetime: "",
+                        end_datetime: "",
+                      },
+                      (res) => {
+                        if (res.status === 200) {
+                          setEditEvent(false);
+                          refetchEvents();
+                          toast.success("Event Created successfully");
+                        }
+                      },
+                      (err) => {
+                        toast.error(
+                          err?.response?.data?.message || "Something went wrong"
+                        );
+                      }
+                    );
+                  }}
+                >
+                  {isEditing ? <Spinner w="20px" h="20px" /> : " Confirm"}
+                </Button>
+              </Flex>
+            </FormControl>
+          )}
         </Modal>
       )}
     </>
