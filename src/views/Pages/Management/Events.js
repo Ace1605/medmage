@@ -24,6 +24,8 @@ import { useCreateEvent } from "hooks/api/management/events/useCreateEvent";
 import { AppContext } from "contexts/AppContext";
 import { DateTimeRangePicker } from "components/CustomDateTimePicker/CustomDateTimeRangePicker";
 import { useGetAllEvents } from "hooks/api/management/events/useGetAllEvents";
+import { MdFolderOff } from "react-icons/md";
+import moment from "moment";
 
 function Events() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -31,10 +33,18 @@ function Events() {
   const [createEvent, setCreateEvent] = useState(false);
   const [eventName, setEventName] = useState("");
   const [description, setDescription] = useState("");
+  const [startDateTime, setStartDateTime] = useState(null);
+  const [endDateTime, setEndDateTime] = useState(null);
 
   const { user, providers, token } = useContext(AppContext);
 
-  const { handleCreateEvent, isLoading } = useCreateEvent();
+  const { handleCreateEvent, isLoading } = useCreateEvent(token);
+
+  const isValid =
+    eventName.trim() !== "" &&
+    description.trim() !== "" &&
+    moment(startDateTime).isValid() &&
+    moment(endDateTime).isValid();
 
   const {
     data,
@@ -85,6 +95,20 @@ function Events() {
             <Flex width="100% " height="30vh" align="center" justify="center">
               <Spinner w="40px" h="40px" color="#3182ce" />
             </Flex>
+          ) : data.length < 1 ? (
+            <Flex
+              width="100% "
+              direction="column"
+              height="30vh"
+              align="center"
+              justify="center"
+              gap="20px"
+            >
+              <Icon as={MdFolderOff} w="60px" h="60px" color="#E2E8F0" />
+              <Text color="#E2E8F0" fontSize="18px">
+                No Data
+              </Text>
+            </Flex>
           ) : (
             <EventsTable tableData={data} refetchEvents={refetch} />
           )}
@@ -132,7 +156,12 @@ function Events() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </FormControl>
-                <DateTimeRangePicker />
+                <DateTimeRangePicker
+                  startDateTime={startDateTime}
+                  setStartDateTime={setStartDateTime}
+                  endDateTime={endDateTime}
+                  setEndDateTime={setEndDateTime}
+                />
               </Grid>
             </Box>
 
@@ -150,6 +179,7 @@ function Events() {
                 Cancel
               </Button>
               <Button
+                disabled={!isValid}
                 fontSize="16px"
                 colorScheme="blue"
                 fontWeight="bold"
@@ -157,20 +187,38 @@ function Events() {
                 h="45"
                 mb="10px"
                 onClick={() => {
-                  handleCreateEvent({
-                    title: eventName,
-                    description: description,
-                    is_completed: false,
-                    user_id: user?.id,
-                    provider_id: providers?.[0]?.id,
-                    start_datetime: "",
-                    end_datetime: "",
-                  });
-                  setCreateEvent(false);
-                  toast.success("Event Created successfully");
+                  handleCreateEvent(
+                    {
+                      title: eventName,
+                      description: description,
+                      is_completed: false,
+                      user_id: user?.id,
+                      provider_id: providers?.[0]?.id,
+                      start_datetime: startDateTime
+                        ? moment(startDateTime).format("YYYY-MM-DD HH:mm:ss")
+                        : null,
+                      end_datetime: endDateTime
+                        ? moment(endDateTime).format("YYYY-MM-DD HH:mm:ss")
+                        : null,
+                    },
+                    (res) => {
+                      if (res.status == 201) {
+                        setCreateEvent(false);
+                        refetch();
+                        toast.success("Event Created successfully");
+                      } else {
+                        toast.error(res?.response.data.message);
+                      }
+                    },
+                    (err) => {
+                      toast.error(
+                        err?.response?.data?.message || "Something went wrong"
+                      );
+                    }
+                  );
                 }}
               >
-                Confirm
+                {isLoading ? <Spinner w="20px" h="20px" /> : " Confirm"}
               </Button>
             </Flex>
           </FormControl>

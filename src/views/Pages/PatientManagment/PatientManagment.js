@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useContext, useRef, useState } from "react";
 
 // NEW imports
@@ -24,6 +7,7 @@ import {
   Button,
   Flex,
   Grid,
+  Icon,
   ListItem,
   OrderedList,
   SimpleGrid,
@@ -51,6 +35,9 @@ import axios from "axios";
 import { AppContext } from "contexts/AppContext";
 import { baseUrl } from "baseUrl/baseUrl";
 import { useGetPatients } from "hooks/api/management/patient/useGetPatient";
+import { GrEmptyCircle } from "react-icons/gr";
+import { CgTrashEmpty } from "react-icons/cg";
+import { MdFolderOff } from "react-icons/md";
 
 function PatientManagment() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -154,6 +141,7 @@ function PatientManagment() {
     isFetching,
   } = useGetPatients(token, page, size);
 
+  console.log(data);
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 4 }} spacing="24px" mb="30px">
@@ -248,6 +236,20 @@ function PatientManagment() {
           {isLoading || isFetching ? (
             <Flex width="100% " height="30vh" align="center" justify="center">
               <Spinner w="40px" h="40px" color="#3182ce" />
+            </Flex>
+          ) : data?.data?.length < 1 ? (
+            <Flex
+              width="100% "
+              direction="column"
+              height="30vh"
+              align="center"
+              justify="center"
+              gap="20px"
+            >
+              <Icon as={MdFolderOff} w="60px" h="60px" color="#E2E8F0" />
+              <Text color="#E2E8F0" fontSize="18px">
+                No Data
+              </Text>
             </Flex>
           ) : (
             <PatientsTable

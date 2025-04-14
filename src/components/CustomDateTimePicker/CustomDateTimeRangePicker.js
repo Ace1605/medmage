@@ -1,17 +1,18 @@
 import { Flex, FormControl, FormLabel, Grid } from "@chakra-ui/react";
 
-import React, { useEffect, useState } from "react";
-import dayjs from "dayjs";
+import React from "react";
 import "dayjs/locale/en";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
 import moment from "moment";
 
-// dayjs.locale("en");
-
-export const DateTimeRangePicker = () => {
-  const [startDateTime, setStartDateTime] = useState(null);
-  const [endDateTime, setEndDateTime] = useState(null);
+export const DateTimeRangePicker = (props) => {
+  const {
+    startDateTime,
+    setStartDateTime,
+    endDateTime,
+    setEndDateTime,
+  } = props;
 
   const handleStartDateChange = (value) => {
     const selectedDate = moment.isMoment(value) ? value : moment(value);
@@ -33,11 +34,6 @@ export const DateTimeRangePicker = () => {
 
     setEndDateTime(selectedDate);
   };
-
-  useEffect(() => {
-    console.log("Start:", startDateTime?.format?.());
-    console.log("End:", endDateTime?.format?.());
-  }, [startDateTime, endDateTime]);
 
   const disableDatesBeforeStart = (currentDate) => {
     return !currentDate.isBefore(startDateTime, "minute");
@@ -80,7 +76,6 @@ export const DateTimeRangePicker = () => {
             inputProps={{
               placeholder: "Select end date and time",
             }}
-            closeOnSelect
           />
         </FormControl>
       </Flex>

@@ -5,8 +5,8 @@ export const useGetAllEvents = (token) => {
     url: "events",
     token: token,
     queryKey: "events",
-    params: {},
     enabled: !!token,
+    //params: { start_date, end_date, per_page },
   });
 
   return {

@@ -20,6 +20,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { DateTimeRangePicker } from "components/CustomDateTimePicker/CustomDateTimeRangePicker";
 import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
@@ -27,6 +28,7 @@ import dayjs from "dayjs";
 import { useDeleteEventById } from "hooks/api/management/events/useDeleteEventById";
 import { useGetEventById } from "hooks/api/management/events/useGetEventById";
 import { useUpdateEventById } from "hooks/api/management/events/useUpdateEventId";
+import moment from "moment";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
@@ -44,6 +46,7 @@ import { toast } from "sonner";
 
 function EventsTable(props) {
   const { tableData, refetchEvents } = props;
+  const queryClient = useQueryClient();
   const [editEvent, setEditEvent] = useState(false);
   const [deleteEvent, setDeleteEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -72,6 +75,8 @@ function EventsTable(props) {
     description: "",
     isCompleted: false,
   });
+  const [startDateTime, setStartDateTime] = useState(null);
+  const [endDateTime, setEndDateTime] = useState(null);
 
   useEffect(() => {
     if (eventData?.data) {
@@ -80,6 +85,9 @@ function EventsTable(props) {
         description: eventData?.data?.description,
         isCompleted: eventData?.data?.is_completed,
       });
+
+      setStartDateTime(moment(eventData?.data?.start_datetime));
+      setEndDateTime(moment(eventData?.data?.end_datetime));
     }
   }, [eventData]);
 
@@ -463,6 +471,7 @@ function EventsTable(props) {
                     if (res.status === 200) {
                       setDeleteEvent(false);
                       refetchEvents();
+
                       toast.success("Event deleted successfully");
                       setSelectedEvent(null);
                     }
@@ -542,7 +551,12 @@ function EventsTable(props) {
                     />
                   </FormControl>
 
-                  <DateTimeRangePicker />
+                  <DateTimeRangePicker
+                    startDateTime={startDateTime}
+                    setStartDateTime={setStartDateTime}
+                    endDateTime={endDateTime}
+                    setEndDateTime={setEndDateTime}
+                  />
                   <FormControl>
                     <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                       Status
@@ -556,12 +570,12 @@ function EventsTable(props) {
                       onChange={(e) => {
                         setEvent((prev) => ({
                           ...prev,
-                          isCompleted: e.target.value,
+                          isCompleted: e.target.value === "true",
                         }));
                       }}
                     >
-                      <option value="true">Completed</option>
-                      <option value="false">Not Completed</option>
+                      <option value={true}>Completed</option>
+                      <option value={false}>Not Completed</option>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -599,14 +613,22 @@ function EventsTable(props) {
                         is_completed: event.isCompleted,
                         user_id: user?.id,
                         provider_id: providers?.[0]?.id,
-                        start_datetime: "",
-                        end_datetime: "",
+                        start_datetime: startDateTime
+                          ? moment(startDateTime).format("YYYY-MM-DD HH:mm:ss")
+                          : null,
+                        end_datetime: endDateTime
+                          ? moment(endDateTime).format("YYYY-MM-DD HH:mm:ss")
+                          : null,
                       },
                       (res) => {
                         if (res.status === 200) {
                           setEditEvent(false);
                           refetchEvents();
-                          toast.success("Event Created successfully");
+                          queryClient.invalidateQueries([
+                            "events",
+                            selectedEvent?.id,
+                          ]);
+                          toast.success("Event updated successfully");
                         }
                       },
                       (err) => {
