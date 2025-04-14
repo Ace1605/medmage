@@ -205,7 +205,7 @@ function Events() {
                       if (res.status == 201) {
                         setCreateEvent(false);
                         refetch();
-                        toast.success("Event Created successfully");
+                        toast.success("Event created successfully");
                       } else {
                         toast.error(res?.response.data.message);
                       }
