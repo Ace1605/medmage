@@ -468,10 +468,9 @@ function EventsTable(props) {
                 handleDeleteEventById(
                   selectedEvent?.id,
                   (res) => {
-                    if (res.status === 200) {
+                    if (res.status === 204) {
                       setDeleteEvent(false);
                       refetchEvents();
-
                       toast.success("Event deleted successfully");
                       setSelectedEvent(null);
                     }
