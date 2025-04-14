@@ -63,3 +63,18 @@
   font-size: 0.875rem; /* text-sm */
   font-weight: 600; /* font-semibold */
 }
+
+.rdt input {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.rdt input:focus-visible {
+  outline: none;
+}
+.rdt input::placeholder {
+  color: #c8d3df;
+}

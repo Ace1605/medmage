@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import {
   Box,
@@ -23,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Grid,
+  Icon,
   Input,
   Spinner,
   Switch,
@@ -36,6 +20,7 @@ import AuthBasic from "layouts/AuthBasic";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCompleteAccount } from "hooks/api/auth/useCompleteAccount";
 import { toast } from "sonner";
+import { BsEyeFill, BsEyeSlash } from "react-icons/bs";
 
 function NewUserValidation() {
   // Chakra color mode
@@ -49,6 +34,8 @@ function NewUserValidation() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [cPassword, setCPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { handleCompleteAccount, isLoading } = useCompleteAccount();
 
@@ -129,34 +116,65 @@ function NewUserValidation() {
                 />
               </Box>
             </Grid>
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Password
-            </FormLabel>
-            <Input
-              variant="auth"
-              fontSize="sm"
-              ms="4px"
-              type="password"
-              placeholder="Your email address"
-              mb="24px"
-              size="lg"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Confirm Password
-            </FormLabel>
-            <Input
-              variant="auth"
-              fontSize="sm"
-              ms="4px"
-              type="password"
-              placeholder="Your password"
-              mb="24px"
-              size="lg"
-              value={cPassword}
-              onChange={(e) => setCPassword(e.target.value)}
-            />
+            <FormControl position="relative">
+              <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                Password
+              </FormLabel>
+              <Input
+                variant="auth"
+                fontSize="sm"
+                ms="4px"
+                type={showPassword ? "text" : "password"}
+                placeholder="Your email address"
+                mb="24px"
+                size="lg"
+                pr="35px"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Box
+                position="absolute"
+                top="43px"
+                right="11px"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <Icon as={BsEyeFill} color="#b0b4ba" cursor="pointer" />
+                ) : (
+                  <Icon as={BsEyeSlash} color="#b0b4ba" cursor="pointer" />
+                )}
+              </Box>
+            </FormControl>
+            <FormControl position="relative">
+              <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                Confirm Password
+              </FormLabel>
+              <Input
+                variant="auth"
+                fontSize="sm"
+                ms="4px"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm your password"
+                mb="24px"
+                size="lg"
+                pr="35px"
+                s
+                value={cPassword}
+                onChange={(e) => setCPassword(e.target.value)}
+              />
+              <Box
+                position="absolute"
+                top="43px"
+                right="11px"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <Icon as={BsEyeFill} color="#b0b4ba" cursor="pointer" />
+                ) : (
+                  <Icon as={BsEyeSlash} color="#b0b4ba" cursor="pointer" />
+                )}
+              </Box>
+            </FormControl>
             <Button
               onClick={() => {
                 handleCompleteAccount(

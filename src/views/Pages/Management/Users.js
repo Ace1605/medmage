@@ -38,6 +38,7 @@ import { useGetUserRoles } from "hooks/api/management/users/useGetUserRoles";
 import { useInviteUser } from "hooks/api/management/users/useInviteUser";
 import { baseUrl } from "baseUrl/baseUrl";
 import axios from "axios";
+import { MdFolderOff } from "react-icons/md";
 
 function Users() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -263,6 +264,20 @@ function Users() {
           {isLoading || isFetching ? (
             <Flex width="100% " height="30vh" align="center" justify="center">
               <Spinner w="40px" h="40px" color="#3182ce" />
+            </Flex>
+          ) : data.length < 1 ? (
+            <Flex
+              width="100% "
+              direction="column"
+              height="30vh"
+              align="center"
+              justify="center"
+              gap="20px"
+            >
+              <Icon as={MdFolderOff} w="60px" h="60px" color="#E2E8F0" />
+              <Text color="#E2E8F0" fontSize="18px">
+                No Data
+              </Text>
             </Flex>
           ) : (
             <UsersTable tableData={data} refetchUsers={refetchUsers} />
