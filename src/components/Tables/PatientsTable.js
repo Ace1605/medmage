@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -22,6 +5,7 @@ import {
   Icon,
   Input,
   Select,
+  Spinner,
   Stack,
   Table,
   Tbody,
@@ -35,7 +19,8 @@ import {
 import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
 import dayjs from "dayjs";
-import React, { useContext, useMemo, useState } from "react";
+import { useDeletePatient } from "hooks/api/patientManagement/useDeletePatient";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
@@ -52,12 +37,22 @@ import {
 import { toast } from "sonner";
 
 function PatientsTable(props) {
-  const { columnsData, tableData, pageNo, size, setPageNo, setSize } = props;
+  const navigate = useNavigate();
+  const {
+    columnsData,
+    refetchPatients,
+    tableData,
+    pageNo,
+    size,
+    setPageNo,
+    setSize,
+  } = props;
   //   const [editPatient, setEditPatient] = useState(false);
   const [deletePatient, setDeletePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
-  const navigate = useNavigate();
-  const { setIsSuperAdmin } = useContext(AppContext);
+  const { setIsSuperAdmin, token } = useContext(AppContext);
+  const { handleDeletePatient, isLoading } = useDeletePatient(token);
+
   const columns = useMemo(() => {
     return [
       {
@@ -124,7 +119,7 @@ function PatientsTable(props) {
                   setIsSuperAdmin(true);
                   setSelectedPatient(row.original);
                   navigate(
-                    `/admin/personnel-management/patient-information/${row.original.id}`
+                    `/admin/patient-management/patient-information/${row.original.id}`
                   );
                 }}
               />
@@ -464,11 +459,25 @@ function PatientsTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setDeletePatient(false);
-                toast.success("Patient's data deleted successfully");
+                handleDeletePatient(
+                  selectedPatient?.id,
+                  (res) => {
+                    if (res.status === 200) {
+                      setSelectedPatient(null);
+                      setDeletePatient(false);
+                      refetchPatients();
+                      toast.success("Patients data deleted successfully");
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
               }}
             >
-              Confirm
+              {isLoading ? <Spinner w="20px" h="20px" /> : " Confirm"}
             </Button>
           </Flex>
         </Modal>

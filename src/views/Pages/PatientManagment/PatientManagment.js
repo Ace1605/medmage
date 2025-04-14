@@ -23,10 +23,9 @@ import {
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import patientsData from "variables/patientsData.json";
 import PatientsTable from "components/Tables/PatientsTable";
 import { PatientsColumns } from "variables/columnsData";
-import { BiPlus, BiUpload } from "react-icons/bi";
+import { BiUpload } from "react-icons/bi";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
 import { DownloadIcon } from "@chakra-ui/icons";
@@ -35,8 +34,6 @@ import axios from "axios";
 import { AppContext } from "contexts/AppContext";
 import { baseUrl } from "baseUrl/baseUrl";
 import { useGetPatients } from "hooks/api/management/patient/useGetPatient";
-import { GrEmptyCircle } from "react-icons/gr";
-import { CgTrashEmpty } from "react-icons/cg";
 import { MdFolderOff } from "react-icons/md";
 
 function PatientManagment() {
@@ -254,6 +251,7 @@ function PatientManagment() {
           ) : (
             <PatientsTable
               tableData={data}
+              refetchPatients={refetchPatients}
               columnsData={PatientsColumns}
               pageNo={page}
               size={size}
