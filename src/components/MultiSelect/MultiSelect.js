@@ -1,4 +1,3 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -8,17 +7,19 @@ import {
   Text,
   useOutsideClick,
 } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useRef, useState } from "react";
 
 function MultiSelect({
-  label = " Select Members",
-  selectedLabel = "member(s)",
+  label = " Select assignee",
+  // selectedLabel = "assingnee",
   options,
   preselected = [],
   disableOthersOnSelect = false,
+  selected,
+  setSelected,
 }) {
-  const [selected, setSelected] = useState(preselected);
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -31,13 +32,19 @@ function MultiSelect({
   const handleSelect = (option) => {
     setSelected((prev) => {
       if (disableOthersOnSelect) {
-        return prev.includes(option) ? [] : [option];
+        return prev.includes(option.id) ? [] : [option.id];
       }
-      return prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option];
+
+      return prev.includes(option.id)
+        ? prev.filter((item) => item !== option.id)
+        : [...prev, option.id];
     });
   };
+
+  const selectedUser =
+    disableOthersOnSelect && selected.length === 1
+      ? options.find((opt) => opt.id === selected[0])
+      : null;
 
   useOutsideClick({
     ref,
@@ -66,7 +73,9 @@ function MultiSelect({
         w="100%"
         fontSize="sm"
       >
-        {`${selected.length} ${selectedLabel}`}
+        {selectedUser
+          ? `${selectedUser.first_name} ${selectedUser.last_name}`
+          : "Select a user"}
 
         <Icon as={ChevronDownIcon} />
       </Button>
@@ -90,7 +99,6 @@ function MultiSelect({
               maxHeight: "150px",
               zIndex: 10,
               border: "1px solid #e2e8f0",
-
               scrollbarWidth: "none",
               msOverflowStyle: "none",
             }}
@@ -98,7 +106,7 @@ function MultiSelect({
             {options.map((option) => {
               return (
                 <Flex
-                  key={option}
+                  key={option.id}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (disableOthersOnSelect) {
@@ -121,10 +129,12 @@ function MultiSelect({
                       }
                       handleSelect(option);
                     }}
-                    isChecked={selected.includes(option)}
+                    isChecked={selected.includes(option.id)}
                     mr={2}
                   />
-                  {option}
+                  {`${option.first_name ?? "User"} ${
+                    option.last_name ?? "User"
+                  }`}
                 </Flex>
               );
             })}
