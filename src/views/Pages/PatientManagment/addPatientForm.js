@@ -248,8 +248,12 @@ export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
                     }))
                   }
                 >
-                  {months.map((month) => {
-                    return <option value={month.value}>{month.key}</option>;
+                  {months.map((month, i) => {
+                    return (
+                      <option key={i} value={month.value}>
+                        {month.key}
+                      </option>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -267,8 +271,12 @@ export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
                     }))
                   }
                 >
-                  {daysArray.map((day) => {
-                    return <option value={day}>{day}</option>;
+                  {daysArray.map((day, i) => {
+                    return (
+                      <option key={i} value={day}>
+                        {day}
+                      </option>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -285,8 +293,12 @@ export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
                     }))
                   }
                 >
-                  {years.map((year) => {
-                    return <option value={year}>{year}</option>;
+                  {years.map((year, i) => {
+                    return (
+                      <option key={i} value={year}>
+                        {year}
+                      </option>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -321,8 +333,12 @@ export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
                 value={bloodType}
                 onChange={(e) => setBloodType(e.target.value)}
               >
-                {bloodTypes.map((bloodType) => {
-                  return <option value={bloodType}>{bloodType}</option>;
+                {bloodTypes.map((bloodType, i) => {
+                  return (
+                    <option key={i} value={bloodType}>
+                      {bloodType}
+                    </option>
+                  );
                 })}
               </Select>
             </FormControl>

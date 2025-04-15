@@ -134,7 +134,7 @@ const dashRoutes = [
       {
         name: "PatientInformation",
         component: <PatientInfo />,
-        path: "/personnel-management/patient-information/:patientId",
+        path: "/patient-management/patient-information/:patientId",
         layout: "/admin",
       },
       {
