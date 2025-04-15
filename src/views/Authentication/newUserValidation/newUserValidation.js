@@ -125,7 +125,7 @@ function NewUserValidation() {
                 fontSize="sm"
                 ms="4px"
                 type={showPassword ? "text" : "password"}
-                placeholder="Your email address"
+                placeholder="Enter your password"
                 mb="24px"
                 size="lg"
                 pr="35px"

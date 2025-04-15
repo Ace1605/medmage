@@ -16,7 +16,6 @@ import {
   Switch,
   Text,
   Textarea,
-  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,7 +24,6 @@ import avatar4 from "assets/img/avatars/avatar4.png";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import FullScreenLoader from "components/FullScreenLoader/FullScreenLoader";
 import { PersonIcon } from "components/Icons/Icons";
 import Modal from "components/Modal/Modal";
 import MedicationTable from "components/Tables/MedicationTable";
@@ -1027,6 +1025,7 @@ function PatientInfo() {
                           Zip Code
                         </FormLabel>
                         <Input
+                          type="number"
                           name="zipCode"
                           variant="main"
                           placeholder="Enter zip code"
@@ -1193,6 +1192,7 @@ function PatientInfo() {
                           Phone Number
                         </FormLabel>
                         <Input
+                          type="number"
                           name="phone"
                           variant="main"
                           sx={{
