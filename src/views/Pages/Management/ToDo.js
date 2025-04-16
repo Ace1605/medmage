@@ -18,7 +18,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Modal from "components/Modal/Modal";
-import MultiSelect from "components/MultiSelect/MultiSelect";
 import { AppContext } from "contexts/AppContext";
 import { useCreateTodo } from "hooks/api/management/todo/useCreateTodo";
 import { useGetUsers } from "hooks/api/management/users/useGetUsers";
@@ -33,6 +32,7 @@ import { useGetTodoById } from "hooks/api/management/todo/useGetTodo";
 import { useUpdateTodo } from "hooks/api/management/todo/useUpdateTodo";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDeleteTodo } from "hooks/api/management/todo/useDeleteTodo";
+import { SingleSelect } from "components/SingleSelect/SingleSelect";
 
 function Todos() {
   const queryClient = useQueryClient();
@@ -47,7 +47,7 @@ function Todos() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [todoId, setTodoId] = useState(null);
-  const [selectedTodo, setSelectedTodo] = useState([]);
+  const [selectedTodo, setSelectedTodo] = useState(null);
 
   const { isLoading, handleCreateTodo } = useCreateTodo(token);
 
@@ -83,9 +83,7 @@ function Todos() {
       setTitle(todoByIdData.title ?? "");
       setDescription(todoByIdData.description ?? "");
       setDueDate(moment(todoByIdData.due_date ?? null));
-      setSelectedTodo(
-        todoByIdData.assigned_to ? [todoByIdData.assigned_to] : []
-      );
+      setSelectedTodo(todoByIdData ?? null);
     }
   }, [todoByIdData]);
 
@@ -262,7 +260,13 @@ function Todos() {
         <Modal
           maxWidth={{ sm: "400px", md: "500px" }}
           label="Add To do"
-          handleCloseModal={() => setAddTodo(false)}
+          handleCloseModal={() => {
+            setTitle("");
+            setDescription("");
+            setDueDate(null);
+            setSelectedTodo(null);
+            setAddTodo(false);
+          }}
         >
           <FormControl>
             <Box pb="15px">
@@ -318,12 +322,15 @@ function Todos() {
                   </FormControl>
                 </Grid>
               </Box>
-              <MultiSelect
-                label="Assinged to"
-                disableOthersOnSelect
+              <SingleSelect
                 options={data}
-                selected={selectedTodo}
-                setSelected={setSelectedTodo}
+                assignee={selectedTodo?.assigned_to}
+                onSelect={(user) => {
+                  setSelectedTodo((prev) => ({
+                    ...prev,
+                    assigned_to: user,
+                  }));
+                }}
               />
             </Box>
             <Flex alignItems="center" gap="18px">
@@ -339,7 +346,7 @@ function Todos() {
                   setTitle("");
                   setDescription("");
                   setDueDate(null);
-                  setSelectedTodo([]);
+                  setSelectedTodo(null);
                   setAddTodo(false);
                 }}
               >
@@ -358,7 +365,7 @@ function Todos() {
                       title: title,
                       description: description,
                       due_date: dueDate,
-                      assigned_to: selectedTodo[0],
+                      assigned_to: selectedTodo?.assigned_to?.id,
                     },
                     (res) => {
                       if (res.status === 201) {
@@ -366,7 +373,7 @@ function Todos() {
                         setTitle("");
                         setDescription("");
                         setDueDate(null);
-                        setSelectedTodo([]);
+                        setSelectedTodo(null);
                         refetch();
                         toast.success("Todo created successfully");
                       } else {
@@ -397,7 +404,7 @@ function Todos() {
             setTitle("");
             setDescription("");
             setDueDate(null);
-            setSelectedTodo([]);
+            setSelectedTodo(null);
             setEditTodo(false);
           }}
         >
@@ -460,12 +467,16 @@ function Todos() {
                     </FormControl>
                   </Grid>
                 </Box>
-                <MultiSelect
-                  label="Assinged to"
-                  disableOthersOnSelect
+
+                <SingleSelect
                   options={data}
-                  selected={selectedTodo}
-                  setSelected={setSelectedTodo}
+                  assignee={selectedTodo?.assigned_to}
+                  onSelect={(user) => {
+                    setSelectedTodo((prev) => ({
+                      ...prev,
+                      assigned_to: user,
+                    }));
+                  }}
                 />
               </Box>
               <Flex alignItems="center" gap="18px">
@@ -481,7 +492,7 @@ function Todos() {
                     setTitle("");
                     setDescription("");
                     setDueDate(null);
-                    setSelectedTodo([]);
+                    setSelectedTodo(null);
                     setEditTodo(false);
                   }}
                 >
@@ -501,7 +512,7 @@ function Todos() {
                         title: title,
                         description: description,
                         due_date: moment(dueDate).format("YYYY-MM-DD"),
-                        assigned_to: selectedTodo[0],
+                        assigned_to: selectedTodo?.assigned_to?.id,
                       },
                       (res) => {
                         if (res.status === 200) {
@@ -509,7 +520,7 @@ function Todos() {
                           setTitle("");
                           setDescription("");
                           setDueDate(null);
-                          setSelectedTodo([]);
+                          setSelectedTodo(null);
                           refetch();
                           queryClient.invalidateQueries(["todo", todoId]);
                           toast.success("Todo updated successfully");

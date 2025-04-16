@@ -20,7 +20,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Modal from "components/Modal/Modal";
-import MultiSelect from "components/MultiSelect/MultiSelect";
 import { AppContext } from "contexts/AppContext";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
