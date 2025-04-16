@@ -132,9 +132,7 @@ function MultiSelect({
                     isChecked={selected.includes(option.id)}
                     mr={2}
                   />
-                  {`${option.first_name ?? "User"} ${
-                    option.last_name ?? "User"
-                  }`}
+                  {`${option.first_name ?? "User"} ${option.last_name ?? ""}`}
                 </Flex>
               );
             })}

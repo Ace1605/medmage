@@ -32,6 +32,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { useGetTodoById } from "hooks/api/management/todo/useGetTodo";
 import { useUpdateTodo } from "hooks/api/management/todo/useUpdateTodo";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDeleteTodo } from "hooks/api/management/todo/useDeleteTodo";
 
 function Todos() {
   const queryClient = useQueryClient();
@@ -40,12 +41,13 @@ function Todos() {
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const iconColor = useColorModeValue("white", "black");
   const [addTodo, setAddTodo] = useState(false);
-  const [editTodo, seteEditTodo] = useState(false);
+  const [editTodo, setEditTodo] = useState(false);
+  const [deleteTodo, setDeleteTodo] = useState(false);
   const [dueDate, setDueDate] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedId, setSelectedId] = useState(null);
-  const [selected, setSelected] = useState([]);
+  const [todoId, setTodoId] = useState(null);
+  const [selectedTodo, setSelectedTodo] = useState([]);
 
   const { isLoading, handleCreateTodo } = useCreateTodo(token);
 
@@ -61,14 +63,15 @@ function Todos() {
   if (error) toast.error("Unable to fetch users");
 
   const {
-    data: todoById,
+    data: todoByIdData,
     isLoading: isGettingTodo,
     error: errorGettingTodo,
-  } = useGetTodoById(token, selectedId);
+  } = useGetTodoById(token, todoId);
 
   if (errorGettingTodo) toast.error("Unable to fetch todo");
 
   const { isLoading: isUpdating, handleUpdateTodo } = useUpdateTodo(token);
+  const { handleDeleteTodo, isLoading: isDeleting } = useDeleteTodo(token);
 
   const handleDueDateChange = (value) => {
     const selectedDate = moment.isMoment(value) ? value : moment(value);
@@ -76,13 +79,15 @@ function Todos() {
   };
 
   useEffect(() => {
-    if (todoById) {
-      setTitle(todoById.title ?? "");
-      setDescription(todoById.description ?? "");
-      setDueDate(moment(todoById.due_date ?? null));
-      setSelected(todoById.assigned_to ? [todoById.assigned_to.id] : []);
+    if (todoByIdData) {
+      setTitle(todoByIdData.title ?? "");
+      setDescription(todoByIdData.description ?? "");
+      setDueDate(moment(todoByIdData.due_date ?? null));
+      setSelectedTodo(
+        todoByIdData.assigned_to ? [todoByIdData.assigned_to] : []
+      );
     }
-  }, [todoById]);
+  }, [todoByIdData]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -161,6 +166,7 @@ function Todos() {
                 }) => {
                   return (
                     <Flex
+                      key={id}
                       justify="space-between"
                       align="center"
                       borderBottom="1px solid"
@@ -188,7 +194,7 @@ function Todos() {
                         <Flex alignItems="center" gap="8px">
                           <BiCalendar color="#A0AEC0" />
                           <Text color="gray.400" fontSize="sm">
-                            {due_date.slice(0, 10)}
+                            {moment(due_date).format("YYYY-MM-DD")}
                           </Text>
 
                           <Tooltip
@@ -219,15 +225,22 @@ function Todos() {
                             as="button"
                             cursor="pointer"
                             onClick={() => {
-                              setSelectedId(id);
-                              seteEditTodo(true);
+                              setTodoId(id);
+                              setEditTodo(true);
                             }}
                           >
                             <Icon as={BsPencilSquare} w="18px" h="18px" />
                           </Box>
                         </Tooltip>
                         <Tooltip label="Delete todo" hasArrow>
-                          <Box as="button" cursor="pointer">
+                          <Box
+                            as="button"
+                            cursor="pointer"
+                            onClick={() => {
+                              setTodoId(id);
+                              setDeleteTodo(true);
+                            }}
+                          >
                             <Icon
                               as={BiTrash}
                               w="20px"
@@ -299,7 +312,7 @@ function Todos() {
                       timeFormat={false}
                       closeOnSelect
                       inputProps={{
-                        placeholder: "Select start date",
+                        placeholder: "Select due date",
                       }}
                     />
                   </FormControl>
@@ -309,8 +322,8 @@ function Todos() {
                 label="Assinged to"
                 disableOthersOnSelect
                 options={data}
-                selected={selected}
-                setSelected={setSelected}
+                selected={selectedTodo}
+                setSelected={setSelectedTodo}
               />
             </Box>
             <Flex alignItems="center" gap="18px">
@@ -326,9 +339,8 @@ function Todos() {
                   setTitle("");
                   setDescription("");
                   setDueDate(null);
-                  setSelected([]);
+                  setSelectedTodo([]);
                   setAddTodo(false);
-                  setSelected([]);
                 }}
               >
                 Cancel
@@ -346,7 +358,7 @@ function Todos() {
                       title: title,
                       description: description,
                       due_date: dueDate,
-                      assigned_to: selected[0],
+                      assigned_to: selectedTodo[0],
                     },
                     (res) => {
                       if (res.status === 201) {
@@ -354,7 +366,7 @@ function Todos() {
                         setTitle("");
                         setDescription("");
                         setDueDate(null);
-                        setSelected([]);
+                        setSelectedTodo([]);
                         refetch();
                         toast.success("Todo created successfully");
                       } else {
@@ -379,13 +391,14 @@ function Todos() {
       {editTodo && (
         <Modal
           maxWidth={{ sm: "400px", md: "500px" }}
-          label={todoById ? "Edit To do" : ""}
+          label={todoByIdData ? "Edit To do" : ""}
           handleCloseModal={() => {
+            setTodoId(null);
             setTitle("");
             setDescription("");
             setDueDate(null);
-            setSelected([]);
-            seteEditTodo(false);
+            setSelectedTodo([]);
+            setEditTodo(false);
           }}
         >
           {isGettingTodo ? (
@@ -441,7 +454,7 @@ function Todos() {
                         timeFormat={false}
                         closeOnSelect
                         inputProps={{
-                          placeholder: "Select start date",
+                          placeholder: "Select due date",
                         }}
                       />
                     </FormControl>
@@ -451,8 +464,8 @@ function Todos() {
                   label="Assinged to"
                   disableOthersOnSelect
                   options={data}
-                  selected={selected}
-                  setSelected={setSelected}
+                  selected={selectedTodo}
+                  setSelected={setSelectedTodo}
                 />
               </Box>
               <Flex alignItems="center" gap="18px">
@@ -468,8 +481,8 @@ function Todos() {
                     setTitle("");
                     setDescription("");
                     setDueDate(null);
-                    setSelected([]);
-                    seteEditTodo(false);
+                    setSelectedTodo([]);
+                    setEditTodo(false);
                   }}
                 >
                   Cancel
@@ -483,22 +496,22 @@ function Todos() {
                   mb="10px"
                   onClick={() => {
                     handleUpdateTodo(
-                      selectedId,
+                      todoId,
                       {
                         title: title,
                         description: description,
                         due_date: moment(dueDate).format("YYYY-MM-DD"),
-                        assigned_to: selected[0],
+                        assigned_to: selectedTodo[0],
                       },
                       (res) => {
                         if (res.status === 200) {
-                          seteEditTodo(false);
+                          setEditTodo(false);
                           setTitle("");
                           setDescription("");
                           setDueDate(null);
-                          setSelected([]);
+                          setSelectedTodo([]);
                           refetch();
-                          queryClient.invalidateQueries(["todo", selectedId]);
+                          queryClient.invalidateQueries(["todo", todoId]);
                           toast.success("Todo updated successfully");
                         } else {
                           toast.error(res?.response.data.message);
@@ -516,6 +529,104 @@ function Todos() {
                 </Button>
               </Flex>
             </FormControl>
+          )}
+        </Modal>
+      )}
+      {deleteTodo && (
+        <Modal
+          maxWidth={"500px"}
+          handleCloseModal={() => {
+            setTodoId(null);
+            setDeleteTodo(false);
+          }}
+        >
+          {isGettingTodo ? (
+            <Flex width="100% " height="30vh" align="center" justify="center">
+              <Spinner w="35px" h="35px" color="#3182ce" />
+            </Flex>
+          ) : (
+            <Box>
+              <Text
+                color={textColor}
+                fontWeight="bold"
+                fontSize={{ sm: "18px", lg: "20px" }}
+                textAlign="center"
+                mt="10px"
+                mb="10px"
+              >
+                Are you sure you want to delete this Todo?
+              </Text>
+              <Text
+                color={textColor}
+                fontWeight="bold"
+                textAlign="center"
+                mb="16px"
+                fontSize={{ sm: "16px", lg: "18px" }}
+              >
+                This action cannot be undone
+              </Text>
+
+              <Text
+                color={textColor}
+                fontWeight="semibold"
+                textAlign="center"
+                mb="16px"
+                fontSize={{ sm: "16px" }}
+              >
+                {` Todo title: ${selectedTodo?.title}`}
+              </Text>
+
+              <Flex
+                alignItems="center"
+                justifyContent="space-evenly"
+                gap="15px"
+                mt="30px"
+                mb="10px"
+              >
+                <Button
+                  fontSize="16px"
+                  variant="dark"
+                  fontWeight="bold"
+                  w="100%"
+                  h="45"
+                  px="30px"
+                  onClick={() => {
+                    setTodoId(null);
+                    setDeleteTodo(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  fontSize="16px"
+                  colorScheme="blue"
+                  fontWeight="bold"
+                  w="100%"
+                  h="45"
+                  px="30px"
+                  onClick={() => {
+                    handleDeleteTodo(
+                      todoId,
+                      (res) => {
+                        if (res.status === 204) {
+                          setDeleteTodo(false);
+                          refetch();
+                          toast.success("Todo deleted successfully");
+                          setTodoId(null);
+                        }
+                      },
+                      (err) => {
+                        toast.error(
+                          err?.response?.data?.message || "Something went wrong"
+                        );
+                      }
+                    );
+                  }}
+                >
+                  {isDeleting ? <Spinner w="20px" h="20px" /> : "    Confirm"}
+                </Button>
+              </Flex>
+            </Box>
           )}
         </Modal>
       )}

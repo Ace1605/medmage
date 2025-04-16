@@ -1,15 +1,15 @@
 import { useTMutation } from "hooks/api/useMutation";
 
-export const useCreateTodo = (token) => {
+export const useDeleteTodo = (token) => {
   const { mutate } = useTMutation({
     url: "todos",
-    method: "post",
+    method: "delete",
     token: token,
   });
 
-  const handleCreateTodo = async (payload, onSuccess, onError) => {
+  const handleDeleteTodo = async (id, onSuccess, onError) => {
     try {
-      const res = await mutate.mutateAsync({ payload });
+      const res = await mutate.mutateAsync({ id });
       if (onSuccess) onSuccess(res);
     } catch (error) {
       console.error(error);
@@ -17,7 +17,7 @@ export const useCreateTodo = (token) => {
     }
   };
   return {
-    handleCreateTodo,
+    handleDeleteTodo,
     isLoading: mutate.isPending,
   };
 };
