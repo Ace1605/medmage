@@ -480,7 +480,7 @@ function UsersTable(props) {
                 handleDeleteUser(
                   selectedUser?.id,
                   (res) => {
-                    if (res.status === 204) {
+                    if (res.status === 200) {
                       setDeleteUser(false);
                       refetchUsers();
                       toast.success("User deleted successfully");
