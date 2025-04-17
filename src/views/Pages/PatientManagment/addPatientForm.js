@@ -457,6 +457,7 @@ export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
                 Zip Code
               </FormLabel>
               <Input
+                type="number"
                 variant="main"
                 placeholder="Enter zip code"
                 fontSize="xs"
@@ -495,6 +496,7 @@ export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
               </FormControl>
               <FormControl>
                 <Input
+                  type="number"
                   variant="main"
                   placeholder="Enter Phone number"
                   fontSize="xs"
@@ -632,6 +634,7 @@ export const AddPatientForm = ({ setAddPatient, refetchPatients }) => {
               </FormControl>
               <FormControl>
                 <Input
+                  type="number"
                   disabled={insurance.hasInsurance ? false : true}
                   variant="main"
                   placeholder="Enter Insurance policy number"

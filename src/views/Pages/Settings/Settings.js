@@ -65,7 +65,7 @@ function Settings() {
     firstName: user?.first_name,
     lastName: user?.last_name,
   });
-  const [gender, setGender] = useState(user?.gender || "");
+  const [gender, setGender] = useState(user?.gender || "Male");
   const [dob, setDob] = useState({
     day: user?.birth_date?.slice(-2) ?? "1",
     month: user?.birth_date?.slice(-5, -3) ?? "01",
@@ -757,6 +757,7 @@ function Settings() {
                         Phone Number
                       </FormLabel>
                       <Input
+                        type="number"
                         variant="main"
                         placeholder="Enter Phone number"
                         fontSize="xs"
