@@ -202,7 +202,7 @@ function Events() {
                         : null,
                     },
                     (res) => {
-                      if (res.status == 201) {
+                      if (res.status === 201) {
                         setCreateEvent(false);
                         refetch();
                         toast.success("Event created successfully");
