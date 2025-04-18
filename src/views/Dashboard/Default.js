@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard Chakra PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-chakra-pro
-* Copyright 2022 Creative Tim (https://www.creative-tim.com/)
-
-* Designed and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// Chakra imports
 import {
   Checkbox,
   SimpleGrid,
@@ -28,7 +10,11 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  color,
+  Tooltip,
+  Avatar,
+  Box,
+  Skeleton,
+  Button,
 } from "@chakra-ui/react";
 
 // Custom icons
@@ -38,13 +24,20 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import IconBox from "components/Icons/IconBox";
-import { ClockIcon, DocumentIcon, WalletIcon } from "components/Icons/Icons";
-import { FaPalette, FaShip } from "react-icons/fa";
 import { calendarDataCalendar } from "variables/calendar";
 import dayjs from "dayjs";
+import { useGetAllTodos } from "hooks/api/management/todo/useGetAllTodos";
+import { useContext } from "react";
+import { AppContext } from "contexts/AppContext";
+import { BiCalendar } from "react-icons/bi";
+import moment from "moment";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { useGetAllEvents } from "hooks/api/management/events/useGetAllEvents";
+import { MdEventAvailable } from "react-icons/md";
 
 export default function Default() {
-  // Chakra Color Mode
+  const naviagte = useNavigate();
   const textColor = useColorModeValue("gray.700", "white");
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const calendarTextColor = useColorModeValue("gray.700", "white");
@@ -52,7 +45,23 @@ export default function Default() {
   const iconBoxColor = useColorModeValue("gray.100", "blue.500");
 
   const today = new Date();
+  const { token } = useContext(AppContext);
 
+  const { data, error, isLoading } = useGetAllTodos(token);
+  if (error) toast.error("Unable to fecth todos, please refresh");
+  const slicedTodos = data ? data?.slice(0, 10) : [];
+  const {
+    data: eventsData,
+    error: eventsError,
+    isLoading: loadingEvents,
+  } = useGetAllEvents(token);
+  if (eventsError) toast.error("Unable to fecth events, please refresh");
+
+  const filteredEvents = eventsData
+    ?.filter(
+      (event) => dayjs(event.start_datetime).valueOf() > dayjs(today).valueOf()
+    )
+    .slice(0, 10);
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 5 }} spacing="24px" mb="30px">
@@ -253,290 +262,197 @@ export default function Default() {
             spacing="24px"
           >
             <Card>
-              <CardHeader>
-                <Text
-                  color={calendarTextColor}
-                  fontSize="lg"
-                  fontWeight="bold"
-                  mb="28px"
-                >
-                  Upcoming events
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <Stack
-                  direction="column"
-                  spacing="20px"
-                  height={{ sm: "300px", md: "230px", lg: "150px" }}
-                  overflowY={{ sm: "scroll", xl: "scroll" }}
-                  sx={{
-                    "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                    "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                    "scrollbar-width": "none", // Hide scrollbar in Firefox
-                  }}
-                >
-                  <Flex align="center">
-                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
-                      <Icon
-                        as={WalletIcon}
-                        h={"22px"}
-                        w={"22px"}
-                        color={calenderIconBlue}
-                      />
-                    </IconBox>
-                    <Flex direction="column">
-                      <Text
-                        color={calendarTextColor}
-                        fontSize="sm"
-                        fontWeight="bold"
-                      >
-                        Polio awareness week
-                      </Text>
-                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                        27 March 2020, at 12:30 PM
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <Flex align="center">
-                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
-                      <Icon
-                        as={ClockIcon}
-                        h={"22px"}
-                        w={"22px"}
-                        color={calenderIconBlue}
-                      />
-                    </IconBox>
-                    <Flex direction="column">
-                      <Text
-                        color={calendarTextColor}
-                        fontSize="sm"
-                        fontWeight="bold"
-                      >
-                        Health Talk
-                      </Text>
-                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                        22 March 2020, at 10:00 PM
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <Flex align="center">
-                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
-                      <Icon
-                        as={DocumentIcon}
-                        h={"22px"}
-                        w={"22px"}
-                        color={calenderIconBlue}
-                      />
-                    </IconBox>
-                    <Flex direction="column">
-                      <Text
-                        color={calendarTextColor}
-                        fontSize="sm"
-                        fontWeight="bold"
-                      >
-                        Book Deposit Hall
-                      </Text>
-                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                        25 March 2022, at 9:30 AM
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <Flex align="center">
-                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
-                      <Icon
-                        as={FaShip}
-                        h={"22px"}
-                        w={"22px"}
-                        color={calenderIconBlue}
-                      />
-                    </IconBox>
-                    <Flex direction="column">
-                      <Text
-                        color={calendarTextColor}
-                        fontSize="sm"
-                        fontWeight="bold"
-                      >
-                        Medical shipment
-                      </Text>
-                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                        25 March 2022, at 2:00 PM
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <Flex align="center" mb="22px">
-                    <IconBox h={"50px"} w={"50px"} bg={iconBoxColor} me="16px">
-                      <Icon
-                        as={FaPalette}
-                        h={"22px"}
-                        w={"22px"}
-                        color={calenderIconBlue}
-                      />
-                    </IconBox>
-                    <Flex direction="column">
-                      <Text
-                        color={calendarTextColor}
-                        fontSize="sm"
-                        fontWeight="bold"
-                      >
-                        Sickle cell awarness
-                      </Text>
-                      <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                        26 March 2022, at 9:00 AM
-                      </Text>
-                    </Flex>
-                  </Flex>
-                </Stack>
-              </CardBody>
+              {loadingEvents ? (
+                <Box p={2}>
+                  <Skeleton
+                    borderRadius="md"
+                    height={{ sm: "300px", md: "230px" }}
+                    isLoaded={!loadingEvents}
+                  />
+                </Box>
+              ) : (
+                <>
+                  <CardHeader>
+                    <Text
+                      color={calendarTextColor}
+                      fontSize="lg"
+                      fontWeight="bold"
+                      mb="28px"
+                    >
+                      Upcoming events
+                    </Text>
+                  </CardHeader>
+                  <CardBody>
+                    <Stack
+                      direction="column"
+                      spacing="20px"
+                      height={{ sm: "300px", md: "230px", lg: "150px" }}
+                      overflowY={{ sm: "scroll", xl: "scroll" }}
+                      sx={{
+                        "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                        "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                        "scrollbar-width": "none", // Hide scrollbar in Firefox
+                      }}
+                    >
+                      {filteredEvents.map((event) => {
+                        return (
+                          <Flex align="center">
+                            <IconBox
+                              h={"50px"}
+                              w={"50px"}
+                              bg={iconBoxColor}
+                              me="16px"
+                            >
+                              <Icon
+                                as={MdEventAvailable}
+                                h={"22px"}
+                                w={"22px"}
+                                color={calenderIconBlue}
+                              />
+                            </IconBox>
+                            <Flex direction="column">
+                              <Text
+                                color={calendarTextColor}
+                                fontSize="sm"
+                                fontWeight="bold"
+                              >
+                                {event.title}
+                              </Text>
+                              <Text
+                                color="gray.400"
+                                fontSize="sm"
+                                fontWeight="normal"
+                              >
+                                {`${dayjs(event.start_datetime).format(
+                                  "DD MMM YYYY"
+                                )} at ${dayjs(event.start_datetime).format(
+                                  "hh:mm A"
+                                )}`}
+                              </Text>
+                            </Flex>
+                          </Flex>
+                        );
+                      })}
+                      <Flex gap="12px" alignItems="center" j>
+                        <Button
+                          onClick={() => naviagte("/admin/management/events")}
+                          fontSize="14px"
+                          fontWeight="normal"
+                          cursor="pointer"
+                          variant="outlined"
+                          w="full"
+                          h="40px"
+                          borderWidth="2px"
+                        >
+                          View all
+                        </Button>
+                      </Flex>
+                    </Stack>
+                  </CardBody>
+                </>
+              )}
             </Card>
 
             <Card>
               <Flex direction="column">
-                <Text
-                  color={textColor}
-                  fontSize="lg"
-                  fontWeight="bold"
-                  mb="14px"
-                >
-                  To Do List
-                </Text>
-                <Stack
-                  direction="column"
-                  spacing="14px"
-                  height={{ sm: "300px", md: "230px" }}
-                  overflowY={{ sm: "scroll", xl: "scroll" }}
-                  sx={{
-                    "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                    "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                    "scrollbar-width": "none", // Hide scrollbar in Firefox
-                  }}
-                >
-                  <Flex
-                    justify="space-between"
-                    align="center"
-                    borderBottom="1px solid"
-                    borderColor={borderColor}
-                    py="12px"
-                  >
-                    <Flex direction="column">
-                      <Text
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="sm"
-                        mb="3.5px"
-                      >
-                        Call with Kev
-                      </Text>
-                      <Text color="gray.400" fontSize="sm">
-                        09:30 AM
-                      </Text>
-                    </Flex>
-                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
-                  </Flex>
-                  <Flex
-                    justify="space-between"
-                    align="center"
-                    borderBottom="1px solid"
-                    borderColor={borderColor}
-                    py="12px"
-                  >
-                    <Flex direction="column">
-                      <Text
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="sm"
-                        mb="3.5px"
-                      >
-                        Meeting with Ministry of health
-                      </Text>
-                      <Text color="gray.400" fontSize="sm">
-                        11:00 AM
-                      </Text>
-                    </Flex>
-                    <Checkbox colorScheme="blue" size="lg" />
-                  </Flex>
-                  <Flex
-                    justify="space-between"
-                    align="center"
-                    borderBottom="1px solid"
-                    borderColor={borderColor}
-                    pt="12px"
-                  >
-                    <Flex direction="column">
-                      <Text
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="sm"
-                        mb="3.5px"
-                      >
-                        Launch with the team
-                      </Text>
-                      <Text color="gray.400" fontSize="sm">
-                        02:00 PM
-                      </Text>
-                    </Flex>
-                    <Checkbox colorScheme="blue" size="lg" />
-                  </Flex>
-                  <Flex
-                    borderBottom="1px solid"
-                    borderColor={borderColor}
-                    justify="space-between"
-                    align="center"
-                    py="14px"
-                  >
-                    <Flex direction="column">
-                      <Text
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="sm"
-                        mb="3.5px"
-                      >
-                        Winter Hackaton
-                      </Text>
-                      <Text color="gray.400" fontSize="sm">
-                        11:30 AM
-                      </Text>
-                    </Flex>
-                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
-                  </Flex>
-                  <Flex
-                    borderBottom="1px solid"
-                    borderColor={borderColor}
-                    justify="space-between"
-                    align="center"
-                    py="14px"
-                  >
-                    <Flex direction="column">
-                      <Text
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="sm"
-                        mb="3.5px"
-                      >
-                        Hackaton
-                      </Text>
-                      <Text color="gray.400" fontSize="sm">
-                        11:30 AM
-                      </Text>
-                    </Flex>
-                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
-                  </Flex>
-                  <Flex justify="space-between" align="center" py="14px">
-                    <Flex direction="column">
-                      <Text
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="sm"
-                        mb="3.5px"
-                      >
-                        Google meet
-                      </Text>
-                      <Text color="gray.400" fontSize="sm">
-                        11:30 AM
-                      </Text>
-                    </Flex>
-                    <Checkbox colorScheme="blue" defaultChecked size="lg" />
-                  </Flex>
-                </Stack>
+                {isLoading ? (
+                  <Box p={2}>
+                    <Skeleton
+                      borderRadius="md"
+                      height={{ sm: "300px", md: "230px" }}
+                      isLoaded={!isLoading}
+                    />
+                  </Box>
+                ) : (
+                  <>
+                    <Text
+                      color={textColor}
+                      fontSize="lg"
+                      fontWeight="bold"
+                      mb="14px"
+                    >
+                      To Do List
+                    </Text>
+                    <Stack
+                      pb="10px"
+                      direction="column"
+                      spacing="14px"
+                      height={{ sm: "300px", md: "230px" }}
+                      overflowY={{ sm: "scroll", xl: "scroll" }}
+                      sx={{
+                        "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                        "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                        "scrollbar-width": "none", // Hide scrollbar in Firefox
+                      }}
+                    >
+                      {slicedTodos.map((todo, i) => {
+                        const isLast = i === slicedTodos.length - 1;
+                        return (
+                          <Flex
+                            key={todo.id}
+                            justify="space-between"
+                            align="center"
+                            borderBottom={!isLast ? "1px solid" : "none"}
+                            borderColor={borderColor}
+                            py="12px"
+                            px="4px"
+                          >
+                            <Flex direction="column">
+                              <Text
+                                color={textColor}
+                                fontWeight="bold"
+                                fontSize="md"
+                                mb="3.5px"
+                              >
+                                {todo.title}
+                              </Text>
+
+                              <Flex alignItems="center" gap="8px">
+                                <BiCalendar color="#A0AEC0" />
+                                <Text color="gray.400" fontSize="sm">
+                                  {moment(todo.due_date).format("YYYY-MM-DD")}
+                                </Text>
+
+                                <Tooltip
+                                  label={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
+                                  hasArrow
+                                >
+                                  <Avatar
+                                    name={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
+                                    size="xs"
+                                    cursor="pointer"
+                                  />
+                                </Tooltip>
+                              </Flex>
+                            </Flex>
+
+                            <Box as="button" cursor="pointer">
+                              <Checkbox
+                                colorScheme="blue"
+                                defaultChecked={todo.is_completed}
+                                size="lg"
+                              />
+                            </Box>
+                          </Flex>
+                        );
+                      })}
+                      <Flex gap="12px" alignItems="center" j>
+                        <Button
+                          onClick={() => naviagte("/admin/management/todos")}
+                          fontSize="14px"
+                          fontWeight="normal"
+                          cursor="pointer"
+                          variant="outlined"
+                          w="full"
+                          h="40px"
+                          borderWidth="2px"
+                        >
+                          View all
+                        </Button>
+                      </Flex>
+                    </Stack>
+                  </>
+                )}
               </Flex>
             </Card>
           </Stack>
