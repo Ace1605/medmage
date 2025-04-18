@@ -135,7 +135,12 @@ export default function HeaderLinks(props) {
             <div className="dropdown-item">
               {user?.first_name} {user?.last_name}
             </div>
-            <div className="dropdown-item">{user?.email}</div>
+            <div
+              className="dropdown-item"
+              style={{ color: "#a0aec0", fontWeight: 530 }}
+            >
+              {user?.email}
+            </div>
           </div>
         </div>
 
