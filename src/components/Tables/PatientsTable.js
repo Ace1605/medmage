@@ -300,7 +300,7 @@ function PatientsTable(props) {
                               setIsSuperAdmin(false);
                               setSelectedPatient("id", row.original.id);
                               navigate(
-                                `/admin/personnel-management/patient-information/${row.original.id}`
+                                `/admin/patient-management/patient-information/${row.original.id}`
                               );
                             }
                             return;
