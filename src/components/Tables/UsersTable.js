@@ -23,6 +23,7 @@ import Modal from "components/Modal/Modal";
 import { Spinner } from "components/svgs/Icons";
 import { AppContext } from "contexts/AppContext";
 import dayjs from "dayjs";
+import { useDeleteUser } from "hooks/api/management/users/useDeleteUser";
 import { useGetUserRoles } from "hooks/api/management/users/useGetUserRoles";
 import { useUpdateUserRoles } from "hooks/api/management/users/useUpdateUserRoles";
 import React, { useContext, useMemo, useState } from "react";
@@ -52,6 +53,7 @@ function UsersTable(props) {
   );
 
   const { handleRoleUpdate, isLoading: isUpdating } = useUpdateUserRoles(token);
+  const { handleDeleteUser, isLoading: isDeleting } = useDeleteUser(token);
 
   const columns = useMemo(() => {
     return [
@@ -475,11 +477,24 @@ function UsersTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setDeleteUser(false);
-                toast.success("User deleted successfully");
+                handleDeleteUser(
+                  selectedUser?.id,
+                  (res) => {
+                    if (res.status === 200) {
+                      setDeleteUser(false);
+                      refetchUsers();
+                      toast.success("User deleted successfully");
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
               }}
             >
-              Confirm
+              {isDeleting ? <Spinner w="20px" h="20px" /> : " Confirm"}
             </Button>
           </Flex>
         </Modal>
