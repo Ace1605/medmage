@@ -36,6 +36,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetAllEvents } from "hooks/api/management/events/useGetAllEvents";
 import { MdEventAvailable } from "react-icons/md";
 
+import { BsCalendarX, BsClipboard2X } from "react-icons/bs";
 export default function Default() {
   const naviagte = useNavigate();
   const textColor = useColorModeValue("gray.700", "white");
@@ -58,10 +59,13 @@ export default function Default() {
   if (eventsError) toast.error("Unable to fecth events, please refresh");
 
   const filteredEvents = eventsData
-    ?.filter(
-      (event) => dayjs(event.start_datetime).valueOf() > dayjs(today).valueOf()
-    )
-    .slice(0, 10);
+    ? eventsData
+        ?.filter(
+          (event) =>
+            dayjs(event.start_datetime).valueOf() > dayjs(today).valueOf()
+        )
+        .slice(0, 10)
+    : [];
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 5 }} spacing="24px" mb="30px">
@@ -283,71 +287,98 @@ export default function Default() {
                     </Text>
                   </CardHeader>
                   <CardBody>
-                    <Stack
-                      direction="column"
-                      spacing="20px"
-                      height={{ sm: "300px", md: "230px", lg: "150px" }}
-                      overflowY={{ sm: "scroll", xl: "scroll" }}
-                      sx={{
-                        "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                        "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                        "scrollbar-width": "none", // Hide scrollbar in Firefox
-                      }}
-                    >
-                      {filteredEvents.map((event) => {
-                        return (
-                          <Flex align="center">
-                            <IconBox
-                              h={"50px"}
-                              w={"50px"}
-                              bg={iconBoxColor}
-                              me="16px"
-                            >
-                              <Icon
-                                as={MdEventAvailable}
-                                h={"22px"}
-                                w={"22px"}
-                                color={calenderIconBlue}
-                              />
-                            </IconBox>
-                            <Flex direction="column">
-                              <Text
-                                color={calendarTextColor}
-                                fontSize="sm"
-                                fontWeight="bold"
-                              >
-                                {event.title}
-                              </Text>
-                              <Text
-                                color="gray.400"
-                                fontSize="sm"
-                                fontWeight="normal"
-                              >
-                                {`${dayjs(event.start_datetime).format(
-                                  "DD MMM YYYY"
-                                )} at ${dayjs(event.start_datetime).format(
-                                  "hh:mm A"
-                                )}`}
-                              </Text>
-                            </Flex>
-                          </Flex>
-                        );
-                      })}
-                      <Flex gap="12px" alignItems="center" j>
-                        <Button
-                          onClick={() => naviagte("/admin/management/events")}
-                          fontSize="14px"
-                          fontWeight="normal"
-                          cursor="pointer"
-                          variant="outlined"
-                          w="full"
-                          h="40px"
-                          borderWidth="2px"
+                    {filteredEvents.length < 1 ? (
+                      <Box>
+                        <Flex
+                          height={{ sm: "200px", md: "180px" }}
+                          justifyContent="center"
+                          alignItems="center"
+                          direction="column"
+                          gap="20px"
                         >
-                          View all
-                        </Button>
-                      </Flex>
-                    </Stack>
+                          <Icon
+                            color="gray.400"
+                            as={BsCalendarX}
+                            w="70px"
+                            h="70px"
+                          />
+                          <Text
+                            fontSize={{ sm: "16px", md: "18px", lg: "19px" }}
+                            fontWeight="600"
+                            textAlign="center"
+                            color="gray.400"
+                          >
+                            You have no upcoming event(s)
+                          </Text>
+                        </Flex>
+                      </Box>
+                    ) : (
+                      <Stack
+                        direction="column"
+                        spacing="20px"
+                        height={{ sm: "300px", md: "230px", lg: "150px" }}
+                        overflowY={{ sm: "scroll", xl: "scroll" }}
+                        sx={{
+                          "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                          "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                          "scrollbar-width": "none", // Hide scrollbar in Firefox
+                        }}
+                      >
+                        {filteredEvents.map((event) => {
+                          return (
+                            <Flex align="center">
+                              <IconBox
+                                h={"50px"}
+                                w={"50px"}
+                                bg={iconBoxColor}
+                                me="16px"
+                              >
+                                <Icon
+                                  as={MdEventAvailable}
+                                  h={"22px"}
+                                  w={"22px"}
+                                  color={calenderIconBlue}
+                                />
+                              </IconBox>
+                              <Flex direction="column">
+                                <Text
+                                  color={calendarTextColor}
+                                  fontSize="sm"
+                                  fontWeight="bold"
+                                >
+                                  {event.title}
+                                </Text>
+                                <Text
+                                  color="gray.400"
+                                  fontSize="sm"
+                                  fontWeight="normal"
+                                >
+                                  {`${dayjs(event.start_datetime).format(
+                                    "DD MMM YYYY"
+                                  )} at ${dayjs(event.start_datetime).format(
+                                    "hh:mm A"
+                                  )}`}
+                                </Text>
+                              </Flex>
+                            </Flex>
+                          );
+                        })}
+                        <Flex gap="12px" alignItems="center" j>
+                          <Button
+                            onClick={() => naviagte("/admin/management/events")}
+                            fontSize="14px"
+                            fontWeight="normal"
+                            cursor="pointer"
+                            variant="outlined"
+                            w="full"
+                            h="40px"
+                            borderWidth="2px"
+                          >
+                            View all
+                          </Button>
+                        </Flex>
+                      </Stack>
+                    )}
                   </CardBody>
                 </>
               )}
@@ -373,84 +404,111 @@ export default function Default() {
                     >
                       To Do List
                     </Text>
-                    <Stack
-                      pb="10px"
-                      direction="column"
-                      spacing="14px"
-                      height={{ sm: "300px", md: "230px" }}
-                      overflowY={{ sm: "scroll", xl: "scroll" }}
-                      sx={{
-                        "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                        "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                        "scrollbar-width": "none", // Hide scrollbar in Firefox
-                      }}
-                    >
-                      {slicedTodos.map((todo, i) => {
-                        const isLast = i === slicedTodos.length - 1;
-                        return (
-                          <Flex
-                            key={todo.id}
-                            justify="space-between"
-                            align="center"
-                            borderBottom={!isLast ? "1px solid" : "none"}
-                            borderColor={borderColor}
-                            py="12px"
-                            px="4px"
+                    {slicedTodos.length < 1 ? (
+                      <Box>
+                        <Flex
+                          height={{ sm: "230px", md: "200px" }}
+                          justifyContent="center"
+                          alignItems="center"
+                          direction="column"
+                          gap="20px"
+                        >
+                          <Icon
+                            color="gray.400"
+                            as={BsClipboard2X}
+                            w="80px"
+                            h="80px"
+                          />
+                          <Text
+                            fontSize={{ sm: "16px", md: "18px", lg: "19px" }}
+                            fontWeight="600"
+                            textAlign="center"
+                            color="gray.400"
                           >
-                            <Flex direction="column">
-                              <Text
-                                color={textColor}
-                                fontWeight="bold"
-                                fontSize="md"
-                                mb="3.5px"
-                              >
-                                {todo.title}
-                              </Text>
-
-                              <Flex alignItems="center" gap="8px">
-                                <BiCalendar color="#A0AEC0" />
-                                <Text color="gray.400" fontSize="sm">
-                                  {moment(todo.due_date).format("YYYY-MM-DD")}
+                            You currently have no tasks
+                          </Text>
+                        </Flex>
+                      </Box>
+                    ) : (
+                      <Stack
+                        pb="10px"
+                        direction="column"
+                        spacing="14px"
+                        height={{ sm: "300px", md: "230px" }}
+                        overflowY={{ sm: "scroll", xl: "scroll" }}
+                        sx={{
+                          "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                          "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                          "scrollbar-width": "none", // Hide scrollbar in Firefox
+                        }}
+                      >
+                        {slicedTodos.map((todo, i) => {
+                          const isLast = i === slicedTodos.length - 1;
+                          return (
+                            <Flex
+                              key={todo.id}
+                              justify="space-between"
+                              align="center"
+                              borderBottom={!isLast ? "1px solid" : "none"}
+                              borderColor={borderColor}
+                              py="12px"
+                              px="4px"
+                            >
+                              <Flex direction="column">
+                                <Text
+                                  color={textColor}
+                                  fontWeight="bold"
+                                  fontSize="md"
+                                  mb="3.5px"
+                                >
+                                  {todo.title}
                                 </Text>
 
-                                <Tooltip
-                                  label={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
-                                  hasArrow
-                                >
-                                  <Avatar
-                                    name={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
-                                    size="xs"
-                                    cursor="pointer"
-                                  />
-                                </Tooltip>
-                              </Flex>
-                            </Flex>
+                                <Flex alignItems="center" gap="8px">
+                                  <BiCalendar color="#A0AEC0" />
+                                  <Text color="gray.400" fontSize="sm">
+                                    {moment(todo.due_date).format("YYYY-MM-DD")}
+                                  </Text>
 
-                            <Box as="button" cursor="pointer">
-                              <Checkbox
-                                colorScheme="blue"
-                                defaultChecked={todo.is_completed}
-                                size="lg"
-                              />
-                            </Box>
-                          </Flex>
-                        );
-                      })}
-                      <Flex gap="12px" alignItems="center" j>
-                        <Button
-                          onClick={() => naviagte("/admin/management/todos")}
-                          fontSize="14px"
-                          fontWeight="normal"
-                          cursor="pointer"
-                          variant="outlined"
-                          w="full"
-                          h="40px"
-                          borderWidth="2px"
-                        >
-                          View all
-                        </Button>
-                      </Flex>
-                    </Stack>
+                                  <Tooltip
+                                    label={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
+                                    hasArrow
+                                  >
+                                    <Avatar
+                                      name={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
+                                      size="xs"
+                                      cursor="pointer"
+                                    />
+                                  </Tooltip>
+                                </Flex>
+                              </Flex>
+
+                              <Box as="button" cursor="pointer">
+                                <Checkbox
+                                  colorScheme="blue"
+                                  defaultChecked={todo.is_completed}
+                                  size="lg"
+                                />
+                              </Box>
+                            </Flex>
+                          );
+                        })}
+                        <Flex gap="12px" alignItems="center" j>
+                          <Button
+                            onClick={() => naviagte("/admin/management/todos")}
+                            fontSize="14px"
+                            fontWeight="normal"
+                            cursor="pointer"
+                            variant="outlined"
+                            w="full"
+                            h="40px"
+                            borderWidth="2px"
+                          >
+                            View all
+                          </Button>
+                        </Flex>
+                      </Stack>
+                    )}
                   </>
                 )}
               </Flex>

@@ -54,7 +54,6 @@ function Events() {
     isLoading: isGetting,
   } = useGetAllEvents(token);
 
-  const preselected = ["Achugo Ebuka", "Kevin Akaluzia"];
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
       <Card px="0px">
