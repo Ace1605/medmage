@@ -1,9 +1,5 @@
 import {
   Checkbox,
-  SimpleGrid,
-  Stat,
-  StatLabel,
-  StatNumber,
   Flex,
   Grid,
   Icon,
@@ -37,6 +33,7 @@ import { useGetAllEvents } from "hooks/api/management/events/useGetAllEvents";
 import { MdEventAvailable } from "react-icons/md";
 
 import { BsCalendarX, BsClipboard2X } from "react-icons/bs";
+import Overview from "components/modules/dashboard/Overview";
 export default function Default() {
   const naviagte = useNavigate();
   const textColor = useColorModeValue("gray.700", "white");
@@ -68,173 +65,7 @@ export default function Default() {
     : [];
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 5 }} spacing="24px" mb="30px">
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Countries
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    3,897
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +3.48%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  States
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    200
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +5.2%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Medical Institutions
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    +2,503
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="red.500" fontWeight="bold">
-                -2.82%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Patients
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    17,000
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +8.12%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Medical Personnel
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    3000
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +5.12%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-      </SimpleGrid>
+      <Overview token={token} />
 
       <Flex direction="column">
         <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="24px">
