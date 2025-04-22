@@ -1,9 +1,5 @@
 import {
   Checkbox,
-  SimpleGrid,
-  Stat,
-  StatLabel,
-  StatNumber,
   Flex,
   Grid,
   Icon,
@@ -35,8 +31,9 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useGetAllEvents } from "hooks/api/management/events/useGetAllEvents";
 import { MdEventAvailable } from "react-icons/md";
-
 import { BsCalendarX, BsClipboard2X } from "react-icons/bs";
+import Overview from "components/modules/dashboard/Overview";
+import { useGetCalendar } from "hooks/api/dashboard/useGetCalendar";
 export default function Default() {
   const naviagte = useNavigate();
   const textColor = useColorModeValue("gray.700", "white");
@@ -47,7 +44,6 @@ export default function Default() {
 
   const today = new Date();
   const { token } = useContext(AppContext);
-
   const { data, error, isLoading } = useGetAllTodos(token);
   if (error) toast.error("Unable to fecth todos, please refresh");
   const slicedTodos = data ? data?.slice(0, 10) : [];
@@ -66,200 +62,56 @@ export default function Default() {
         )
         .slice(0, 10)
     : [];
+
+  const {
+    data: calenderData,
+    error: calenderError,
+    isLoading: calenderLoading,
+  } = useGetCalendar(token);
+  if (calenderError) toast.error("Unable to fecth calendar, please refresh");
+
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 5 }} spacing="24px" mb="30px">
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Countries
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    3,897
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +3.48%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  States
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    200
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +5.2%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Medical Institutions
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    +2,503
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="red.500" fontWeight="bold">
-                -2.82%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Patients
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    17,000
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +8.12%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Medical Personnel
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    3000
-                  </StatNumber>
-                </Flex>
-              </Stat>
-            </Flex>
-            <Text color="gray.400" fontSize="sm">
-              <Text as="span" color="green.400" fontWeight="bold">
-                +5.12%{" "}
-              </Text>
-              Since last month
-            </Text>
-          </Flex>
-        </Card>
-      </SimpleGrid>
+      <Overview token={token} />
 
       <Flex direction="column">
         <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="24px">
           <Card minH="570px">
-            <CardHeader mb="6px">
-              <Flex direction="column">
-                <Text
-                  color={calendarTextColor}
-                  fontSize="lg"
-                  fontWeight="bold"
-                  mb="6px"
-                >
-                  Calendar
-                </Text>
-                <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                  {dayjs(today).format("DD MMM, YYYY")}
-                </Text>
-              </Flex>
-            </CardHeader>
-            <CardBody position="relative" display="block" height="100%">
-              <EventCalendar
-                initialDate="2022-10-01"
-                calendarData={calendarDataCalendar}
-              />
-            </CardBody>
+            {calenderLoading ? (
+              <Box p={2}>
+                <Skeleton
+                  borderRadius="md"
+                  w="100%"
+                  minH="570px"
+                  isLoaded={!calenderLoading}
+                />
+              </Box>
+            ) : (
+              <>
+                <CardHeader mb="6px">
+                  <Flex direction="column">
+                    <Text
+                      color={calendarTextColor}
+                      fontSize="lg"
+                      fontWeight="bold"
+                      mb="6px"
+                    >
+                      Calendar
+                    </Text>
+                    <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                      {dayjs(today).format("DD MMM, YYYY")}
+                    </Text>
+                  </Flex>
+                </CardHeader>
+
+                <CardBody position="relative" display="block" height="100%">
+                  <EventCalendar
+                    initialDate={dayjs(today).format("YYYY-MM-DD")}
+                    calendarData={calenderData}
+                  />
+                </CardBody>
+              </>
+            )}
           </Card>
           <Stack
             direction={{ sm: "column", md: "row", lg: "column" }}
