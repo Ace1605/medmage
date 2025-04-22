@@ -49,11 +49,11 @@ function Overview({ token }) {
                   fontWeight="bold"
                   textTransform="uppercase"
                 >
-                  Patients
+                  Active Users
                 </StatLabel>
                 <Flex>
                   <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    {data?.patieceCount}
+                    {data?.activeUsers}
                   </StatNumber>
                 </Flex>
               </Stat>
@@ -63,7 +63,7 @@ function Overview({ token }) {
             </Flex>
             <Text color="gray.400" fontSize="sm">
               <Text as="span" color="green.400" fontWeight="bold">
-                +3.48%{" "}
+                +5.2%{" "}
               </Text>
               Since last month
             </Text>
@@ -96,11 +96,11 @@ function Overview({ token }) {
                   fontWeight="bold"
                   textTransform="uppercase"
                 >
-                  Active Users
+                  Patients
                 </StatLabel>
                 <Flex>
                   <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    {data?.activeUsers}
+                    {data?.patieceCount}
                   </StatNumber>
                 </Flex>
               </Stat>
@@ -110,7 +110,7 @@ function Overview({ token }) {
             </Flex>
             <Text color="gray.400" fontSize="sm">
               <Text as="span" color="green.400" fontWeight="bold">
-                +5.2%{" "}
+                +3.48%{" "}
               </Text>
               Since last month
             </Text>
