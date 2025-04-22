@@ -33,6 +33,7 @@ import { useUpdateTodo } from "hooks/api/management/todo/useUpdateTodo";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDeleteTodo } from "hooks/api/management/todo/useDeleteTodo";
 import { SingleSelect } from "components/SingleSelect/SingleSelect";
+import { MdFolderOff } from "react-icons/md";
 
 function Todos() {
   const queryClient = useQueryClient();
@@ -92,7 +93,7 @@ function Todos() {
       <Card
         padding="24px"
         borderRadius="22px"
-        height={{ sm: "calc(100vh - 180px)", md: "calc(100vh - 140px)" }}
+        // height={{ sm: "calc(100vh - 180px)", md: "calc(100vh - 140px)" }}
       >
         <Flex direction="column">
           <CardHeader p="0px">
@@ -135,6 +136,20 @@ function Todos() {
               justify="center"
             >
               <Spinner w="40px" h="40px" color="#3182ce" />
+            </Flex>
+          ) : todos.length < 1 ? (
+            <Flex
+              width="100% "
+              direction="column"
+              height="30vh"
+              align="center"
+              justify="center"
+              gap="20px"
+            >
+              <Icon as={MdFolderOff} w="60px" h="60px" color="#E2E8F0" />
+              <Text color="#E2E8F0" fontSize="18px">
+                No Data
+              </Text>
             </Flex>
           ) : (
             <Stack
