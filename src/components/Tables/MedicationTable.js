@@ -45,7 +45,7 @@ import {
 import { toast } from "sonner";
 
 function MedicationTable(props) {
-  const { tableData, refetch } = props;
+  const { tableData, refetch, pageNo, size, setPageNo, setSize } = props;
   const queryClient = useQueryClient();
   const [edit, setEdit] = useState(false);
   const [deleteMedication, setDeleteMedication] = useState(false);
@@ -210,8 +210,9 @@ function MedicationTable(props) {
     ];
   }, []);
 
-  const data = useMemo(() => tableData, []);
+  const data = useMemo(() => tableData?.data, []);
 
+  const { meta } = tableData;
   const tableInstance = useTable(
     {
       columns,
@@ -254,6 +255,13 @@ function MedicationTable(props) {
   const { pageIndex, pageSize, globalFilter } = state;
 
   const textColor = useColorModeValue("gray.600", "white");
+  const goToPrev = () => {
+    setPageNo(pageNo - 1);
+  };
+
+  const goToNext = () => {
+    setPageNo(pageNo + 1);
+  };
   return (
     <>
       <Flex direction="column" w="100%">
@@ -355,23 +363,21 @@ function MedicationTable(props) {
             fontWeight="normal"
             mb={{ sm: "14px", md: "0px" }}
           >
-            Showing {pageSize * pageIndex + 1} to{" "}
-            {pageSize * (pageIndex + 1) <= tableData.length
-              ? pageSize * (pageIndex + 1)
-              : tableData.length}{" "}
-            of {tableData.length} entries
+            Showing {meta.pagination.current_page} to{" "}
+            {meta.pagination.current_page * tableData?.data.length} of{" "}
+            {meta.pagination.total} entries
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
             <Button
               variant="no-effects"
-              onClick={() => previousPage()}
+              onClick={() => goToPrev()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex === 0}
+              isDisabled={meta.pagination.current_page === 1}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",
@@ -405,21 +411,22 @@ function MedicationTable(props) {
                     fontSize="sm"
                     color={pageNumber === pageIndex + 1 ? "#fff" : "gray.600"}
                   >
-                    {pageNumber}
+                    {meta.pagination.current_page}
                   </Text>
                 </Button>
               );
             })}
             <Button
               variant="no-effects"
-              onClick={() => nextPage()}
+              onClick={() => goToNext()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex + 1 === pageCount}
+              // isDisabled={pageIndex + 1 === pageCount}
+              isDisabled={meta.pagination.last_page === pageNo}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",

@@ -28,6 +28,8 @@ export const Medication = (props) => {
   const [addMedication, setAddMedication] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
   const { isSuperAdmin, token, providers } = useContext(AppContext);
   const [medication, setMedication] = useState({
     medication_name: "",
@@ -58,7 +60,8 @@ export const Medication = (props) => {
     refetch,
     error,
     isLoading: isGetting,
-  } = useListMedications(token);
+  } = useListMedications(token, page, size);
+  if (error) toast.error("Unable to fetch medications, please try again");
 
   return (
     <>
@@ -105,7 +108,14 @@ export const Medication = (props) => {
               "scrollbar-width": "none", // Hide scrollbar in Firefox
             }}
           >
-            <MedicationTable tableData={data?.data} refetch={refetch} />
+            <MedicationTable
+              tableData={data}
+              refetch={refetch}
+              pageNo={page}
+              size={size}
+              setPageNo={(val) => setPage(val)}
+              setSize={(val) => setSize(val)}
+            />
           </CardBody>
         </>
       )}
