@@ -93,11 +93,6 @@ function EventsTable(props) {
     }
   }, [eventData]);
 
-  useEffect(() => {
-    console.log(event.isCompleted);
-    console.log("event", selectedEvent);
-  }, [editEvent]);
-
   const columns = useMemo(() => {
     return [
       {

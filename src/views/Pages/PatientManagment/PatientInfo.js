@@ -1,5 +1,10 @@
 // Chakra imports
-import { ChevronDownIcon, InfoIcon, PhoneIcon } from "@chakra-ui/icons";
+import {
+  ArrowBackIcon,
+  ChevronDownIcon,
+  InfoIcon,
+  PhoneIcon,
+} from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -26,7 +31,6 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { PersonIcon } from "components/Icons/Icons";
 import Modal from "components/Modal/Modal";
-import MedicationTable from "components/Tables/MedicationTable";
 import VisitationTable from "components/Tables/visitationTable";
 import { AppContext } from "contexts/AppContext";
 import { useGetPatientById } from "hooks/api/patientManagement/useGetPatientById";
@@ -39,12 +43,12 @@ import { MdMedication } from "react-icons/md";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Element, Link } from "react-scroll";
 import { toast } from "sonner";
-import { bloodTypes } from "utils/constants";
-import { months } from "utils/constants";
-import { getDaysInMonth } from "utils/generators";
-import { getAllYears } from "utils/generators";
-import medicationData from "variables/medicationData.json";
 import visitationData from "variables/visitationData.json";
+import { Link as RouteLink } from "react-router-dom";
+import { DateTimeRangePicker } from "components/CustomDateTimePicker/CustomDateTimeRangePicker";
+import { BasicInfo } from "components/modules/patientManagment/basicInfo";
+import { Medication } from "components/modules/patientManagment/medication";
+import { useListMedications } from "hooks/api/patientManagement/medication/useListMedication";
 
 function PatientInfo() {
   const { patientId } = useParams();
@@ -55,9 +59,7 @@ function PatientInfo() {
   const { pathname } = useLocation();
   const scrollContainerRef = useRef(null);
   const [isDisplayed, setisDisplayed] = useState(true);
-  const [addMedication, setAddMedication] = useState(false);
   const [addVisitor, setAddVisitor] = useState(false);
-  const [isUpdatingBasicInfo, setIsUpdatingBasicInfo] = useState(false);
   const [isUpdatingEmergencyContact, setIsUpdatingEmergencyContact] = useState(
     false
   );
@@ -66,6 +68,7 @@ function PatientInfo() {
   const [isUpdatingAdditionalInfo, setIsUpdatingAdditionalInfo] = useState(
     false
   );
+
   const {
     isSuperAdmin,
     setIsSuperAdmin,
@@ -184,13 +187,6 @@ function PatientInfo() {
       }));
     }
   };
-
-  const years = getAllYears();
-  const daysInSelectedMonth = getDaysInMonth(formData.dob.month);
-  const daysArray = Array.from(
-    { length: daysInSelectedMonth },
-    (_, i) => i + 1
-  );
 
   const handleScrollToId = (id) => {
     const container = scrollContainerRef.current;
@@ -438,6 +434,26 @@ function PatientInfo() {
                   </Flex>
                 </Button>
               </Link>
+              <RouteLink to={"/admin/patient-management"}>
+                <Button
+                  variant="no-effects"
+                  _hover={{ bg: bgHoverLinks }}
+                  w="100%"
+                >
+                  <Flex align="center" justifySelf="flex-start" w="100%">
+                    <Icon
+                      as={ArrowBackIcon}
+                      me="12px"
+                      w="18px"
+                      h="18px"
+                      color={textColor}
+                    />
+                    <Text color="gray.500" fontWeight="normal" fontSize="xs">
+                      Go back
+                    </Text>
+                  </Flex>
+                </Button>
+              </RouteLink>
             </Grid>
           </CardBody>
         </Card>
@@ -470,7 +486,7 @@ function PatientInfo() {
               {isLoading ? (
                 <Flex
                   width="100% "
-                  height="20vh"
+                  height="10vh"
                   align="center"
                   justify="center"
                 >
@@ -554,580 +570,13 @@ function PatientInfo() {
                 </Flex>
               ) : (
                 <Element id="info" name="info">
-                  <CardHeader mb="40px">
-                    <Text color={textColor} fontSize="lg" fontWeight="bold">
-                      Basic Info
-                    </Text>
-                  </CardHeader>
-
-                  <CardBody>
-                    <Grid
-                      templateColumns={{
-                        base: "1fr",
-                        sm: "1fr",
-                        md: "repeat(3, 1fr)",
-                        lg: "repeat(3, 1fr)",
-                      }}
-                      gap="15px"
-                      spacing={{ sm: "8px", lg: "30px" }}
-                      w={{ sm: "100%", lg: null }}
-                    >
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          First Name
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          placeholder="Enter first name"
-                          name="firstName"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.name.firstName}
-                          onChange={(e) => handleChange(e, "name")}
-                        />
-                      </FormControl>
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Middle Name
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          name="middleName"
-                          placeholder="Enter middle name"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.name.middleName}
-                          onChange={(e) => handleChange(e, "name")}
-                        />
-                      </FormControl>
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Last Name
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          name="lastName"
-                          placeholder="Enter last name"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.name.lastName}
-                          onChange={(e) => handleChange(e, "name")}
-                        />
-                      </FormControl>
-
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "24px", lg: "15px" }}
-                        align="flex-end"
-                        gridColumn={{ base: "1 / -1" }}
-                      >
-                        <FormControl isReadOnly={!isSuperAdmin}>
-                          <FormLabel
-                            fontWeight="semibold"
-                            fontSize="xs"
-                            mb="10px"
-                            sx={{ _readOnly: { color: "gray.500" } }}
-                          >
-                            Birth Date
-                          </FormLabel>
-                          <Select
-                            cursor="pointer"
-                            variant="main"
-                            name="month"
-                            color="gray.400"
-                            fontSize="sm"
-                            maxW=""
-                            icon={isSuperAdmin ? <ChevronDownIcon /> : ""}
-                            sx={{
-                              _readOnly: {
-                                color: "gray.700",
-                                fontWeight: "semibold",
-                                border: 0,
-                                pl: 0,
-                                opacity: 1,
-                                cursor: "default",
-                              },
-                            }}
-                            value={formData.dob.month}
-                            onChange={(e) => handleChange(e, "dob")}
-                          >
-                            {months.map((month, i) => {
-                              return (
-                                <option key={i} value={month.value}>
-                                  {month.key}
-                                </option>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-                        <FormControl isReadOnly={!isSuperAdmin}>
-                          <Select
-                            cursor="pointer"
-                            variant="main"
-                            color="gray.400"
-                            name="day"
-                            fontSize="xs"
-                            icon={isSuperAdmin ? <ChevronDownIcon /> : ""}
-                            sx={{
-                              _readOnly: {
-                                color: "gray.700",
-                                fontWeight: "semibold",
-                                border: 0,
-                                pl: 0,
-                                opacity: 1,
-                                cursor: "default",
-                              },
-                            }}
-                            value={formData.dob.day}
-                            onChange={(e) => handleChange(e, "dob")}
-                          >
-                            {daysArray.map((day, i) => {
-                              return (
-                                <option key={i} value={day}>
-                                  {day}
-                                </option>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-                        <FormControl isReadOnly={!isSuperAdmin}>
-                          <Select
-                            name="year"
-                            variant="main"
-                            color="gray.400"
-                            fontSize="xs"
-                            icon={isSuperAdmin ? <ChevronDownIcon /> : ""}
-                            sx={{
-                              _readOnly: {
-                                color: "gray.700",
-                                fontWeight: "semibold",
-                                border: 0,
-                                pl: 0,
-                                opacity: 1,
-                                cursor: "default",
-                              },
-                            }}
-                            value={formData.dob.year}
-                            onChange={(e) => handleChange(e, "dob")}
-                          >
-                            {years.map((year, i) => {
-                              return (
-                                <option key={i} value={year}>
-                                  {year}
-                                </option>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-                      </Stack>
-
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Gender
-                        </FormLabel>
-                        <Select
-                          cursor="pointer"
-                          variant="main"
-                          name="gender"
-                          color="gray.700"
-                          fontSize="xs"
-                          icon={isSuperAdmin ? <ChevronDownIcon /> : ""}
-                          disabled={!isSuperAdmin}
-                          isReadOnly={isSuperAdmin ? false : true}
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.gender}
-                          onChange={(e) => handleChange(e)}
-                        >
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                        </Select>
-                      </FormControl>
-
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Blood type
-                        </FormLabel>
-                        <Select
-                          name="bloodType"
-                          cursor="pointer"
-                          variant="main"
-                          color="gray.400"
-                          fontSize="xs"
-                          icon={isSuperAdmin ? <ChevronDownIcon /> : ""}
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.bloodType}
-                          onChange={(e) => handleChange(e)}
-                        >
-                          {bloodTypes.map((bloodType, i) => {
-                            return (
-                              <option key={i} value={bloodType}>
-                                {bloodType}
-                              </option>
-                            );
-                          })}
-                        </Select>
-                      </FormControl>
-
-                      <FormControl
-                        minW={{ sm: "35%", lg: null }}
-                        isReadOnly={!isSuperAdmin}
-                      >
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          National Id
-                        </FormLabel>
-                        <Input
-                          name="nationalId"
-                          variant="main"
-                          type="number"
-                          placeholder="Enter Id number"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.nationalId}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      </FormControl>
-
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Phone
-                        </FormLabel>
-                        <Input
-                          name="phoneNumber"
-                          type="number"
-                          variant="main"
-                          placeholder="Enter phone number"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.phoneNumber}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      </FormControl>
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Email
-                        </FormLabel>
-                        <Input
-                          disabled
-                          name="email"
-                          variant="main"
-                          placeholder="Enter email address"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.email}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      </FormControl>
-
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Address
-                        </FormLabel>
-                        <Input
-                          name="address"
-                          variant="main"
-                          placeholder="Enter home address"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.location.address}
-                          onChange={(e) => handleChange(e, "location")}
-                        />
-                      </FormControl>
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          City
-                        </FormLabel>
-                        <Input
-                          name="city"
-                          variant="main"
-                          placeholder="Enter city "
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.location.city}
-                          onChange={(e) => handleChange(e, "location")}
-                        />
-                      </FormControl>
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          State
-                        </FormLabel>
-                        <Input
-                          name="state"
-                          variant="main"
-                          placeholder="Enter state"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.location.state}
-                          onChange={(e) => handleChange(e, "location")}
-                        />
-                      </FormControl>
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Zip Code
-                        </FormLabel>
-                        <Input
-                          type="number"
-                          name="zipCode"
-                          variant="main"
-                          placeholder="Enter zip code"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.location.zipCode}
-                          onChange={(e) => handleChange(e, "location")}
-                        />
-                      </FormControl>
-                      <FormControl isReadOnly={!isSuperAdmin}>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                          sx={{ _readOnly: { color: "gray.500" } }}
-                        >
-                          Country
-                        </FormLabel>
-                        <Input
-                          name="country"
-                          variant="main"
-                          placeholder="Enter country"
-                          fontSize="xs"
-                          sx={{
-                            _readOnly: {
-                              color: "gray.700",
-                              fontWeight: "semibold",
-                              border: 0,
-                              pl: 0,
-                              opacity: 1,
-                              cursor: "default",
-                            },
-                          }}
-                          value={formData.location.country}
-                          onChange={(e) => handleChange(e, "location")}
-                        />
-                      </FormControl>
-                    </Grid>
-                    <Flex justify="end" mt="18px">
-                      <Button
-                        display={isSuperAdmin ? "block" : "none"}
-                        variant="dark"
-                        w="150px"
-                        h="35px"
-                        alignSelf="flex-end"
-                        onClick={() => {
-                          handleUpdatePatient(
-                            patientId,
-                            {
-                              first_name: formData.name.firstName,
-                              middle_name: formData.name.middleName,
-                              last_name: formData.name.lastName,
-                              date_of_birth: `${formData.dob.year}-${formData.dob.month}-${formData.dob.day}`,
-                              gender: formData.gender,
-                              blood_type: formData.bloodType,
-                              national_id: formData.nationalId,
-                              phone: formData.phoneNumber,
-                              email: formData.email,
-                              address: formData.location.address,
-                              city: formData.location.city,
-                              state: formData.location.state,
-                              country: formData.location.country,
-                              zip_code: formData.location.zipCode,
-                            },
-                            (res) => {
-                              if (res.status === 200) {
-                                queryClient.invalidateQueries([
-                                  "patient",
-                                  patientId,
-                                ]);
-                                toast.success("Paitent updated successfully");
-                              } else {
-                                toast.error(res?.message);
-                              }
-                            },
-                            (err) => {
-                              toast.error(
-                                err?.response?.data?.message ||
-                                  "Something went wrong"
-                              );
-                            },
-                            setIsUpdatingBasicInfo
-                          );
-                        }}
-                      >
-                        {isUpdatingBasicInfo ? (
-                          <Spinner w="18px" h="18px" />
-                        ) : (
-                          " UPDATE"
-                        )}
-                      </Button>
-                    </Flex>
-                  </CardBody>
+                  <BasicInfo
+                    formData={formData}
+                    queryClient={queryClient}
+                    handleChange={handleChange}
+                    handleUpdatePatient={handleUpdatePatient}
+                    patientId={patientId}
+                  />
                 </Element>
               )}
             </Card>
@@ -1620,58 +1069,9 @@ function PatientInfo() {
               alignSelf="flex-end"
               justifySelf="flex-end"
             >
-              {isLoading ? (
-                <Flex
-                  width="100% "
-                  height="50vh"
-                  align="center"
-                  justify="center"
-                >
-                  <Spinner w="40px" h="40px" color="#3182ce" />
-                </Flex>
-              ) : (
-                <Element id="medication" name="medical">
-                  <CardHeader mb="32px">
-                    <Flex
-                      alignItems="center"
-                      justifyContent="space-between"
-                      pe="8px"
-                      px="24px"
-                    >
-                      <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                        Medication
-                      </Text>
-
-                      {isSuperAdmin && (
-                        <Flex gap="12px" alignItems="center">
-                          <Button
-                            px="14px"
-                            py="8px"
-                            fontSize="14px"
-                            colorScheme="blue"
-                            fontWeight="bold"
-                            minw="90px"
-                            h="40px"
-                            onClick={() => setAddMedication(true)}
-                          >
-                            Add
-                          </Button>
-                        </Flex>
-                      )}
-                    </Flex>
-                  </CardHeader>
-                  <CardBody
-                    overflowX={{ base: "scroll" }}
-                    sx={{
-                      "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                      "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                      "scrollbar-width": "none", // Hide scrollbar in Firefox
-                    }}
-                  >
-                    <MedicationTable tableData={medicationData} />
-                  </CardBody>
-                </Element>
-              )}
+              <Element id="medication" name="medication">
+                <Medication patientId={patientId} />
+              </Element>
             </Card>
             <Card
               w={{ sm: "100%", lg: "70%" }}
@@ -1908,167 +1308,6 @@ function PatientInfo() {
                 </Element>
               )}
             </Card>
-
-            {addMedication && (
-              <Modal
-                maxWidth={"500px"}
-                label="Add Medication"
-                handleCloseModal={() => setAddMedication(false)}
-              >
-                <FormControl>
-                  <Box
-                    h={{ sm: "40vh", md: "100%" }}
-                    overflowY={{ sm: "scroll", md: "hidden" }}
-                  >
-                    <Grid
-                      templateColumns={{
-                        base: "1fr",
-                        sm: "1fr",
-                        md: "repeat(2, 1fr)",
-                      }}
-                      gap="15px"
-                      spacing={{ sm: "8px", lg: "30px" }}
-                      w={{ sm: "100%", lg: null }}
-                      my="18px"
-                    >
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Name
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          placeholder="Enter medication name"
-                          fontSize="xs"
-                        />
-                      </FormControl>
-
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Dosage
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          placeholder="Enter dosage"
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Route
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          placeholder="Enter route"
-                          fontSize="xs"
-                        />
-                      </FormControl>
-
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Frequency
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          placeholder="Enter frequency"
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Duration
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          placeholder="Enter dureation"
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel
-                          fontWeight="semibold"
-                          fontSize="xs"
-                          mb="10px"
-                        >
-                          Date
-                        </FormLabel>
-                        <Input
-                          variant="main"
-                          type="text"
-                          placeholder="Enter Date "
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                    </Grid>
-                  </Box>
-
-                  <FormControl>
-                    <FormLabel
-                      fontWeight="semibold"
-                      fontSize="xs"
-                      mb="10px"
-                      sx={{ _readOnly: { color: "gray.500" } }}
-                    >
-                      Notes
-                    </FormLabel>
-                    <Textarea
-                      sx={{
-                        _readOnly: {
-                          color: "gray.700",
-                          fontWeight: "semibold",
-                          border: 0,
-                          pl: 0,
-                          opacity: 1,
-                          cursor: "default",
-                        },
-                      }}
-                      _focus={{
-                        borderColor: "gray.300", // Change to desired color
-                        boxShadow: "none", // Remove the glow effect
-                      }}
-                      border="1px solid #e2e8f0"
-                      placeholder="notes"
-                      fontSize="xs"
-                    />
-                  </FormControl>
-
-                  <Button
-                    fontSize="16px"
-                    colorScheme="blue"
-                    fontWeight="bold"
-                    w="100%"
-                    h="50"
-                    my="10px"
-                    onClick={() => {
-                      setAddMedication(false);
-                      toast.success("New medication added ");
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </FormControl>
-              </Modal>
-            )}
-
             {addVisitor && (
               <Modal
                 maxWidth={"500px"}
