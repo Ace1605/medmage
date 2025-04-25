@@ -20,7 +20,6 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import IconBox from "components/Icons/IconBox";
-import { calendarDataCalendar } from "variables/calendar";
 import dayjs from "dayjs";
 import { useGetAllTodos } from "hooks/api/management/todo/useGetAllTodos";
 import { useContext } from "react";
@@ -34,6 +33,7 @@ import { MdEventAvailable } from "react-icons/md";
 import { BsCalendarX, BsClipboard2X } from "react-icons/bs";
 import Overview from "components/modules/dashboard/Overview";
 import { useGetCalendar } from "hooks/api/dashboard/useGetCalendar";
+
 export default function Default() {
   const naviagte = useNavigate();
   const textColor = useColorModeValue("gray.700", "white");
@@ -165,71 +165,78 @@ export default function Default() {
                         </Flex>
                       </Box>
                     ) : (
-                      <Stack
-                        direction="column"
-                        spacing="20px"
-                        height={{ sm: "300px", md: "230px", lg: "150px" }}
-                        overflowY={{ sm: "scroll", xl: "scroll" }}
-                        sx={{
-                          "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                          "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                          "scrollbar-width": "none", // Hide scrollbar in Firefox
-                        }}
-                      >
-                        {filteredEvents.map((event) => {
-                          return (
-                            <Flex align="center">
-                              <IconBox
-                                h={"50px"}
-                                w={"50px"}
-                                bg={iconBoxColor}
-                                me="16px"
-                              >
-                                <Icon
-                                  as={MdEventAvailable}
-                                  h={"22px"}
-                                  w={"22px"}
-                                  color={calenderIconBlue}
-                                />
-                              </IconBox>
-                              <Flex direction="column">
-                                <Text
-                                  color={calendarTextColor}
-                                  fontSize="sm"
-                                  fontWeight="bold"
+                      <>
+                        <Stack
+                          direction="column"
+                          spacing="20px"
+                          height={{ sm: "300px", md: "230px", lg: "150px" }}
+                          overflowY={{ sm: "scroll", xl: "scroll" }}
+                          sx={{
+                            "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                            "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                            "scrollbar-width": "none", // Hide scrollbar in Firefox
+                          }}
+                        >
+                          {filteredEvents.map((event) => {
+                            return (
+                              <Flex align="center">
+                                <IconBox
+                                  h={"50px"}
+                                  w={"50px"}
+                                  bg={iconBoxColor}
+                                  me="16px"
                                 >
-                                  {event.title}
-                                </Text>
-                                <Text
-                                  color="gray.400"
-                                  fontSize="sm"
-                                  fontWeight="normal"
-                                >
-                                  {`${dayjs(event.start_datetime).format(
-                                    "DD MMM YYYY"
-                                  )} at ${dayjs(event.start_datetime).format(
-                                    "hh:mm A"
-                                  )}`}
-                                </Text>
+                                  <Icon
+                                    as={MdEventAvailable}
+                                    h={"22px"}
+                                    w={"22px"}
+                                    color={calenderIconBlue}
+                                  />
+                                </IconBox>
+                                <Flex direction="column">
+                                  <Text
+                                    color={calendarTextColor}
+                                    fontSize="sm"
+                                    fontWeight="bold"
+                                  >
+                                    {event.title}
+                                  </Text>
+                                  <Text
+                                    color="gray.400"
+                                    fontSize="sm"
+                                    fontWeight="normal"
+                                  >
+                                    {`${dayjs(event.start_datetime).format(
+                                      "DD MMM YYYY"
+                                    )} at ${dayjs(event.start_datetime).format(
+                                      "hh:mm A"
+                                    )}`}
+                                  </Text>
+                                </Flex>
                               </Flex>
-                            </Flex>
-                          );
-                        })}
+                            );
+                          })}
+                        </Stack>
                         <Flex gap="12px" alignItems="center" j>
                           <Button
                             onClick={() => naviagte("/admin/management/events")}
                             fontSize="14px"
                             fontWeight="normal"
                             cursor="pointer"
-                            variant="outlined"
+                            color="blue.500"
                             w="full"
-                            h="40px"
-                            borderWidth="2px"
+                            pt="10px"
+                            h="26px"
+                            bg="transparent"
+                            _hover={{
+                              bg: "transparent",
+                              textDecoration: "underline",
+                            }}
                           >
                             View all
                           </Button>
                         </Flex>
-                      </Stack>
+                      </>
                     )}
                   </CardBody>
                 </>
@@ -282,84 +289,93 @@ export default function Default() {
                         </Flex>
                       </Box>
                     ) : (
-                      <Stack
-                        pb="10px"
-                        direction="column"
-                        spacing="14px"
-                        height={{ sm: "300px", md: "230px" }}
-                        overflowY={{ sm: "scroll", xl: "scroll" }}
-                        sx={{
-                          "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
-                          "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
-                          "scrollbar-width": "none", // Hide scrollbar in Firefox
-                        }}
-                      >
-                        {slicedTodos.map((todo, i) => {
-                          const isLast = i === slicedTodos.length - 1;
-                          return (
-                            <Flex
-                              key={todo.id}
-                              justify="space-between"
-                              align="center"
-                              borderBottom={!isLast ? "1px solid" : "none"}
-                              borderColor={borderColor}
-                              py="12px"
-                              px="4px"
-                            >
-                              <Flex direction="column">
-                                <Text
-                                  color={textColor}
-                                  fontWeight="bold"
-                                  fontSize="md"
-                                  mb="3.5px"
-                                >
-                                  {todo.title}
-                                </Text>
-
-                                <Flex alignItems="center" gap="8px">
-                                  <BiCalendar color="#A0AEC0" />
-                                  <Text color="gray.400" fontSize="sm">
-                                    {moment(todo.due_date).format("YYYY-MM-DD")}
+                      <>
+                        <Stack
+                          pb="10px"
+                          direction="column"
+                          spacing="14px"
+                          height={{ sm: "300px", md: "230px" }}
+                          overflowY={{ sm: "scroll", xl: "scroll" }}
+                          sx={{
+                            "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+                            "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+                            "scrollbar-width": "none", // Hide scrollbar in Firefox
+                          }}
+                        >
+                          {slicedTodos.map((todo, i) => {
+                            const isLast = i === slicedTodos.length - 1;
+                            return (
+                              <Flex
+                                key={todo.id}
+                                justify="space-between"
+                                align="center"
+                                borderBottom={!isLast ? "1px solid" : "none"}
+                                borderColor={borderColor}
+                                py="12px"
+                                px="4px"
+                              >
+                                <Flex direction="column">
+                                  <Text
+                                    color={textColor}
+                                    fontWeight="bold"
+                                    fontSize="md"
+                                    mb="3.5px"
+                                  >
+                                    {todo.title}
                                   </Text>
 
-                                  <Tooltip
-                                    label={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
-                                    hasArrow
-                                  >
-                                    <Avatar
-                                      name={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
-                                      size="xs"
-                                      cursor="pointer"
-                                    />
-                                  </Tooltip>
-                                </Flex>
-                              </Flex>
+                                  <Flex alignItems="center" gap="8px">
+                                    <BiCalendar color="#A0AEC0" />
+                                    <Text color="gray.400" fontSize="sm">
+                                      {moment(todo.due_date).format(
+                                        "YYYY-MM-DD"
+                                      )}
+                                    </Text>
 
-                              <Box as="button" cursor="pointer">
-                                <Checkbox
-                                  colorScheme="blue"
-                                  defaultChecked={todo.is_completed}
-                                  size="lg"
-                                />
-                              </Box>
-                            </Flex>
-                          );
-                        })}
+                                    <Tooltip
+                                      label={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
+                                      hasArrow
+                                    >
+                                      <Avatar
+                                        name={`${todo.assigned_to.first_name} ${todo.assigned_to.last_name}`}
+                                        size="xs"
+                                        cursor="pointer"
+                                      />
+                                    </Tooltip>
+                                  </Flex>
+                                </Flex>
+
+                                <Box as="button" cursor="pointer">
+                                  <Checkbox
+                                    colorScheme="blue"
+                                    defaultChecked={todo.is_completed}
+                                    size="lg"
+                                  />
+                                </Box>
+                              </Flex>
+                            );
+                          })}
+                        </Stack>
                         <Flex gap="12px" alignItems="center" j>
                           <Button
                             onClick={() => naviagte("/admin/management/todos")}
                             fontSize="14px"
                             fontWeight="normal"
                             cursor="pointer"
-                            variant="outlined"
+                            color="blue.500"
                             w="full"
-                            h="40px"
-                            borderWidth="2px"
+                            pt="10px"
+                            h="26px"
+                            bg="transparent"
+                            _hover={{
+                              bg: "transparent",
+                              textDecoration: "underline",
+                            }}
                           >
                             View all
                           </Button>
                         </Flex>
-                      </Stack>
+                      </>
                     )}
                   </>
                 )}

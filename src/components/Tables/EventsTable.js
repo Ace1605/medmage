@@ -43,8 +43,10 @@ import {
   useTable,
 } from "react-table";
 import { toast } from "sonner";
+import utc from "dayjs/plugin/utc";
 
 function EventsTable(props) {
+  dayjs.extend(utc);
   const { tableData, refetchEvents } = props;
   const queryClient = useQueryClient();
   const [editEvent, setEditEvent] = useState(false);
@@ -121,9 +123,9 @@ function EventsTable(props) {
           const endTime = row.original.end_datetime;
           return (
             <Text color={textColor}>
-              {`${dayjs(startTime).format("hh:mm A")} - ${dayjs(endTime).format(
-                "hh:mm A"
-              )}`}
+              {`${dayjs(startTime).utc().format("hh:mm A")} - ${dayjs(endTime)
+                .utc()
+                .format("hh:mm A")}`}
             </Text>
           );
         },
