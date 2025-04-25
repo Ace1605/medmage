@@ -39,7 +39,7 @@ function EventCalendar(props) {
       events={calendarData}
       editable={true}
       height="100%"
-      dayMaxEventRows={true}
+      dayMaxEvents={2}
       fixedWeekCount={false}
     />
   );

@@ -8,6 +8,7 @@ import {
   Grid,
   Icon,
   Input,
+  Spinner,
   Stack,
   Table,
   Tbody,
@@ -19,8 +20,15 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { DateTimeRangePicker } from "components/CustomDateTimePicker/CustomDateTimeRangePicker";
 import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
+import dayjs from "dayjs";
+import { useDeleteMedication } from "hooks/api/patientManagement/medication/useDeleteMedication";
+import { useGetMedication } from "hooks/api/patientManagement/medication/useGetMedication";
+import { useUpdateMedication } from "hooks/api/patientManagement/medication/useUpdateMedication";
+import moment from "moment";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
@@ -37,17 +45,70 @@ import {
 import { toast } from "sonner";
 
 function MedicationTable(props) {
-  const { tableData } = props;
+  const { tableData, refetch, pageNo, size, setPageNo, setSize } = props;
+  const queryClient = useQueryClient();
   const [edit, setEdit] = useState(false);
   const [deleteMedication, setDeleteMedication] = useState(false);
   const [selected, setSelected] = useState(null);
-  const { isSuperAdmin } = useContext(AppContext);
+  const { isSuperAdmin, token } = useContext(AppContext);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const { data: medicationData, error, isLoading } = useGetMedication(
+    token,
+    selected?.id
+  );
+  if (error) toast.error("Unable to get medication, please try again");
+
+  const { handleUpdateMedication, isLoading: isUpdating } = useUpdateMedication(
+    token
+  );
+
+  const { handleDeleteMedication, isLoading: isDeleting } = useDeleteMedication(
+    token
+  );
+  const [medication, setMedication] = useState({
+    medication_name: "",
+    description: "",
+    dosage: "",
+    frequency: "",
+    route: "",
+    patient_id: "",
+    status: "",
+    notes: "",
+  });
+
+  useEffect(() => {
+    if (medicationData?.data) {
+      setMedication({
+        medication_name: medicationData.data.medication_name,
+        description: medicationData.data.description,
+        dosage: medicationData.data.dosage,
+        frequency: medicationData.data.frequency,
+        route: medicationData.data.route,
+        start_date: medicationData.data.start_date,
+        end_date: medicationData.data.end_date,
+        notes: medicationData.data.notes,
+      });
+
+      setStartDate(moment(medicationData.data.start_date));
+      setEndDate(moment(medicationData.data.end_date));
+    }
+  }, [medicationData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setMedication((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const columns = useMemo(() => {
     return [
       {
         Header: "Name",
-        accessor: "medicationName",
+        accessor: "medication_name",
       },
       {
         Header: "Dosage",
@@ -55,45 +116,62 @@ function MedicationTable(props) {
         disableSortBy: true,
         sortType: false,
       },
-      {
-        Header: "Route",
-        accessor: "route",
-        disableSortBy: true,
-        sortType: false,
-      },
+      // {
+      //   Header: "Route",
+      //   accessor: "route",
+      //   disableSortBy: true,
+      //   sortType: false,
+      // },
       {
         Header: "Frequency",
         accessor: "frequency",
         disableSortBy: true,
         sortType: false,
-        minWidth: 100,
+        minWidth: 200,
+      },
+      {
+        Header: "Description",
+        accessor: "description",
+        disableSortBy: true,
+        sortType: false,
+        minWidth: 200,
       },
       {
         Header: "Duration",
         accessor: "duration",
         disableSortBy: true,
         sortType: false,
-      },
-      {
-        Header: "Date",
-        accessor: "date",
-        disableSortBy: true,
-        sortType: false,
-        minWidth: 130,
+        minWidth: 220,
+        Cell: ({ row }) => {
+          const startDate = row.original.start_date;
+          const endDate = row.original.end_date;
+
+          return (
+            <Text color={textColor}>{`${dayjs(startDate).format(
+              "DD MMM, YYYY"
+            )} - ${dayjs(endDate).format("DD MMM, YYYY")}`}</Text>
+          );
+        },
       },
       {
         Header: "Doctor",
-        accessor: "doctor",
+        accessor: "prescribed_by",
         disableSortBy: true,
         sortType: false,
+        minWidth: 120,
+        Cell: ({ row }) => {
+          const doctor = row.original.prescribed_by;
+
+          return <Text color={textColor}>{doctor ? doctor : "---"}</Text>;
+        },
       },
-      {
-        Header: "Notes",
-        accessor: "notes",
-        disableSortBy: true,
-        sortType: false,
-        minWidth: 200,
-      },
+      // {
+      //   Header: "Notes",
+      //   accessor: "notes",
+      //   disableSortBy: true,
+      //   sortType: false,
+      //   minWidth: 200,
+      // },
       {
         Header: "Action",
         accessor: "action",
@@ -132,8 +210,9 @@ function MedicationTable(props) {
     ];
   }, []);
 
-  const data = useMemo(() => tableData, []);
+  const data = useMemo(() => tableData?.data, []);
 
+  const { meta } = tableData;
   const tableInstance = useTable(
     {
       columns,
@@ -176,6 +255,13 @@ function MedicationTable(props) {
   const { pageIndex, pageSize, globalFilter } = state;
 
   const textColor = useColorModeValue("gray.600", "white");
+  const goToPrev = () => {
+    setPageNo(pageNo - 1);
+  };
+
+  const goToNext = () => {
+    setPageNo(pageNo + 1);
+  };
   return (
     <>
       <Flex direction="column" w="100%">
@@ -277,23 +363,21 @@ function MedicationTable(props) {
             fontWeight="normal"
             mb={{ sm: "14px", md: "0px" }}
           >
-            Showing {pageSize * pageIndex + 1} to{" "}
-            {pageSize * (pageIndex + 1) <= tableData.length
-              ? pageSize * (pageIndex + 1)
-              : tableData.length}{" "}
-            of {tableData.length} entries
+            Showing {meta.pagination.current_page} to{" "}
+            {meta.pagination.current_page * tableData?.data.length} of{" "}
+            {meta.pagination.total} entries
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
             <Button
               variant="no-effects"
-              onClick={() => previousPage()}
+              onClick={() => goToPrev()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex === 0}
+              isDisabled={meta.pagination.current_page === 1}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",
@@ -327,21 +411,22 @@ function MedicationTable(props) {
                     fontSize="sm"
                     color={pageNumber === pageIndex + 1 ? "#fff" : "gray.600"}
                   >
-                    {pageNumber}
+                    {meta.pagination.current_page}
                   </Text>
                 </Button>
               );
             })}
             <Button
               variant="no-effects"
-              onClick={() => nextPage()}
+              onClick={() => goToNext()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex + 1 === pageCount}
+              // isDisabled={pageIndex + 1 === pageCount}
+              isDisabled={meta.pagination.last_page === pageNo}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",
@@ -388,7 +473,7 @@ function MedicationTable(props) {
             mb="16px"
             fontSize={{ sm: "16px" }}
           >
-            {`Medication: ${selected.medicationName}`}
+            {`Medication: ${selected?.medication_name}`}
           </Text>
 
           <Flex
@@ -420,11 +505,25 @@ function MedicationTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setDeleteMedication(false);
-                toast.success("Medication deleted successfully");
+                handleDeleteMedication(
+                  selected?.id,
+                  (res) => {
+                    if (res.status === 204) {
+                      refetch();
+                      setDeleteMedication(false);
+                      toast.success("Medication deleted successfully");
+                      setSelected(null);
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
               }}
             >
-              Confirm
+              {isDeleting ? <Spinner w="20px" h="20px" /> : "  Confirm"}
             </Button>
           </Flex>
         </Modal>
@@ -432,172 +531,196 @@ function MedicationTable(props) {
       {edit && (
         <Modal
           maxWidth={{ sm: "400px", md: "500px" }}
-          label={`Edit: ${selected.medicationName}`}
+          label={
+            medicationData?.data ? `Edit: ${selected?.medication_name}` : ""
+          }
           handleCloseModal={() => {
             setSelected(null);
             setEdit(false);
           }}
         >
-          <FormControl>
-            <Box
-              h={{ sm: "40vh", md: "100%" }}
-              overflowY={{ sm: "scroll", md: "hidden" }}
-            >
-              <Grid
-                templateColumns={{
-                  base: "1fr",
-                  sm: "1fr",
-                  md: "repeat(2, 1fr)",
-                }}
-                gap="15px"
-                spacing={{ sm: "8px", lg: "30px" }}
-                w={{ sm: "100%", lg: null }}
-                my="18px"
+          {isLoading && (
+            <Flex width="100% " height="30vh" align="center" justify="center">
+              <Spinner w="35px" h="35px" color="#3182ce" />
+            </Flex>
+          )}
+          {medicationData?.data && (
+            <FormControl>
+              <Box
+                h={{ sm: "40vh", md: "100%" }}
+                overflowY={{ sm: "scroll", md: "hidden" }}
               >
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Name
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter medication name"
-                    fontSize="xs"
-                    value={selected.medicationName}
-                  />
-                </FormControl>
+                <Grid
+                  templateColumns={{
+                    base: "1fr",
+                    sm: "1fr",
+                    md: "repeat(2, 1fr)",
+                  }}
+                  gap="15px"
+                  spacing={{ sm: "8px", lg: "30px" }}
+                  w={{ sm: "100%", lg: null }}
+                  my="18px"
+                >
+                  <FormControl>
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Name
+                    </FormLabel>
+                    <Input
+                      variant="main"
+                      placeholder="Enter medication name"
+                      fontSize="xs"
+                      name="medication_name"
+                      value={medication.medication_name}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
 
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Dosage
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter dosage"
-                    fontSize="xs"
-                    value={selected.dosage}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Route
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter route"
-                    fontSize="xs"
-                    value={selected.route}
-                  />
-                </FormControl>
+                  <FormControl>
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Dosage
+                    </FormLabel>
+                    <Input
+                      variant="main"
+                      placeholder="Enter dosage"
+                      fontSize="xs"
+                      name="dosage"
+                      value={medication.dosage}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Route
+                    </FormLabel>
+                    <Input
+                      variant="main"
+                      placeholder="Enter route"
+                      fontSize="xs"
+                      name="route"
+                      value={medication.route}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
 
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Frequency
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter frequency"
-                    fontSize="xs"
-                    value={selected.frequency}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Duration
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder="Enter duration"
-                    fontSize="xs"
-                    value={selected.duration}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Date
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    type="text"
-                    placeholder="Enter Date "
-                    fontSize="xs"
-                    value={selected.date}
-                  />
-                </FormControl>
-              </Grid>
-            </Box>
-            {/* <Flex alignItems="center" justifyContent="space-between" gap="10px">
+                  <FormControl>
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Frequency
+                    </FormLabel>
+                    <Input
+                      variant="main"
+                      placeholder="Enter frequency"
+                      fontSize="xs"
+                      name="frequency"
+                      value={medication.frequency}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
+                </Grid>
+              </Box>
+              <FormControl>
+                <DateTimeRangePicker
+                  dateSelect
+                  startDateTime={startDate}
+                  setStartDateTime={setStartDate}
+                  endDateTime={endDate}
+                  setEndDateTime={setEndDate}
+                />
+              </FormControl>
+
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                  Date
+                  Description
                 </FormLabel>
                 <Input
                   variant="main"
-                  type="text"
-                  placeholder="Enter Date "
+                  placeholder="Enter description"
                   fontSize="xs"
-                  value={selected.date}
+                  name="description"
+                  value={medication.description}
+                  onChange={handleChange}
                 />
               </FormControl>
+
               <FormControl>
-                <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                End date
-            </FormLabel>
-            <Input
-                variant="main"
-                type="text"
-                placeholder="End time"
-                fontSize="xs"
-                value={selectedEvent.endTime}
-            />
-            </FormControl>
-            </Flex> */}
+                <FormLabel
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  mb="10px"
+                  sx={{ _readOnly: { color: "gray.500" } }}
+                >
+                  Notes
+                </FormLabel>
+                <Textarea
+                  sx={{
+                    _readOnly: {
+                      color: "gray.700",
+                      fontWeight: "semibold",
+                      border: 0,
+                      pl: 0,
+                      opacity: 1,
+                      cursor: "default",
+                    },
+                  }}
+                  _focus={{
+                    borderColor: "gray.300", // Change to desired color
+                    boxShadow: "none", // Remove the glow effect
+                  }}
+                  border="1px solid #e2e8f0"
+                  placeholder="notes"
+                  fontSize="xs"
+                  name="notes"
+                  value={medication.notes}
+                  onChange={handleChange}
+                />
+              </FormControl>
 
-            <FormControl>
-              <FormLabel
-                fontWeight="semibold"
-                fontSize="xs"
-                mb="10px"
-                sx={{ _readOnly: { color: "gray.500" } }}
+              <Button
+                fontSize="16px"
+                colorScheme="blue"
+                fontWeight="bold"
+                w="100%"
+                h="50"
+                my="10px"
+                onClick={() => {
+                  handleUpdateMedication(
+                    selected?.id,
+                    {
+                      medication_name: medication.medication_name,
+                      description: medication.description,
+                      dosage: medication.dosage,
+                      frequency: medication.frequency,
+                      route: medication.route,
+                      start_date: startDate,
+                      end_date: endDate,
+                      // status: "active",
+                      notes: medication.notes,
+                    },
+                    (res) => {
+                      if (res.status === 200) {
+                        setEdit(false);
+                        refetch();
+                        queryClient.invalidateQueries([
+                          "medications",
+                          selected?.id,
+                        ]);
+                        setSelected(null);
+                        toast.success(" Medication updated ");
+                      } else {
+                        toast.error(res?.message);
+                      }
+                    },
+                    (err) => {
+                      toast.error(
+                        err?.response?.data?.message || "Something went wrong"
+                      );
+                    }
+                  );
+                }}
               >
-                Notes
-              </FormLabel>
-              <Textarea
-                value={selected.notes}
-                sx={{
-                  _readOnly: {
-                    color: "gray.700",
-                    fontWeight: "semibold",
-                    border: 0,
-                    pl: 0,
-                    opacity: 1,
-                    cursor: "default",
-                  },
-                }}
-                _focus={{
-                  borderColor: "gray.300", // Change to desired color
-                  boxShadow: "none", // Remove the glow effect
-                }}
-                border="1px solid #e2e8f0"
-                placeholder="notes"
-                fontSize="xs"
-              />
+                {isUpdating ? <Spinner w="20px" h="20px" /> : "Confirm"}
+              </Button>
             </FormControl>
-
-            <Button
-              fontSize="16px"
-              colorScheme="blue"
-              fontWeight="bold"
-              w="100%"
-              h="50"
-              my="10px"
-              onClick={() => {
-                setEdit(false);
-                toast.success("New medication added ");
-              }}
-            >
-              Confirm
-            </Button>
-          </FormControl>
+          )}
         </Modal>
       )}
     </>

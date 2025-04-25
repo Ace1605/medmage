@@ -20,7 +20,7 @@ import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
 import dayjs from "dayjs";
 import { useDeletePatient } from "hooks/api/patientManagement/useDeletePatient";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,

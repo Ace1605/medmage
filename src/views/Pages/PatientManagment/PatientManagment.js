@@ -138,7 +138,6 @@ function PatientManagment() {
     isFetching,
   } = useGetPatients(token, page, size);
 
-  console.log(data);
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 4 }} spacing="24px" mb="30px">

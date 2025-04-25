@@ -106,3 +106,23 @@
   color: #3182ce;
   opacity: 1;
 }
+
+.fc-theme-standard .fc-popover {
+  border-radius: 10px;
+}
+
+.fc-theme-standard .fc-popover-header {
+  background-color: #f7fafc;
+}
+
+.fc .fc-popover-title {
+  font-size: 15px;
+}
+
+.fc .fc-daygrid-event {
+  border-radius: 3px !important;
+  padding-left: 5px;
+  width: 100%;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}

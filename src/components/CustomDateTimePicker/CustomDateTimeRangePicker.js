@@ -12,6 +12,7 @@ export const DateTimeRangePicker = (props) => {
     setStartDateTime,
     endDateTime,
     setEndDateTime,
+    dateSelect = false,
   } = props;
 
   const handleStartDateChange = (value) => {
@@ -51,30 +52,30 @@ export const DateTimeRangePicker = (props) => {
       <Flex alignItems="center" justifyContent="space-between" gap="10px">
         <FormControl>
           <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-            Start Date Time
+            {dateSelect ? "Start Date " : "  Start Date Time"}
           </FormLabel>
           <Datetime
             value={startDateTime}
             onChange={handleStartDateChange}
             dateFormat="YYYY-MM-DD"
-            timeFormat="hh:mm A"
+            timeFormat={dateSelect ? false : "hh:mm A"}
             inputProps={{
-              placeholder: "Select start date and time",
+              placeholder: `Select start date ${dateSelect ? "" : " and time"}`,
             }}
           />
         </FormControl>
         <FormControl>
           <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-            End Date Time
+            {dateSelect ? "End Date" : "End Date Time"}
           </FormLabel>
           <Datetime
             value={endDateTime ? endDateTime : ""}
             isValidDate={disableDatesBeforeStart}
             onChange={handleEndDateChange}
             dateFormat="YYYY-MM-DD"
-            timeFormat="hh:mm A"
+            timeFormat={dateSelect ? false : "hh:mm A"}
             inputProps={{
-              placeholder: "Select end date and time",
+              placeholder: `Select end date ${dateSelect ? "" : " and time"}`,
             }}
           />
         </FormControl>
