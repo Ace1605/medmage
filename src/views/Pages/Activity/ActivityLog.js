@@ -10,16 +10,28 @@ import {
   StatNumber,
   Text,
   useColorModeValue,
+  Icon,
+  Spinner,
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import activityData from "variables/activityData";
 import ActivityLogTable from "components/Tables/ActivityLogTable";
+import { useGetActivityLog } from "hooks/api/activities/useGetActivityLog";
+import { useContext, useState } from "react";
+import { AppContext } from "contexts/AppContext";
 
 function ActivityLog() {
   const textColor = useColorModeValue("gray.700", "white");
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
+  const { token } = useContext(AppContext);
+  const { data, isFetching, refetch, error, isLoading } = useGetActivityLog(
+    token,
+    page,
+    size
+  );
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
@@ -38,7 +50,19 @@ function ActivityLog() {
           </Flex>
         </CardHeader>
         <CardBody px="22px">
-          <ActivityLogTable tableData={activityData} />
+          {isLoading || isFetching ? (
+            <Flex width="100% " height="30vh" align="center" justify="center">
+              <Spinner w="40px" h="40px" color="#3182ce" />
+            </Flex>
+          ) : (
+            <ActivityLogTable
+              tableData={data}
+              pageNo={page}
+              size={size}
+              setPageNo={setPage}
+              setSize={setSize}
+            />
+          )}
         </CardBody>
       </Card>
     </Flex>
