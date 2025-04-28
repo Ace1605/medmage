@@ -12,6 +12,8 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
@@ -27,28 +29,51 @@ import {
 } from "react-table";
 
 function ActivityLogTable(props) {
-  const { tableData } = props;
+  const { tableData, pageNo, size, setPageNo, setSize } = props;
+  const queryClient = useQueryClient();
 
   const columns = useMemo(() => {
     return [
       {
         Header: "TIME STAMP",
         accessor: "timeStamp",
-        minWidth: 170,
-        width: 170,
+        minWidth: 120,
+        width: 120,
+
+        Cell: ({ row }) => {
+          const createdAt = row.original.created_at;
+
+          return (
+            <Text color={textColor}>
+              {dayjs(createdAt).format("DD MMM, YYYY")}
+            </Text>
+          );
+        },
       },
       {
         Header: "USER",
         accessor: "user",
+        Cell: ({ row }) => {
+          const user = row.original.causer;
+
+          return (
+            <Text color={textColor}>
+              {`${user.first_name} ${user.last_name}`}
+            </Text>
+          );
+        },
       },
       {
         Header: "ROLE",
         accessor: "role",
+        Cell: ({ row }) => {
+          return <Text color={textColor}>---</Text>;
+        },
       },
       {
         Header: "ACTIVITY TYPE",
-        accessor: "activityType",
-        width: 110,
+        accessor: "event",
+        width: 130,
         disableSortBy: true,
       },
       {
@@ -61,11 +86,16 @@ function ActivityLogTable(props) {
         Header: "IP ADDRESS",
         accessor: "ipAddress",
         disableSortBy: true,
+        Cell: ({ row }) => {
+          return <Text color={textColor}>---</Text>;
+        },
       },
     ];
   }, []);
 
-  const data = useMemo(() => tableData, []);
+  const data = useMemo(() => tableData?.data, [tableData]);
+
+  const { current_page, total, last_page } = tableData;
 
   const tableInstance = useTable(
     {
@@ -82,7 +112,7 @@ function ActivityLogTable(props) {
     getTableBodyProps,
     headerGroups,
     page,
-    gotoPage,
+    // gotoPage,
     pageCount,
     prepareRow,
     nextPage,
@@ -92,17 +122,65 @@ function ActivityLogTable(props) {
     state,
   } = tableInstance;
 
-  const createPages = (count) => {
-    let arrPageCount = [];
+  // const createPages = (count) => {
+  //   let arrPageCount = [];
 
-    for (let i = 1; i <= count; i++) {
-      arrPageCount.push(i);
+  //   for (let i = 1; i <= count; i++) {
+  //     arrPageCount.push(i);
+  //   }
+
+  //   return arrPageCount;
+  // };
+
+  const createPages = (totalPages, currentPage) => {
+    const pages = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 4) {
+        pages.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(
+          1,
+          "...",
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
     }
 
-    return arrPageCount;
+    return pages;
   };
 
   const { pageIndex, pageSize = 10, globalFilter } = state;
+
+  const goToPrev = () => {
+    setPageNo(pageNo - 1);
+  };
+
+  const goToNext = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const goToPage = (pageNumber) => {
+    setPageNo(pageNumber);
+  };
 
   const textColor = useColorModeValue("gray.600", "white");
   return (
@@ -180,6 +258,7 @@ function ActivityLogTable(props) {
             </Tbody>
           </Table>
         </Flex>
+
         <Flex
           direction={{ sm: "column", md: "row" }}
           justify="space-between"
@@ -193,23 +272,21 @@ function ActivityLogTable(props) {
             fontWeight="normal"
             mb={{ sm: "14px", md: "0px" }}
           >
-            Showing {pageSize * pageIndex + 1} to{" "}
-            {pageSize * (pageIndex + 1) <= tableData.length
-              ? pageSize * (pageIndex + 1)
-              : tableData.length}{" "}
-            of {tableData.length} entries
+            Showing {current_page} to {current_page * tableData?.data.length} of{" "}
+            {total} entries
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
             <Button
               variant="no-effects"
-              onClick={() => previousPage()}
+              onClick={() => goToPrev()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex === 0}
+              // isDisabled={pageIndex === 0}
+              isDisabled={current_page === 1}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",
@@ -218,20 +295,26 @@ function ActivityLogTable(props) {
             >
               <Icon as={GrFormPrevious} w="16px" h="16px" color="gray.400" />
             </Button>
-            {createPages(pageCount).map((pageNumber, index) => {
+            {createPages(total, current_page).map((pageNumber, index) => {
+              if (pageNumber === "...") {
+                return (
+                  <Text key={index} mx="2" fontSize="sm" color="gray.500">
+                    ...
+                  </Text>
+                );
+              }
+
               return (
                 <Button
                   variant="no-effects"
                   transition="all .5s ease"
-                  onClick={() => gotoPage(pageNumber - 1)}
+                  onClick={() => goToPage(pageNumber)}
                   w="40px"
                   h="40px"
                   borderRadius="8px"
-                  bg={pageNumber === pageIndex + 1 ? "blue.500" : "#fff"}
+                  bg={pageNumber === current_page ? "blue.500" : "#fff"}
                   border={
-                    pageNumber === pageIndex + 1
-                      ? "none"
-                      : "1px solid lightgray"
+                    pageNumber === current_page ? "none" : "1px solid lightgray"
                   }
                   _hover={{
                     opacity: "0.7",
@@ -241,7 +324,7 @@ function ActivityLogTable(props) {
                 >
                   <Text
                     fontSize="sm"
-                    color={pageNumber === pageIndex + 1 ? "#fff" : "gray.600"}
+                    color={pageNumber === current_page ? "#fff" : "gray.600"}
                   >
                     {pageNumber}
                   </Text>
@@ -250,14 +333,15 @@ function ActivityLogTable(props) {
             })}
             <Button
               variant="no-effects"
-              onClick={() => nextPage()}
+              onClick={() => goToNext()}
               transition="all .5s ease"
               w="40px"
               h="40px"
               borderRadius="8px"
               bg="#fff"
               border="1px solid lightgray"
-              isDisabled={pageIndex + 1 === pageCount}
+              // isDisabled={pageIndex + 1 === pageCount}
+              isDisabled={last_page === pageNo}
               _hover={{
                 bg: "gray.200",
                 opacity: "0.7",

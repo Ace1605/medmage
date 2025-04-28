@@ -69,6 +69,19 @@ export const Medication = (props) => {
         <Flex width="100% " height="50vh" align="center" justify="center">
           <Spinner w="40px" h="40px" color="#3182ce" />
         </Flex>
+      ) : data?.data.length < 1 ? (
+        <Flex
+          width="100% "
+          direction="column"
+          height="30vh"
+          align="center"
+          justify="center"
+          gap="20px"
+        >
+          <Text color="gray.400" fontSize="18px">
+            This paitent currenlty has no medication
+          </Text>
+        </Flex>
       ) : (
         <>
           <CardHeader mb="32px">
