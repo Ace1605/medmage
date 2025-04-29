@@ -7,10 +7,13 @@ import {
   Grid,
   Icon,
   Input,
+  ListItem,
+  OrderedList,
   Select,
   Spinner,
   Text,
   Textarea,
+  UnorderedList,
   useColorModeValue,
 } from "@chakra-ui/react";
 // Custom components
@@ -20,17 +23,19 @@ import CardHeader from "components/Card/CardHeader";
 import { BiUpload } from "react-icons/bi";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { AppContext } from "contexts/AppContext";
 import InventoryTable from "components/Tables/InventoryTable";
 import { useListInventory } from "hooks/api/management/inventory/useListInventory";
 import { useCreateInventory } from "hooks/api/management/inventory/useCreateInventory";
+import { DownloadIcon } from "@chakra-ui/icons";
 
 function Inventory() {
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("white", "black");
   const [addInventory, setAddInventory] = useState(false);
   const [bulkUpload, setBulkUpload] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const { providers, token } = useContext(AppContext);
@@ -53,6 +58,33 @@ function Inventory() {
       [name]: value,
     }));
   };
+
+  const requiredField = [
+    "Name",
+    "Qunatity ",
+    "Description",
+    "Sku",
+    "Status",
+    "Reorder level",
+    "Reorder quantity",
+  ];
+
+  const fileInputRef = useRef(null);
+  const [csvFile, setCsvFile] = useState(null);
+
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setCsvFile(file);
+    }
+  };
+
   const { handleCreateInventory, isLoading: isCreating } = useCreateInventory(
     token
   );
@@ -63,7 +95,7 @@ function Inventory() {
     size
   );
 
-  console.log(product);
+  if (error) toast.error("Unable to fecth inventory list");
 
   const isValidProduct =
     product.name.trim() !== "" &&
@@ -381,6 +413,88 @@ function Inventory() {
               </Button>
             </Flex>
           </FormControl>
+        </Modal>
+      )}
+
+      {bulkUpload && (
+        <Modal
+          maxWidth={"600px"}
+          label="Upload Inventory"
+          handleCloseModal={() => setBulkUpload(false)}
+        >
+          <OrderedList pt="10px">
+            <Grid gap="15px">
+              <Box>
+                <ListItem>Download the template</ListItem>
+                <a href="/csvFiles/inventory_sample.csv">
+                  <Button
+                    rightIcon={<DownloadIcon size="16px" />}
+                    fontSize="14px"
+                    fontWeight="normal"
+                    cursor="pointer"
+                    variant="outlined"
+                    minw="90px"
+                    mt="10px"
+                    h="40px"
+                    borderWidth="2px"
+                  >
+                    CSV template
+                  </Button>
+                </a>
+              </Box>
+              <Box>
+                <ListItem>Fill out the fields as follows</ListItem>
+                <UnorderedList>
+                  {requiredField.map((field) => {
+                    return <ListItem>{field}</ListItem>;
+                  })}
+                </UnorderedList>
+              </Box>
+              <Box>
+                <ListItem>Upload your file to send out the invites</ListItem>
+                <Box>
+                  <input
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    type="file"
+                    id="fileUpload"
+                    name="file"
+                    accept=".csv, .xlsx"
+                    style={{ display: "none" }}
+                  />
+                  <Button
+                    rightIcon={<BiUpload size="19px" />}
+                    fontSize="17px"
+                    fontWeight="normal"
+                    cursor="pointer"
+                    variant="outlined"
+                    w="100%"
+                    h="50px"
+                    mt="10px"
+                    borderWidth="2px"
+                    onClick={handleClick}
+                  >
+                    {csvFile ? csvFile.name : " Upload your CSV or XLSX file"}
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </OrderedList>
+
+          <Button
+            fontSize="18px"
+            colorScheme="blue"
+            fontWeight="bold"
+            w="100%"
+            h="50"
+            mb="10px"
+            mt="20px"
+            onClick={() => {
+              handleBulkUpload(csvFile);
+            }}
+          >
+            {isUploading ? <Spinner w="18px" h="18px" /> : "Upload"}
+          </Button>
         </Modal>
       )}
     </Flex>

@@ -122,18 +122,26 @@ function InventoryTable(props) {
       {
         Header: "QUANTITY",
         accessor: "quantity",
+        minWidth: 100,
+        width: 100,
       },
       {
         Header: "DESCRIPTION",
         accessor: "description",
+        minWidth: 150,
+        width: 150,
       },
       {
         Header: "REORDER LEVEL",
         accessor: "reorder_level",
+        minWidth: 100,
+        width: 100,
       },
       {
         Header: "REORDER QUANTITY",
         accessor: "reorder_quantity",
+        minWidth: 100,
+        width: 100,
       },
       {
         Header: "STATUS",
