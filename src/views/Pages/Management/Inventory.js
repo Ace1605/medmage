@@ -29,6 +29,8 @@ import InventoryTable from "components/Tables/InventoryTable";
 import { useListInventory } from "hooks/api/management/inventory/useListInventory";
 import { useCreateInventory } from "hooks/api/management/inventory/useCreateInventory";
 import { DownloadIcon } from "@chakra-ui/icons";
+import { baseUrl } from "baseUrl/baseUrl";
+import axios from "axios";
 
 function Inventory() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -82,6 +84,44 @@ function Inventory() {
     const file = e.target.files && e.target.files[0];
     if (file) {
       setCsvFile(file);
+    }
+  };
+
+  const handleBulkUpload = async (file) => {
+    setIsUploading(true);
+
+    if (!file) {
+      toast.warning("Please select a CSV file first.");
+      setIsUploading(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    console.log(formData);
+
+    try {
+      const response = await axios.post(
+        `${baseUrl}/inventory/bulk-upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Inventory list uploaded successfully");
+      setIsUploading(false);
+      setBulkUpload(false);
+      setCsvFile(null);
+      refetch();
+      console.log(response);
+    } catch (error) {
+      setIsUploading(false);
+      console.error("Upload failed:", error);
+      toast.error("Inventory list upload failed");
     }
   };
 
@@ -445,8 +485,8 @@ function Inventory() {
               <Box>
                 <ListItem>Fill out the fields as follows</ListItem>
                 <UnorderedList>
-                  {requiredField.map((field) => {
-                    return <ListItem>{field}</ListItem>;
+                  {requiredField.map((field, i) => {
+                    return <ListItem key={i}>{field}</ListItem>;
                   })}
                 </UnorderedList>
               </Box>

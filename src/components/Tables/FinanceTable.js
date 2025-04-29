@@ -105,11 +105,18 @@ function FinanceTable(props) {
   const textColor = useColorModeValue("gray.600", "white");
   const SuccessColor = useColorModeValue("green.600", "white");
   const PendingColor = useColorModeValue("yellow.600", "white");
-  const FailedColor = useColorModeValue("red.600", "white")
+  const FailedColor = useColorModeValue("red.600", "white");
   return (
     <>
       <Flex direction="column" w="100%">
-        <Flex overflowX={{ sm: "scroll", lg: "hidden" }}>
+        <Flex
+          overflowX={{ sm: "scroll" }}
+          sx={{
+            "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+            "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+            "scrollbar-width": "none", // Hide scrollbar in Firefox
+          }}
+        >
           <Table
             {...getTableProps()}
             variant="simple"
@@ -164,17 +171,17 @@ function FinanceTable(props) {
                 return (
                   <Tr {...row.getRowProps()} key={index}>
                     {row.cells.map((cell, index) => {
-                    let cellColor = textColor;
+                      let cellColor = textColor;
 
-                    if (cell.column.id === "status") {
-                     if (cell.value === "Completed") {
-                        cellColor = SuccessColor;
+                      if (cell.column.id === "status") {
+                        if (cell.value === "Completed") {
+                          cellColor = SuccessColor;
                         } else if (cell.value === "Pending") {
-                    cellColor = PendingColor;
-                    } else if (cell.value === "Failed") {
-                        cellColor = FailedColor;
-                    }
-                    }
+                          cellColor = PendingColor;
+                        } else if (cell.value === "Failed") {
+                          cellColor = FailedColor;
+                        }
+                      }
                       return (
                         <Td
                           color={cellColor}
