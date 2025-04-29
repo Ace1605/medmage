@@ -102,6 +102,7 @@ function PatientManagment() {
 
     if (!file) {
       alert("Please select a CSV file first.");
+      setIsUploading(false);
       return;
     }
 
@@ -300,8 +301,8 @@ function PatientManagment() {
               <Box>
                 <ListItem>Fill out the fields as follows</ListItem>
                 <UnorderedList>
-                  {requiredField.map((field) => {
-                    return <ListItem>{field}</ListItem>;
+                  {requiredField.map((field, i) => {
+                    return <ListItem key={i}>{field}</ListItem>;
                   })}
                 </UnorderedList>
               </Box>

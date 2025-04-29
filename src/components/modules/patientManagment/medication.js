@@ -293,6 +293,19 @@ export const Medication = (props) => {
                   (res) => {
                     if (res.status === 201) {
                       setAddMedication(false);
+                      refetch();
+                      setMedication({
+                        medication_name: "",
+                        description: "",
+                        dosage: "",
+                        frequency: "",
+                        route: "",
+                        start_date: "",
+                        end_date: "",
+                        patient_id: "",
+                        status: "",
+                        notes: "",
+                      });
                       toast.success("New medication added ");
                     } else {
                       toast.error(res?.message);

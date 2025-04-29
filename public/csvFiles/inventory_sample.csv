@@ -1,0 +1,4 @@
+name,quantity,description,sku,status,reorder_level,reorder_quantity,notes
+MacBook Pro 16,10,Apple MacBook Pro 2023,MBP16-2023,active,5,10,"High demand item"
+iPhone 15,50,Latest iPhone 15 model,IPH15-2023,active,20,30,"Popular among students"
+Dell XPS 13,20,Lightweight Dell laptop,XPS13-2023,active,10,15,"Limited stock available"

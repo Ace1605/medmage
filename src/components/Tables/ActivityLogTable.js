@@ -186,7 +186,14 @@ function ActivityLogTable(props) {
   return (
     <>
       <Flex direction="column" w="100%">
-        <Flex overflowX={{ sm: "scroll", lg: "hidden" }}>
+        <Flex
+          overflowX={{ sm: "scroll" }}
+          sx={{
+            "::-webkit-scrollbar": { display: "none" }, // Hide scrollbar in Webkit (Chrome, Safari)
+            "-ms-overflow-style": "none", // Hide scrollbar in IE/Edge
+            "scrollbar-width": "none", // Hide scrollbar in Firefox
+          }}
+        >
           <Table
             {...getTableProps()}
             variant="simple"

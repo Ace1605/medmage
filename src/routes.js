@@ -36,12 +36,13 @@ import { ExitIcon } from "components/Icons/Icons";
 import { UsersGroupIcon } from "components/Icons/Icons";
 import { InstitutionIcon } from "components/Icons/Icons";
 import Events from "views/Pages/Management/Events";
-import { MdEvent } from "react-icons/md";
+import { MdEvent, MdInventory } from "react-icons/md";
 import Todos from "views/Pages/Management/ToDo";
 import { RiTodoFill } from "react-icons/ri";
 import ActivityLog from "views/Pages/Activity/ActivityLog";
 import Finance from "views/Pages/Finance/Finance";
 import ConfirmAccount from "views/Authentication/confirmAccount/ConfirmAccount";
+import Inventory from "views/Pages/Management/Inventory";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -95,6 +96,14 @@ const dashRoutes = [
         icon: <InstitutionIcon color="inherit" />,
         path: "/management/institution",
         component: "",
+        layout: "/admin",
+      },
+      {
+        name: "Inventory",
+        secondaryNavbar: false,
+        icon: <MdInventory color="inherit" />,
+        path: "/management/Inventory",
+        component: <Inventory />,
         layout: "/admin",
       },
       {

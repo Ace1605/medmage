@@ -1,15 +1,15 @@
 import { useTMutation } from "hooks/api/useMutation";
 
-export const useUpdateMedication = (token) => {
+export const useDeleteInventory = (token) => {
   const { mutate } = useTMutation({
-    url: "medications",
-    method: "patch",
+    url: "inventory",
+    method: "delete",
     token: token,
   });
 
-  const handleUpdateMedication = async (id, payload, onSuccess, onError) => {
+  const handleDeleteInventory = async (id, onSuccess, onError) => {
     try {
-      const res = await mutate.mutateAsync({ id, payload });
+      const res = await mutate.mutateAsync({ id });
       if (onSuccess) onSuccess(res);
     } catch (error) {
       console.error(error);
@@ -17,7 +17,7 @@ export const useUpdateMedication = (token) => {
     }
   };
   return {
-    handleUpdateMedication,
+    handleDeleteInventory,
     isLoading: mutate.isPending,
   };
 };
