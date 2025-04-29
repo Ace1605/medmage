@@ -1,7 +1,11 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
+  FormControl,
+  FormLabel,
+  Grid,
   Icon,
   Input,
   Select,
@@ -11,6 +15,7 @@ import {
   Tbody,
   Td,
   Text,
+  Textarea,
   Th,
   Thead,
   Tr,
@@ -20,7 +25,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
 import dayjs from "dayjs";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
@@ -36,30 +41,64 @@ import {
 import { toast } from "sonner";
 import utc from "dayjs/plugin/utc";
 import { useDeleteInventory } from "hooks/api/management/inventory/useDeleteInventory";
+import { useGetInventory } from "hooks/api/management/inventory/useGetInventory";
+import { useUpdateInventory } from "hooks/api/management/inventory/useUpdateInventory";
 
 function InventoryTable(props) {
   dayjs.extend(utc);
   const { tableData, pageNo, size, setPageNo, setSize, refetch } = props;
-  const queryClient = useQueryClient();
   const [editProduct, setEditProduct] = useState(false);
   const [deleteProduct, setDeleteProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { token } = useContext(AppContext);
+  const { token, providers } = useContext(AppContext);
 
   const { handleDeleteInventory, isLoading } = useDeleteInventory(token);
+  const {
+    data: inventoryData,
+    error: errorGetting,
+    isLoading: isGetting,
+  } = useGetInventory(token, selectedProduct?.id);
 
-  // useEffect(() => {
-  //   if (error) {
-  //     setEditProduct(false);
-  //     toast.error("Unable to get Pro");
-  //   }
-  // }, [error]);
+  const { handleUpdateInventory, isLoading: isUpdating } = useUpdateInventory(
+    token
+  );
 
-  const [event, setEvent] = useState({
-    title: "",
+  if (errorGetting) toast.error("Unable to get inventory");
+
+  const [product, setProduct] = useState({
+    name: "",
     description: "",
-    isCompleted: false,
+    quantity: null,
+    reorderLevel: null,
+    reorderQuantity: null,
+    status: "active",
+    sku: "",
+    notes: "",
   });
+
+  useEffect(() => {
+    if (inventoryData?.data) {
+      setProduct({
+        name: inventoryData.data.medication_name,
+        description: inventoryData.data.description,
+        quantity: inventoryData.data.quantity,
+        reorderLevel: inventoryData.data.reorder_level,
+        reorderQuantity: inventoryData.data.reorder_quantity,
+        status: inventoryData.data.status,
+        sku: inventoryData.data.sku,
+        notes: inventoryData.data.notes,
+      });
+    }
+  }, [inventoryData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setProduct((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const columns = useMemo(() => {
     return [
@@ -150,7 +189,7 @@ function InventoryTable(props) {
           const status = row.original.status;
           return (
             <div style={{ color: status === "active" ? "#48bb78" : "#FF3B30" }}>
-              {status}
+              {status === "active" ? "Active" : "Inactive"}
             </div>
           );
         },
@@ -512,21 +551,25 @@ function InventoryTable(props) {
           </Flex>
         </Modal>
       )}
-      {/* {editProduct && (
+      {editProduct && (
         <Modal
           maxWidth={{ sm: "400px", md: "500px" }}
-          //  label={eventData?.data ? `Edit: ${eventData?.data?.title}` : ""}
+          label={
+            inventoryData?.data
+              ? `Edit: ${inventoryData?.data?.medication_name}`
+              : ""
+          }
           handleCloseModal={() => {
             setSelectedProduct(null);
             setEditProduct(false);
           }}
         >
-          {isLoading && (
+          {isGetting && (
             <Flex width="100% " height="30vh" align="center" justify="center">
               <Spinner w="35px" h="35px" color="#3182ce" />
             </Flex>
           )}
-          {eventData?.data && (
+          {inventoryData?.data && (
             <FormControl>
               <Box pb="15px">
                 <Grid
@@ -541,19 +584,15 @@ function InventoryTable(props) {
                 >
                   <FormControl>
                     <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      Event Title
+                      Name
                     </FormLabel>
                     <Input
                       variant="main"
-                      placeholder="Enter event title"
+                      placeholder="Enter product name"
                       fontSize="xs"
-                      value={event.title}
-                      onChange={(e) =>
-                        setEvent((prev) => ({
-                          ...prev,
-                          title: e.target.value,
-                        }))
-                      }
+                      name="name"
+                      value={product.name}
+                      onChange={handleChange}
                     />
                   </FormControl>
                   <FormControl>
@@ -564,42 +603,156 @@ function InventoryTable(props) {
                       variant="main"
                       placeholder="Enter description"
                       fontSize="xs"
-                      value={event.description}
-                      onChange={(e) => {
-                        setEvent((prev) => ({
-                          ...prev,
-                          description: e.target.value,
-                        }));
-                      }}
+                      name="description"
+                      value={product.description}
+                      onChange={handleChange}
                     />
                   </FormControl>
 
-                  <DateTimeRangePicker
-                    startDateTime={startDateTime}
-                    setStartDateTime={setStartDateTime}
-                    endDateTime={endDateTime}
-                    setEndDateTime={setEndDateTime}
-                  />
-                  <FormControl>
-                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                      Status
-                    </FormLabel>
-                    <Select
-                      cursor="pointer"
-                      variant="main"
-                      color="gray.400"
-                      fontSize="xs"
-                      value={event.isCompleted} // Convert boolean to string for Select value
-                      onChange={(e) => {
-                        setEvent((prev) => ({
-                          ...prev,
-                          isCompleted: e.target.value === "true",
-                        }));
-                      }}
+                  <Grid
+                    templateColumns={{
+                      base: "1fr",
+                      sm: "1fr",
+                      md: "repeat( 1fr)",
+                    }}
+                    gap="15px"
+                  >
+                    <Flex
+                      alignItems="center"
+                      justifyContent="space-between"
+                      gap="10px"
                     >
-                      <option value={true}>Completed</option>
-                      <option value={false}>Not Completed</option>
-                    </Select>
+                      <FormControl>
+                        <FormLabel
+                          fontWeight="semibold"
+                          fontSize="xs"
+                          mb="10px"
+                        >
+                          Quantity
+                        </FormLabel>
+                        <Input
+                          type="number"
+                          variant="main"
+                          placeholder=" "
+                          fontSize="xs"
+                          name="quantity"
+                          value={product.quantity}
+                          onChange={handleChange}
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel
+                          fontWeight="semibold"
+                          fontSize="xs"
+                          mb="10px"
+                        >
+                          Status
+                        </FormLabel>
+                        <Select
+                          cursor="pointer"
+                          variant="main"
+                          color="gray.400"
+                          fontSize="xs"
+                          name="status"
+                          value={product.status}
+                          onChange={handleChange}
+                        >
+                          <option value="active">Active</option>
+                          <option value="inactive">Inactive</option>
+                        </Select>
+                      </FormControl>
+                    </Flex>
+                  </Grid>
+
+                  <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
+                    gap="10px"
+                  >
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Reorder level
+                      </FormLabel>
+                      <Input
+                        type="number"
+                        variant="main"
+                        placeholder=" "
+                        fontSize="xs"
+                        name="reorderLevel"
+                        value={product.reorderLevel}
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Reorder quantity
+                      </FormLabel>
+                      <Input
+                        type="number"
+                        variant="main"
+                        placeholder=" "
+                        fontSize="xs"
+                        name="reorderQuantity"
+                        value={product.reorderQuantity}
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                  </Flex>
+
+                  <Grid
+                    templateColumns={{
+                      base: "1fr",
+                      sm: "1fr 1fr", // or "repeat(2, 1fr)"
+                      md: "repeat(2, 1fr)", // two equal columns
+                    }}
+                    gap="15px"
+                  >
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Sku
+                      </FormLabel>
+                      <Input
+                        variant="main"
+                        placeholder=" "
+                        fontSize="xs"
+                        name="sku"
+                        value={product.sku}
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                  </Grid>
+
+                  <FormControl>
+                    <FormLabel
+                      fontWeight="semibold"
+                      fontSize="xs"
+                      mb="10px"
+                      sx={{ _readOnly: { color: "gray.500" } }}
+                    >
+                      Notes
+                    </FormLabel>
+                    <Textarea
+                      sx={{
+                        _readOnly: {
+                          color: "gray.700",
+                          fontWeight: "semibold",
+                          border: 0,
+                          pl: 0,
+                          opacity: 1,
+                          cursor: "default",
+                        },
+                      }}
+                      _focus={{
+                        borderColor: "gray.300", // Change to desired color
+                        boxShadow: "none", // Remove the glow effect
+                      }}
+                      border="1px solid #e2e8f0"
+                      placeholder="notes"
+                      fontSize="xs"
+                      name="notes"
+                      value={product.notes}
+                      onChange={handleChange}
+                    />
                   </FormControl>
                 </Grid>
               </Box>
@@ -615,7 +768,16 @@ function InventoryTable(props) {
                   mb="10px"
                   onClick={() => {
                     setEditProduct(false);
-                    setSelectedProduct(null);
+                    setProduct({
+                      name: "",
+                      description: "",
+                      quantity: null,
+                      reorderLevel: null,
+                      reorderQuantity: null,
+                      status: "active",
+                      sku: "",
+                      notes: "",
+                    });
                   }}
                 >
                   Cancel
@@ -628,30 +790,36 @@ function InventoryTable(props) {
                   h="45"
                   mb="10px"
                   onClick={() => {
-                    handleUpdateEventById(
+                    handleUpdateInventory(
                       selectedProduct?.id,
                       {
-                        title: event.title,
-                        description: event.description,
-                        is_completed: event.isCompleted,
-                        user_id: user?.id,
+                        name: product.name,
+                        description: product.description,
+                        status: product.status,
+                        quantity: product.quantity,
+                        reorder_level: product.reorderLevel,
+                        reorder_quantity: product.reorderQuantity,
+                        notes: product.notes,
+                        sku: product.sku,
                         provider_id: providers?.[0]?.id,
-                        start_datetime: startDateTime
-                          ? moment(startDateTime).format("YYYY-MM-DD HH:mm:ss")
-                          : null,
-                        end_datetime: endDateTime
-                          ? moment(endDateTime).format("YYYY-MM-DD HH:mm:ss")
-                          : null,
                       },
                       (res) => {
                         if (res.status === 200) {
                           setEditProduct(false);
-                          refetchEvents();
-                          queryClient.invalidateQueries([
-                            "events",
-                            selectedProduct?.id,
-                          ]);
-                          toast.success("Event updated successfully");
+                          refetch();
+                          toast.success("Inventory item updated successfully");
+                          setProduct({
+                            name: "",
+                            description: "",
+                            quantity: null,
+                            reorderLevel: null,
+                            reorderQuantity: null,
+                            status: "active",
+                            sku: "",
+                            notes: "",
+                          });
+                        } else {
+                          toast.error(res?.response.data.message);
                         }
                       },
                       (err) => {
@@ -662,13 +830,13 @@ function InventoryTable(props) {
                     );
                   }}
                 >
-                  {isEditing ? <Spinner w="20px" h="20px" /> : " Confirm"}
+                  {isUpdating ? <Spinner w="20px" h="20px" /> : " Confirm"}
                 </Button>
               </Flex>
             </FormControl>
           )}
         </Modal>
-      )} */}
+      )}
     </>
   );
 }
