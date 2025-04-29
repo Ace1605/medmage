@@ -20,7 +20,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
   TiArrowSortedDown,
@@ -35,6 +35,7 @@ import {
 } from "react-table";
 import { toast } from "sonner";
 import utc from "dayjs/plugin/utc";
+import { useDeleteInventory } from "hooks/api/management/inventory/useDeleteInventory";
 
 function InventoryTable(props) {
   dayjs.extend(utc);
@@ -43,7 +44,9 @@ function InventoryTable(props) {
   const [editProduct, setEditProduct] = useState(false);
   const [deleteProduct, setDeleteProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { token, user, providers } = useContext(AppContext);
+  const { token } = useContext(AppContext);
+
+  const { handleDeleteInventory, isLoading } = useDeleteInventory(token);
 
   // useEffect(() => {
   //   if (error) {
@@ -471,28 +474,25 @@ function InventoryTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                setDeleteProduct(false);
-                setSelectedProduct(null);
-                toast.success("Product deleted successfully");
-                // handleDeleteEventById(
-                //   selectedProduct?.id,
-                //   (res) => {
-                //     if (res.status === 204) {
-                //       setDeleteProduct(false);
-                //       refetchEvents();
-                //       toast.success("Event deleted successfully");
-                //       setSelectedProduct(null);
-                //     }
-                //   },
-                //   (err) => {
-                //     toast.error(
-                //       err?.response?.data?.message || "Something went wrong"
-                //     );
-                //   }
-                // );
+                handleDeleteInventory(
+                  selectedProduct?.id,
+                  (res) => {
+                    if (res.status === 200) {
+                      setDeleteProduct(false);
+                      refetch();
+                      toast.success("Inventory item deleted successfully");
+                      setSelectedProduct(null);
+                    }
+                  },
+                  (err) => {
+                    toast.error(
+                      err?.response?.data?.message || "Something went wrong"
+                    );
+                  }
+                );
               }}
             >
-              {"" ? <Spinner w="20px" h="20px" /> : "    Confirm"}
+              {isLoading ? <Spinner w="20px" h="20px" /> : "    Confirm"}
             </Button>
           </Flex>
         </Modal>

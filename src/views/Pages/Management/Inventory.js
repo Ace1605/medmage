@@ -355,7 +355,7 @@ function Inventory() {
                       if (res.status === 201) {
                         setAddInventory(false);
                         refetch();
-                        toast.success("Product created successfully");
+                        toast.success("Inventory item created successfully");
                         setProduct({
                           name: "",
                           description: "",
