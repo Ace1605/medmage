@@ -1,11 +1,7 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
-  Grid,
   Icon,
   Input,
   Select,
@@ -21,14 +17,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { DateTimeRangePicker } from "components/CustomDateTimePicker/CustomDateTimeRangePicker";
 import Modal from "components/Modal/Modal";
 import { AppContext } from "contexts/AppContext";
 import dayjs from "dayjs";
-import { useDeleteEventById } from "hooks/api/management/events/useDeleteEventById";
-import { useGetEventById } from "hooks/api/management/events/useGetEventById";
-import { useUpdateEventById } from "hooks/api/management/events/useUpdateEventId";
-import moment from "moment";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
@@ -134,11 +125,11 @@ function InventoryTable(props) {
         accessor: "description",
       },
       {
-        Header: "RE-ORDER LEVEL",
+        Header: "REORDER LEVEL",
         accessor: "reorder_level",
       },
       {
-        Header: "RE-ORDER QUANTITY",
+        Header: "REORDER QUANTITY",
         accessor: "reorder_quantity",
       },
       {
@@ -413,7 +404,7 @@ function InventoryTable(props) {
           </Stack>
         </Flex>
       </Flex>
-      {/* {deleteProduct && (
+      {deleteProduct && (
         <Modal
           maxWidth={"500px"}
           handleCloseModal={() => {
@@ -448,7 +439,7 @@ function InventoryTable(props) {
             mb="16px"
             fontSize={{ sm: "16px" }}
           >
-            {`Event title: ${selectedProduct?.title}`}
+            {`Product name: ${selectedProduct?.medication_name}`}
           </Text>
 
           <Flex
@@ -480,29 +471,32 @@ function InventoryTable(props) {
               h="45"
               px="30px"
               onClick={() => {
-                handleDeleteEventById(
-                  selectedProduct?.id,
-                  (res) => {
-                    if (res.status === 204) {
-                      setDeleteProduct(false);
-                      refetchEvents();
-                      toast.success("Event deleted successfully");
-                      setSelectedProduct(null);
-                    }
-                  },
-                  (err) => {
-                    toast.error(
-                      err?.response?.data?.message || "Something went wrong"
-                    );
-                  }
-                );
+                setDeleteProduct(false);
+                setSelectedProduct(null);
+                toast.success("Product deleted successfully");
+                // handleDeleteEventById(
+                //   selectedProduct?.id,
+                //   (res) => {
+                //     if (res.status === 204) {
+                //       setDeleteProduct(false);
+                //       refetchEvents();
+                //       toast.success("Event deleted successfully");
+                //       setSelectedProduct(null);
+                //     }
+                //   },
+                //   (err) => {
+                //     toast.error(
+                //       err?.response?.data?.message || "Something went wrong"
+                //     );
+                //   }
+                // );
               }}
             >
               {"" ? <Spinner w="20px" h="20px" /> : "    Confirm"}
             </Button>
           </Flex>
         </Modal>
-      )} */}
+      )}
       {/* {editProduct && (
         <Modal
           maxWidth={{ sm: "400px", md: "500px" }}

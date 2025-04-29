@@ -7,8 +7,10 @@ import {
   Grid,
   Icon,
   Input,
+  Select,
   Spinner,
   Text,
+  Textarea,
   useColorModeValue,
 } from "@chakra-ui/react";
 // Custom components
@@ -20,9 +22,9 @@ import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
 import { useContext, useState } from "react";
 import { AppContext } from "contexts/AppContext";
-import moment from "moment";
 import InventoryTable from "components/Tables/InventoryTable";
 import { useListInventory } from "hooks/api/management/inventory/useListInventory";
+import { useCreateInventory } from "hooks/api/management/inventory/useCreateInventory";
 
 function Inventory() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -31,21 +33,47 @@ function Inventory() {
   const [bulkUpload, setBulkUpload] = useState(false);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
-  const [eventName, setEventName] = useState("");
-  const [description, setDescription] = useState("");
+  const { providers, token } = useContext(AppContext);
 
-  const { user, providers, token } = useContext(AppContext);
+  const [product, setProduct] = useState({
+    name: "",
+    description: "",
+    quantity: null,
+    reorderLevel: null,
+    reorderQuantity: null,
+    status: "active",
+    notes: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setProduct((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const { handleCreateInventory, isLoading: isCreating } = useCreateInventory(
+    token
+  );
+
   const { data, isFetching, refetch, error, isLoading } = useListInventory(
     token,
     page,
     size
   );
 
-  const isValid =
-    eventName.trim() !== "" &&
-    description.trim() !== "" &&
-    moment(startDateTime).isValid() &&
-    moment(endDateTime).isValid();
+  console.log(product);
+
+  const isValidProduct =
+    product.name.trim() !== "" &&
+    product.description.trim() !== "" &&
+    product.quantity !== null &&
+    product.quantity > 0 &&
+    product.reorderLevel !== null &&
+    product.reorderLevel >= 0 &&
+    product.reorderQuantity !== null &&
+    product.reorderQuantity > 0;
 
   return (
     <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
@@ -90,7 +118,7 @@ function Inventory() {
           </Flex>
         </CardHeader>
         <CardBody px="22px">
-          {isLoading ? (
+          {isLoading || isFetching ? (
             <Flex width="100% " height="30vh" align="center" justify="center">
               <Spinner w="40px" h="40px" color="#3182ce" />
             </Flex>
@@ -146,8 +174,9 @@ function Inventory() {
                     variant="main"
                     placeholder="Enter product name"
                     fontSize="xs"
-                    value={eventName}
-                    onChange={(e) => setEventName(e.target.value)}
+                    name="name"
+                    value={product.name}
+                    onChange={handleChange}
                   />
                 </FormControl>
                 <FormControl>
@@ -158,20 +187,9 @@ function Inventory() {
                     variant="main"
                     placeholder="Enter description"
                     fontSize="xs"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                    Category
-                  </FormLabel>
-                  <Input
-                    variant="main"
-                    placeholder=" "
-                    fontSize="xs"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    name="description"
+                    value={product.description}
+                    onChange={handleChange}
                   />
                 </FormControl>
 
@@ -190,30 +208,113 @@ function Inventory() {
                   >
                     <FormControl>
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Qunatity
+                        Quantity
                       </FormLabel>
                       <Input
+                        type="number"
                         variant="main"
                         placeholder=" "
                         fontSize="xs"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        name="quantity"
+                        value={product.quantity}
+                        onChange={handleChange}
                       />
                     </FormControl>
                     <FormControl>
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Price per unit
+                        Status
+                      </FormLabel>
+                      <Select
+                        cursor="pointer"
+                        variant="main"
+                        color="gray.400"
+                        fontSize="xs"
+                        name="status"
+                        value={product.status}
+                        onChange={handleChange}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </Select>
+                    </FormControl>
+                  </Flex>
+                </Grid>
+
+                <Grid
+                  templateColumns={{
+                    base: "1fr",
+                    sm: "1fr",
+                    md: "repeat( 1fr)",
+                  }}
+                  gap="15px"
+                >
+                  <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
+                    gap="10px"
+                  >
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Reorder level
                       </FormLabel>
                       <Input
+                        type="number"
                         variant="main"
                         placeholder=" "
                         fontSize="xs"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        name="reorderLevel"
+                        value={product.reorderLevel}
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Reorder quantity
+                      </FormLabel>
+                      <Input
+                        type="number"
+                        variant="main"
+                        placeholder=" "
+                        fontSize="xs"
+                        name="reorderQuantity"
+                        value={product.reorderQuantity}
+                        onChange={handleChange}
                       />
                     </FormControl>
                   </Flex>
                 </Grid>
+                <FormControl>
+                  <FormLabel
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    mb="10px"
+                    sx={{ _readOnly: { color: "gray.500" } }}
+                  >
+                    Notes
+                  </FormLabel>
+                  <Textarea
+                    sx={{
+                      _readOnly: {
+                        color: "gray.700",
+                        fontWeight: "semibold",
+                        border: 0,
+                        pl: 0,
+                        opacity: 1,
+                        cursor: "default",
+                      },
+                    }}
+                    _focus={{
+                      borderColor: "gray.300", // Change to desired color
+                      boxShadow: "none", // Remove the glow effect
+                    }}
+                    border="1px solid #e2e8f0"
+                    placeholder="notes"
+                    fontSize="xs"
+                    name="notes"
+                    value={product.notes}
+                    onChange={handleChange}
+                  />
+                </FormControl>
               </Grid>
             </Box>
 
@@ -231,7 +332,7 @@ function Inventory() {
                 Cancel
               </Button>
               <Button
-                disabled={!isValid}
+                disabled={!isValidProduct}
                 fontSize="16px"
                 colorScheme="blue"
                 fontWeight="bold"
@@ -239,38 +340,44 @@ function Inventory() {
                 h="45"
                 mb="10px"
                 onClick={() => {
-                  //   handleCreateEvent(
-                  //     {
-                  //       title: eventName,
-                  //       description: description,
-                  //       is_completed: false,
-                  //       user_id: user?.id,
-                  //       provider_id: providers?.[0]?.id,
-                  //       start_datetime: startDateTime
-                  //         ? moment(startDateTime).format("YYYY-MM-DD HH:mm:ss")
-                  //         : null,
-                  //       end_datetime: endDateTime
-                  //         ? moment(endDateTime).format("YYYY-MM-DD HH:mm:ss")
-                  //         : null,
-                  //     },
-                  //     (res) => {
-                  //       if (res.status === 201) {
-                  //         setCreateEvent(false);
-                  //         refetch();
-                  //         toast.success("Event created successfully");
-                  //       } else {
-                  //         toast.error(res?.response.data.message);
-                  //       }
-                  //     },
-                  //     (err) => {
-                  //       toast.error(
-                  //         err?.response?.data?.message || "Something went wrong"
-                  //       );
-                  //     }
-                  //   );
+                  handleCreateInventory(
+                    {
+                      name: product.name,
+                      description: product.description,
+                      status: product.status,
+                      quantity: product.quantity,
+                      reorder_level: product.reorderLevel,
+                      reorder_quantity: product.reorderQuantity,
+                      notes: product.notes,
+                      provider_id: providers?.[0]?.id,
+                    },
+                    (res) => {
+                      if (res.status === 201) {
+                        setAddInventory(false);
+                        refetch();
+                        toast.success("Product created successfully");
+                        setProduct({
+                          name: "",
+                          description: "",
+                          quantity: null,
+                          reorderLevel: null,
+                          reorderQuantity: null,
+                          status: "active",
+                          notes: "",
+                        });
+                      } else {
+                        toast.error(res?.response.data.message);
+                      }
+                    },
+                    (err) => {
+                      toast.error(
+                        err?.response?.data?.message || "Something went wrong"
+                      );
+                    }
+                  );
                 }}
               >
-                {"" ? <Spinner w="20px" h="20px" /> : " Confirm"}
+                {isCreating ? <Spinner w="20px" h="20px" /> : " Confirm"}
               </Button>
             </Flex>
           </FormControl>
