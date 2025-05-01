@@ -12,6 +12,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
@@ -59,8 +60,15 @@ function InstitutionTable(props) {
       },
       {
         Header: "CREATED",
-        accessor: "created",
+        accessor: "createdAt",
         minWidth: 150,
+        Cell: ({ row }) => {
+          const date = row.original.createdAt;
+
+          return (
+            <Text color={textColor}>{dayjs(date).format("DD MMM, YYYY")}</Text>
+          );
+        },
       },
     ];
   }, []);

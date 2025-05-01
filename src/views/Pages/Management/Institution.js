@@ -4,6 +4,7 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import InstitutionTable from "components/Tables/InstitutionTable";
+import { exportCSV } from "utils/exports";
 import InistitutionData from "variables/inistitutionData.json";
 
 function Institution() {
@@ -25,6 +26,7 @@ function Institution() {
             </Text>
             <Flex gap="12px" alignItems="center">
               <Button
+                onClick={() => exportCSV(InistitutionData)}
                 rightIcon={<DownloadIcon />}
                 px="12px"
                 fontSize="14px"

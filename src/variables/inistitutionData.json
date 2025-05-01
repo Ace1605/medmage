@@ -5,7 +5,7 @@
     "email": "medplus@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   },
   {
     "name": "University College Hospital",
@@ -13,7 +13,7 @@
     "email": "uc@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   },
   {
     "name": "LUTH",
@@ -21,7 +21,7 @@
     "email": "medplus@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   },
   {
     "name": "National Hospital",
@@ -29,23 +29,23 @@
     "email": "nationalhos@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   },
   {
-    "name": "Eko Hospital,",
+    "name": "Eko Hospital",
     "category": "Rehabilitation hospital",
     "email": "eko@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   },
   {
-    "name": "St. Nicholas Hospital,",
+    "name": "St. Nicholas Hospital",
     "category": "Orthopedic hospital",
     "email": "st.nicholas@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   },
   {
     "name": "Lily Hospitals",
@@ -53,7 +53,7 @@
     "email": "lily@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   },
   {
     "name": "Reddington Hospital",
@@ -61,6 +61,6 @@
     "email": "reddington@gmail.com",
     "admin": "Smauel Davis",
     "addedBy": "Dammy Ayobami",
-    "created": "21, Apr, 2024"
+    "createdAt": "2024-04-21"
   }
 ]
