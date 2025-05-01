@@ -39,7 +39,6 @@ import { toast } from "sonner";
 function PatientsTable(props) {
   const navigate = useNavigate();
   const {
-    columnsData,
     refetchPatients,
     tableData,
     pageNo,

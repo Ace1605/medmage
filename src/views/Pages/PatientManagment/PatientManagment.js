@@ -24,7 +24,6 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import PatientsTable from "components/Tables/PatientsTable";
-import { PatientsColumns } from "variables/columnsData";
 import { BiUpload } from "react-icons/bi";
 import Modal from "components/Modal/Modal";
 import { toast } from "sonner";
@@ -252,7 +251,6 @@ function PatientManagment() {
             <PatientsTable
               tableData={data}
               refetchPatients={refetchPatients}
-              columnsData={PatientsColumns}
               pageNo={page}
               size={size}
               setPageNo={(val) => setPage(val)}

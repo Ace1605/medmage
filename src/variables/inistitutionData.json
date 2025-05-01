@@ -1,0 +1,66 @@
+[
+  {
+    "name": "MedpLUS",
+    "category": "General hospital",
+    "email": "medplus@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  },
+  {
+    "name": "University College Hospital",
+    "category": "Children’s hospital",
+    "email": "uc@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  },
+  {
+    "name": "LUTH",
+    "category": "General hospital",
+    "email": "medplus@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  },
+  {
+    "name": "National Hospital",
+    "category": "Psychiatric hospital",
+    "email": "nationalhos@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  },
+  {
+    "name": "Eko Hospital",
+    "category": "Rehabilitation hospital",
+    "email": "eko@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  },
+  {
+    "name": "St. Nicholas Hospital",
+    "category": "Orthopedic hospital",
+    "email": "st.nicholas@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  },
+  {
+    "name": "Lily Hospitals",
+    "category": "Oncology hospital",
+    "email": "lily@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  },
+  {
+    "name": "Reddington Hospital",
+    "category": "Cardiology hospital",
+    "email": "reddington@gmail.com",
+    "admin": "Smauel Davis",
+    "addedBy": "Dammy Ayobami",
+    "createdAt": "2024-04-21"
+  }
+]

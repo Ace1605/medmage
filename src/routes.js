@@ -43,6 +43,7 @@ import ActivityLog from "views/Pages/Activity/ActivityLog";
 import Finance from "views/Pages/Finance/Finance";
 import ConfirmAccount from "views/Authentication/confirmAccount/ConfirmAccount";
 import Inventory from "views/Pages/Management/Inventory";
+import Institution from "views/Pages/Management/Institution";
 const dashRoutes = [
   {
     name: "Dashboard",
@@ -95,7 +96,7 @@ const dashRoutes = [
         secondaryNavbar: false,
         icon: <InstitutionIcon color="inherit" />,
         path: "/management/institution",
-        component: "",
+        component: <Institution />,
         layout: "/admin",
       },
       {
