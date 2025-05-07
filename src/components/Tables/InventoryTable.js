@@ -46,7 +46,17 @@ import { useUpdateInventory } from "hooks/api/management/inventory/useUpdateInve
 
 function InventoryTable(props) {
   dayjs.extend(utc);
-  const { tableData, pageNo, size, setPageNo, setSize, refetch } = props;
+  const {
+    tableData,
+    pageNo,
+    size,
+    setPageNo,
+    setSize,
+    refetch,
+    categories,
+    isFetchingCategories,
+    setAddCategory,
+  } = props;
   const [editProduct, setEditProduct] = useState(false);
   const [deleteProduct, setDeleteProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -69,6 +79,7 @@ function InventoryTable(props) {
     name: "",
     description: "",
     quantity: null,
+    category: "",
     reorderLevel: null,
     reorderQuantity: null,
     status: "active",
@@ -82,6 +93,7 @@ function InventoryTable(props) {
         name: inventoryData.data.medication_name,
         description: inventoryData.data.description,
         quantity: inventoryData.data.quantity,
+        category: inventoryData.data.category.id,
         reorderLevel: inventoryData.data.reorder_level,
         reorderQuantity: inventoryData.data.reorder_quantity,
         status: inventoryData.data.status,
@@ -98,6 +110,14 @@ function InventoryTable(props) {
       ...prev,
       [name]: value,
     }));
+
+    if (value === "add-category") {
+      setAddCategory(true);
+      setProduct((prev) => ({
+        ...prev,
+        ["category"]: "",
+      }));
+    }
   };
 
   const columns = useMemo(() => {
@@ -142,6 +162,15 @@ function InventoryTable(props) {
       {
         Header: "SKU",
         accessor: "sku",
+      },
+      {
+        Header: "CATEGORY",
+        accessor: "category",
+        Cell: ({ row }) => {
+          const category = row.original.category;
+
+          return <Text color={textColor}>{category.name}</Text>;
+        },
       },
       {
         Header: "CREATED AT",
@@ -646,20 +675,32 @@ function InventoryTable(props) {
                           fontSize="xs"
                           mb="10px"
                         >
-                          Status
+                          Category
                         </FormLabel>
-                        <Select
-                          cursor="pointer"
-                          variant="main"
-                          color="gray.400"
-                          fontSize="xs"
-                          name="status"
-                          value={product.status}
-                          onChange={handleChange}
-                        >
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                        </Select>
+                        <Flex align="center" gap="10px">
+                          <Select
+                            disabled={isFetchingCategories}
+                            cursor="pointer"
+                            variant="main"
+                            color="gray.400"
+                            fontSize="xs"
+                            name="category"
+                            value={product.category}
+                            onChange={handleChange}
+                          >
+                            {categories.map((category) => {
+                              return (
+                                <option key={category.id} value={category.id}>
+                                  {category.name}
+                                </option>
+                              );
+                            })}
+                            <option value="add-category">Add category</option>
+                          </Select>
+                          {isFetchingCategories && (
+                            <Spinner w="12px" h="12px" color="blue.600" />
+                          )}
+                        </Flex>
                       </FormControl>
                     </Flex>
                   </Grid>
@@ -707,6 +748,23 @@ function InventoryTable(props) {
                     }}
                     gap="15px"
                   >
+                    <FormControl>
+                      <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                        Status
+                      </FormLabel>
+                      <Select
+                        cursor="pointer"
+                        variant="main"
+                        color="gray.400"
+                        fontSize="xs"
+                        name="status"
+                        value={product.status}
+                        onChange={handleChange}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </Select>
+                    </FormControl>
                     <FormControl>
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                         Sku
@@ -772,6 +830,7 @@ function InventoryTable(props) {
                       name: "",
                       description: "",
                       quantity: null,
+                      category: "",
                       reorderLevel: null,
                       reorderQuantity: null,
                       status: "active",
@@ -797,6 +856,7 @@ function InventoryTable(props) {
                         description: product.description,
                         status: product.status,
                         quantity: product.quantity,
+                        category_id: product.category,
                         reorder_level: product.reorderLevel,
                         reorder_quantity: product.reorderQuantity,
                         notes: product.notes,
