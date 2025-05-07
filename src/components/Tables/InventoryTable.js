@@ -93,7 +93,7 @@ function InventoryTable(props) {
         name: inventoryData.data.medication_name,
         description: inventoryData.data.description,
         quantity: inventoryData.data.quantity,
-        category: inventoryData.data.category.id,
+        category: inventoryData.data.category?.id,
         reorderLevel: inventoryData.data.reorder_level,
         reorderQuantity: inventoryData.data.reorder_quantity,
         status: inventoryData.data.status,
@@ -169,7 +169,7 @@ function InventoryTable(props) {
         Cell: ({ row }) => {
           const category = row.original.category;
 
-          return <Text color={textColor}>{category.name}</Text>;
+          return <Text color={textColor}>{category?.name ?? "---"}</Text>;
         },
       },
       {
