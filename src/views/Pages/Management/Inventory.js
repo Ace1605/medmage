@@ -31,13 +31,15 @@ import { useCreateInventory } from "hooks/api/management/inventory/useCreateInve
 import { DownloadIcon } from "@chakra-ui/icons";
 import { baseUrl } from "baseUrl/baseUrl";
 import axios from "axios";
+import { useListCategory } from "hooks/api/management/inventory/inventoryCategory/useListInventoryCategory";
+import { useCreateCategory } from "hooks/api/management/inventory/inventoryCategory/useCreateInventoryCategory";
 
 function Inventory() {
   const textColor = useColorModeValue("gray.700", "white");
-  const iconColor = useColorModeValue("white", "black");
   const [addInventory, setAddInventory] = useState(false);
   const [bulkUpload, setBulkUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [addCategory, setAddCategory] = useState(false);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const { providers, token } = useContext(AppContext);
@@ -46,19 +48,39 @@ function Inventory() {
     name: "",
     description: "",
     quantity: null,
+    category: "",
     reorderLevel: null,
     reorderQuantity: null,
     status: "active",
     notes: "",
   });
 
+  const [category, setCategory] = useState({
+    category_name: "",
+    category_description: "",
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setProduct((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name.startsWith("category_")) {
+      setCategory((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else {
+      setProduct((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+    if (value === "add-category") {
+      setAddCategory(true);
+      setProduct((prev) => ({
+        ...prev,
+        ["category"]: "",
+      }));
+    }
   };
 
   const requiredField = [
@@ -99,8 +121,6 @@ function Inventory() {
     const formData = new FormData();
     formData.append("file", file);
 
-    console.log(formData);
-
     try {
       const response = await axios.post(
         `${baseUrl}/inventory/bulk-upload`,
@@ -137,6 +157,20 @@ function Inventory() {
 
   if (error) toast.error("Unable to fecth inventory list");
 
+  const {
+    handleCreateCategory,
+    isLoading: isCreatingCategory,
+  } = useCreateCategory(token);
+
+  const {
+    data: categories,
+    isFetching: isFetchingCategories,
+    refetch: refetchCategories,
+    error: errorFetchingCategories,
+    isLoading: isLoadingCategories,
+  } = useListCategory(token);
+  if (errorFetchingCategories) toast.error("Unable to fecth categories");
+
   const isValidProduct =
     product.name.trim() !== "" &&
     product.description.trim() !== "" &&
@@ -163,6 +197,7 @@ function Inventory() {
             </Text>
             <Flex gap="12px" alignItems="center">
               <Button
+                disabled={isLoadingCategories}
                 px="10px"
                 fontSize="14px"
                 colorScheme="blue"
@@ -216,6 +251,9 @@ function Inventory() {
               setPageNo={setPage}
               setSize={setSize}
               refetch={refetch}
+              isFetchingCategories={isFetchingCategories}
+              categories={categories}
+              setAddCategory={setAddCategory}
             />
           )}
         </CardBody>
@@ -294,20 +332,32 @@ function Inventory() {
                     </FormControl>
                     <FormControl>
                       <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
-                        Status
+                        Category
                       </FormLabel>
-                      <Select
-                        cursor="pointer"
-                        variant="main"
-                        color="gray.400"
-                        fontSize="xs"
-                        name="status"
-                        value={product.status}
-                        onChange={handleChange}
-                      >
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                      </Select>
+                      <Flex align="center" gap="10px">
+                        <Select
+                          disabled={isFetchingCategories}
+                          cursor="pointer"
+                          variant="main"
+                          color="gray.400"
+                          fontSize="xs"
+                          name="category"
+                          value={product.category}
+                          onChange={handleChange}
+                        >
+                          {categories.map((category) => {
+                            return (
+                              <option key={category.id} value={category.id}>
+                                {category.name}
+                              </option>
+                            );
+                          })}
+                          <option value="add-category">Add category</option>
+                        </Select>
+                        {isFetchingCategories && (
+                          <Spinner w="12px" h="12px" color="blue.600" />
+                        )}
+                      </Flex>
                     </FormControl>
                   </Flex>
                 </Grid>
@@ -354,6 +404,32 @@ function Inventory() {
                       />
                     </FormControl>
                   </Flex>
+                </Grid>
+                <Grid
+                  templateColumns={{
+                    base: "1fr",
+                    sm: "1fr 1fr",
+                    md: "repeat(2 1fr)",
+                  }}
+                  gap="15px"
+                >
+                  <FormControl>
+                    <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                      Status
+                    </FormLabel>
+                    <Select
+                      cursor="pointer"
+                      variant="main"
+                      color="gray.400"
+                      fontSize="xs"
+                      name="status"
+                      value={product.status}
+                      onChange={handleChange}
+                    >
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <FormControl>
                   <FormLabel
@@ -417,6 +493,7 @@ function Inventory() {
                       name: product.name,
                       description: product.description,
                       status: product.status,
+                      category_id: product.category,
                       quantity: product.quantity,
                       reorder_level: product.reorderLevel,
                       reorder_quantity: product.reorderQuantity,
@@ -431,6 +508,7 @@ function Inventory() {
                         setProduct({
                           name: "",
                           description: "",
+                          category: "",
                           quantity: null,
                           reorderLevel: null,
                           reorderQuantity: null,
@@ -535,6 +613,112 @@ function Inventory() {
           >
             {isUploading ? <Spinner w="18px" h="18px" /> : "Upload"}
           </Button>
+        </Modal>
+      )}
+
+      {addCategory && (
+        <Modal
+          maxWidth={{ sm: "400px", md: "500px" }}
+          label="Add New Category"
+          handleCloseModal={() => setAddCategory(false)}
+        >
+          <FormControl>
+            <Box pb="15px">
+              <Grid
+                templateColumns={{
+                  base: "1fr",
+                  sm: "1fr",
+                }}
+                gap="15px"
+                spacing={{ sm: "8px", lg: "30px" }}
+                w={{ sm: "100%", lg: null }}
+                my="18px"
+              >
+                <FormControl>
+                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                    Name
+                  </FormLabel>
+                  <Input
+                    variant="main"
+                    placeholder="Enter name"
+                    fontSize="xs"
+                    name="category_name"
+                    value={category.name}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
+                    Description
+                  </FormLabel>
+                  <Input
+                    variant="main"
+                    placeholder="Enter description"
+                    fontSize="xs"
+                    name="category_description"
+                    value={category.description}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+              </Grid>
+            </Box>
+
+            <Flex alignItems="center" gap="18px">
+              {" "}
+              <Button
+                fontSize="16px"
+                variant="dark"
+                fontWeight="bold"
+                w="100%"
+                h="45"
+                mb="10px"
+                onClick={() => setAddCategory(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                fontSize="16px"
+                colorScheme="blue"
+                fontWeight="bold"
+                w="100%"
+                h="45"
+                mb="10px"
+                onClick={() => {
+                  handleCreateCategory(
+                    {
+                      name: category.category_name,
+                      description: category.category_description,
+                      provider_id: providers?.[0]?.id,
+                    },
+                    (res) => {
+                      if (res.status === 201) {
+                        setAddCategory(false);
+                        refetchCategories();
+                        toast.success("Category created successfully");
+                        setCategory({
+                          categoryName: "",
+                          categoryDescription: "",
+                        });
+                      } else {
+                        toast.error(res?.response.data.message);
+                      }
+                    },
+                    (err) => {
+                      toast.error(
+                        err?.response?.data?.message || "Something went wrong"
+                      );
+                    }
+                  );
+                }}
+              >
+                {isCreatingCategory ? (
+                  <Spinner w="20px" h="20px" />
+                ) : (
+                  " Confirm"
+                )}
+              </Button>
+            </Flex>
+          </FormControl>
         </Modal>
       )}
     </Flex>
