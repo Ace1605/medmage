@@ -58,7 +58,7 @@ function ActivityLogTable(props) {
 
           return (
             <Text color={textColor}>
-              {`${user.first_name} ${user.last_name}`}
+              {user ? `${user.first_name} ${user.last_name}` : "--- ---"}
             </Text>
           );
         },
@@ -95,7 +95,7 @@ function ActivityLogTable(props) {
 
   const data = useMemo(() => tableData?.data, [tableData]);
 
-  const { current_page, total, last_page } = tableData;
+  const { current_page, total, last_page, from, to } = tableData;
 
   const tableInstance = useTable(
     {
@@ -279,8 +279,7 @@ function ActivityLogTable(props) {
             fontWeight="normal"
             mb={{ sm: "14px", md: "0px" }}
           >
-            Showing {current_page} to {current_page * tableData?.data.length} of{" "}
-            {total} entries
+            Showing {from ?? 0} to {to ?? 0} of {total} entries
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
             <Button
@@ -302,7 +301,7 @@ function ActivityLogTable(props) {
             >
               <Icon as={GrFormPrevious} w="16px" h="16px" color="gray.400" />
             </Button>
-            {createPages(total, current_page).map((pageNumber, index) => {
+            {createPages(last_page, current_page).map((pageNumber, index) => {
               if (pageNumber === "...") {
                 return (
                   <Text key={index} mx="2" fontSize="sm" color="gray.500">
